@@ -121,12 +121,17 @@ Phase 4 conformance:
 table, and the kernel executes a rewrite by rule id.
 
 Phase 5 conformance:
-: The implementation exposes rule violations as named diagnostics.
+: `RULES.omi` names diagnostics, the extractor emits a diagnostic table, and
+kernel/replay report named violations or `VALID STATE`.
 
 Phase 6 conformance:
-: `RULES.omi` is parsed or compiled beyond the tiny rewrite declaration.
+: Symbols include deterministic content hashes and symbol ids, and replay emits
+the same identity trace as the kernel.
 
 Phase 7 conformance:
+: `RULES.omi` is parsed or compiled beyond the tiny rewrite declaration.
+
+Phase 8 conformance:
 : regions, SID/OID promotion, and soft pressure metrics become executable.
 
 ## Non-Goals

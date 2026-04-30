@@ -100,6 +100,7 @@ predicate count(Query, Count)
 predicate rewrite_rule(Id, Name)
 predicate rewrite_min_region_len(Id, Len)
 predicate rewrite_authorized(Id)
+predicate diagnostic(Id, Severity, Name)
 
 ; RULESET IDENTITY
 
@@ -290,6 +291,14 @@ MUST_NOT cycle_without_bom(A, B) :-
   not bom_path(A, B).
 
 ; DIAGNOSTICS
+;
+; The compact diagnostic declarations below are extracted into a generated C
+; table for Phase 5. The Datalog-like rules after them describe intended
+; semantics.
+
+diagnostic violation null_cons.
+diagnostic violation null_edge.
+diagnostic warning transient_pressure.
 
 MUST violation("null_edge", N) :-
   null(N),

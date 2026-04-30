@@ -87,15 +87,25 @@ static void print_symbols(const omi_symbol_table_t *symbols)
         const omi_symbol_entry_t *symbol = &symbols->entries[i];
         omi_serial_write_string("SYMBOL ");
         omi_serial_write_u32(i);
-        omi_serial_write_string(": start=");
+        omi_serial_write_string(": id=");
+        omi_serial_write_hex32(symbol->symbol_id);
+        omi_serial_write_string(" content=");
+        omi_serial_write_hex32(symbol->content_hash);
+        omi_serial_write_string(" orbit=");
+        omi_serial_write_hex32(symbol->orbit_id);
+        omi_serial_write_string(" start=");
         omi_serial_write_hex32(symbol->region_start);
         omi_serial_write_string(" len=");
         omi_serial_write_u32(symbol->region_len);
         omi_serial_write_string(" value=");
         omi_serial_write_hex32(symbol->value);
-        omi_serial_write_string(" orbit=");
-        omi_serial_write_hex32(symbol->orbit_id);
         omi_serial_write_string("\n");
+
+        if (symbol->reused) {
+            omi_serial_write_string("REUSE DETECTED content=");
+            omi_serial_write_hex32(symbol->content_hash);
+            omi_serial_write_string("\n");
+        }
     }
 
     if (symbols && symbols->count > limit) {
@@ -127,6 +137,49 @@ static void print_rule_table(void)
     }
 }
 
+static void print_diagnostic_table(void)
+{
+    omi_serial_write_string("DIAGNOSTIC TABLE count=");
+    omi_serial_write_u32(omi_diagnostic_rule_count());
+    omi_serial_write_string("\n");
+
+    for (uint32_t i = 1; i <= omi_diagnostic_rule_count(); i++) {
+        const omi_diagnostic_rule_t *rule = omi_find_diagnostic_rule((omi_diagnostic_id_t)i);
+        if (!rule) {
+            continue;
+        }
+
+        omi_serial_write_string("DIAG ");
+        omi_serial_write_u32((uint32_t)rule->id);
+        omi_serial_write_string(": ");
+        omi_serial_write_string(rule->severity == OMI_DIAGNOSTIC_VIOLATION ? "violation " : "warning ");
+        omi_serial_write_string(rule->name);
+        omi_serial_write_string("\n");
+    }
+}
+
+static void print_diagnostic_report(const omi_diagnostic_report_t *report)
+{
+    for (uint32_t i = 0; report && i < report->count; i++) {
+        const omi_diagnostic_result_t *result = &report->results[i];
+        if (!result->rule) {
+            continue;
+        }
+
+        omi_serial_write_string(result->rule->severity == OMI_DIAGNOSTIC_VIOLATION ? "VIOLATION " : "WARNING ");
+        omi_serial_write_string(result->rule->name);
+        omi_serial_write_string(" subject=");
+        omi_serial_write_hex32(result->subject);
+        omi_serial_write_string("\n");
+    }
+
+    if (omi_diagnostic_report_valid(report)) {
+        omi_serial_write_string("VALID STATE\n");
+    } else {
+        omi_serial_write_string("OMI INVALID STATE\n");
+    }
+}
+
 static void qemu_debug_exit(void)
 {
     __asm__ volatile("outb %0, %1" : : "a"((uint8_t)0x10), "Nd"((uint16_t)0x00f4));
@@ -137,7 +190,7 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
     omi_serial_init();
 
     omi_serial_write_string("OMI BOOT\n");
-    omi_serial_write_string("OMI PHASE 4 RULE-DERIVED REWRITE EXECUTION\n");
+    omi_serial_write_string("OMI PHASE 6 CONTENT-ADDRESSABLE SYMBOL FIELD\n");
     omi_serial_write_string("multiboot magic=");
     omi_serial_write_hex32(magic);
     omi_serial_write_string(" info=");
@@ -149,6 +202,7 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
     omi_serial_write_size(memory.len);
     omi_serial_write_string("\n");
     print_rule_table();
+    print_diagnostic_table();
 
     uint32_t addr = OMI_ORBIT_SEED;
     omi_rules_state_t previous = {0};
@@ -164,7 +218,7 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
             omi_serial_write_string("CONS REGION FORMED size=");
             omi_serial_write_u32(current.region_count);
             omi_serial_write_string("\n");
-            omi_symbols_from_regions(current.regions, current.region_count, current.orbit_id, &symbols);
+            omi_symbols_from_regions(current.regions, current.region_count, memory, current.orbit_id, &symbols);
             print_symbols(&symbols);
         }
 
@@ -175,8 +229,8 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
                 omi_apply_rewrite_rule(memory, &symbols, rule, &symbol_index)) {
                 omi_serial_write_string("REWRITE rule=");
                 omi_serial_write_string(rule->name);
-                omi_serial_write_string(" symbol=");
-                omi_serial_write_u32(symbol_index);
+                omi_serial_write_string(" symbol_id=");
+                omi_serial_write_hex32(symbols.entries[symbol_index].symbol_id);
                 omi_serial_write_string("\n");
                 rewrites++;
                 previous = (omi_rules_state_t){0};
@@ -185,6 +239,9 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
             }
 
             omi_serial_write_string("OMI STABLE FIXPOINT\n");
+            omi_diagnostic_report_t report;
+            omi_evaluate_diagnostics(&current, &report);
+            print_diagnostic_report(&report);
             break;
         }
 

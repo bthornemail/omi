@@ -17,6 +17,10 @@ runtime rules evaluation, and fixed-point/orbit halt conditions. Phase 3 adds
 symbol extraction and a single rewrite before final re-stabilization.
 Phase 4 derives the rewrite rule from `RULES.omi` through a host-generated rule
 table linked into the kernel.
+Phase 5 also derives a diagnostic table from `RULES.omi` and prints a validity
+certificate after convergence.
+Phase 6 adds content-addressed symbol identity so replay can compare symbols by
+hash/id rather than only table index.
 
 ## Phase 1 Target
 
@@ -108,13 +112,16 @@ The current runtime loop is bounded but semantic:
 3. derive CONS/null/transient relations from traversed address pairs
 4. record a small fixed-size set of CONS edges
 5. extract contiguous CONS regions as symbols
-6. compare the current summary with the previous summary
-7. on the first fixed point, select the extracted rewrite rule
-8. split one symbol region through that rule
-9. re-run from the orbit seed
-10. halt on the next stable fixed point or orbit closure
-11. print `OMI HALT`
-12. exit QEMU through the debug-exit device
+6. compute symbol content hashes and symbol ids
+7. compare the current summary with the previous summary
+8. on the first fixed point, select the extracted rewrite rule
+9. split one symbol region through that rule
+10. re-run from the orbit seed
+11. halt on the next stable fixed point or orbit closure
+12. evaluate named diagnostics
+13. print warnings/violations and `VALID STATE` or `OMI INVALID STATE`
+14. print `OMI HALT`
+15. exit QEMU through the debug-exit device
 
 This loop is deliberately finite so `make run` can be automated.
 

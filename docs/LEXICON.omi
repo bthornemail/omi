@@ -74,3 +74,110 @@ Replay:
 Multiboot2:
   Boot protocol used by GRUB to load the current OMI kernel and graph image
   module.
+
+FRAME:
+  Control-bound, header-scaled, plane-selected region of memory. A frame is the
+  intended future unit of user-space interpretation.
+
+FRAMES.omi:
+  Normative target for frame generation, resolution scaling, Aegean/Braille
+  dialect roles, OMICRON hearing, and future user-space opening.
+
+HEADER8:
+  First complete runtime injection surface. HEADER8 is a dispatch/control
+  witness, not the origin of the ontology.
+
+Pre-header:
+  In-band control ladder that prepares HEADER8. It establishes the order in
+  which distinctions become valid.
+
+ASCII:
+  Sparse decoding plane over `0x00..0x7f`.
+
+BRAILLE:
+  Dense payload/significand dialect over `0x80..0xbf`.
+
+AEGEAN:
+  Lifted header/exponent/governance dialect over `0xc0..0xff`.
+
+OMICRON:
+  Radix-4 control hearing over BOM, ESC, BOUNDARY, and ECC.
+
+BOM unit:
+  Recursion/polarity operator in frame addressing. The field that governs
+  traversal direction and semantic rewrite chirality. Analogous to IEEE
+  sign bit in field layout (but NOT the same semantic domain).
+
+AEGEAN header:
+  Exponent/scale/governance selector in frame addressing. The field
+  that sets the tower abstraction level and header scope. Analogous to
+  IEEE exponent field (but NOT the same semantic domain).
+
+BRAILLE body:
+  Significand/resolution body in frame addressing. The field that
+  defines dense payload and structural resolution density.
+  Analogous to IEEE significand field (but NOT the same semantic domain).
+
+FRAME address:
+  A composition of frame fields: BOM ⊗ AEGEAN ⊗ BRAILLE, interpreted
+  as transform operator composition, NOT arithmetic product.
+
+GAUGE:
+  Transformation operator over codepoint lattice. The function that maps
+  each ASCII codepoint (0x00-0x7F) to a state transformation.
+  Operators: I (Identity), F (Flip/s-toggle), M (Mirror/parity), p/q/r (plane rotations).
+  Key principle: ASCII is operational, not semantic.
+
+GAUGE operator:
+  A primitive transformation over interpreter state:
+  - I = Identity (no state change)
+  - F = Flip (toggle control/data boundary / s-bit)
+  - M = Mirror (parity inversion)
+  - p = Binary plane rotation
+  - q = Decimal plane rotation
+  - r = Hex plane rotation
+
+GAUGE table:
+  The canonical lookup of 128 codepoints to GAUGE operators (defined in docs/GAUGE_TABLE.omi).
+
+OMICRON hearing:
+  The interpretation mode selector function. OMICRON determines whether
+  to continue linear encoding or enter recursion/loop/replay mode based on
+  BOM detection. BOM is the carrier; OMICRON is the hearing.
+
+GNOMON:
+  Self-similarity constraint over recursion depth. NOT a field - is an
+  invariance law requiring that deeper frame interpretation preserves the
+  same structural operator grammar. This is the closure invariant:
+  GAUGE^d(State) maintains equivalent operator basis at any depth d.
+
+GAUGE strata:
+  The four-layer structure of codepoint space:
+  - 0x00-0x1F: Control kernel (system control automata)
+  - 0x20-0x2F: Operator algebra (transformation symbols)
+  - 0x30-0x3F: Evaluation/query space (numeric basis + relational)
+  - 0x40-0x7F: Symbolic manifold (extended grammar)
+
+BOM carrier:
+  The byte-level marker (0xef or control anchor) that triggers
+  OMICRON hearing. BOM is the carrier; OMICRON is the interpretive role.
+
+p (plane rotation):
+  Binary plane rotation operator. Projects interpretation onto
+  binary (0/1) interpretation plane.
+
+q (plane rotation):
+  Decimal plane rotation operator. Projects interpretation onto
+  decimal (0-9) interpretation plane.
+
+r (plane rotation):
+  Hex plane rotation operator. Projects interpretation onto
+  hex (0-F) interpretation plane.
+
+F (flip):
+  Flip operator - toggles s-bit / control-data boundary.
+  Composition: F ∘ F = I
+
+M (mirror):
+  Mirror operator - parity inversion (even↔odd permutation).
+  Composition: M ∘ M = I

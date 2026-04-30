@@ -16,6 +16,8 @@ See [AGENTS.md](/root/omi/AGENTS.md) for the repository coordination contract,
 [docs/BOOT_MODEL.md](/root/omi/docs/BOOT_MODEL.md) for the first boot target.
 
 The normative graph constraint layer is [docs/RULES.omi](/root/omi/docs/RULES.omi).
+The future frame/user-space interpretation contract is
+[docs/FRAMES.omi](/root/omi/docs/FRAMES.omi).
 
 ## Layout
 

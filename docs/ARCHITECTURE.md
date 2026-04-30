@@ -10,6 +10,13 @@ through address traversal and a minimal executable rules engine. Phase 3 makes
 detected structure nameable and rewritable through a fixed symbol table.
 Phase 4 makes the rewrite rule come from `RULES.omi` through a tiny extracted
 rule table.
+Phase 5 makes validity reportable by extracting named diagnostics from
+`RULES.omi` and certifying the final converged state.
+Phase 6 makes symbols content-addressable by deriving stable content hashes and
+symbol ids from region bytes and BOM orbit identity.
+`FRAMES.omi` defines the next abstraction boundary: frame-based user-space
+interpretation where Aegean headers, Braille payload density, and BOM semantic
+orientation become explicit.
 
 ## Core Claim
 
@@ -92,6 +99,16 @@ valid_state = constraints(memory interpreted through BOM and CONS)
 Polyform encodings such as Braille, Aegean, and mixed-base are future external
 views of graph state. They are not authoritative in Phase 1.
 
+### Frame Layer
+
+Frames are the future bridge from kernel-certified symbols to user-space
+interpretation. A frame is a control-bound, header-scaled, plane-selected region
+whose resolution can be interpreted through Aegean governance and Braille
+payload density.
+
+Frame interpretation is not implemented in the kernel yet. The contract lives in
+`FRAMES.omi` and `FRAME_ABI.md`.
+
 ## Phase 1 Data Flow
 
 ```text
@@ -124,6 +141,10 @@ vm_image/omi.img
 - symbol table entries
 - one deterministic split rewrite
 - RULES.omi-derived rewrite table
+- RULES.omi-derived diagnostic table
+- named warnings/violations and final validity certification
+- content-addressed symbol hashes and ids
+- reused symbol detection
 - image builder
 - host replay validator
 - unit tests for the low-level primitives
@@ -138,6 +159,8 @@ vm_image/omi.img
 - graph regions as runtime objects
 - SID/OID promotion as executable logic
 - polyform round-trip validation
+- frame runtime state
+- user-space frame rebinding
 
 ## Design Discipline
 
@@ -146,6 +169,8 @@ OMI keeps three things separate:
 - `RULES.omi` defines validity.
 - `GRAPH_MEMORY_SPEC.md` defines the current byte representation.
 - Kernel/tool code implements the Phase 1 subset.
+- `FRAMES.omi` defines the next interpretation target and should not be
+  back-projected onto current kernel behavior until replay can verify it.
 
 That separation matters. It lets the project grow from a tiny executable proof
 without pretending the whole semantic machine is already complete.

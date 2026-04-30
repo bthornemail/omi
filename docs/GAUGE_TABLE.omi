@@ -1,0 +1,270 @@
+gauge_set OMI_GAUGE_TABLE
+version 0.1
+
+; ============================================================================
+; OMI GAUGE OPERATOR BASIS
+; ============================================================================
+;
+; PURPOSE:
+;   This file defines the canonical 0x00..0x7F finite operator basis for OMI
+;   frame interpretation. Each codepoint is a GAUGE transformation over interpreter state.
+;
+; IMPORTANT:
+;   ASCII is operational, not semantic.
+;   A codepoint applies a GAUGE transform to interpreter state.
+;   Meaning is a side-effect of state transformation.
+;
+; STATUS:
+;   Normative reference for OMICRON hearing layer.
+;   Not yet executed by Phase 6 kernel - defines future ABI target.
+
+; ============================================================================
+; SECTION 1: OPERATOR BASIS DEFINITION
+; ============================================================================
+
+operator I
+  name identity
+  description no state change
+  composition I ∘ I = I
+  parity invariant
+
+operator F
+  name flip
+  description toggle s-bit / control-data boundary / mode polarity
+  composition F ∘ F = I
+  parity flip
+  ; F toggles between Data mode and Control mode
+
+operator M
+  name mirror
+  description parity inversion / symmetry reflection
+  composition M ∘ M = I
+  parity invert
+  ; M inverts even↔odd permutation class
+
+operator p
+  name binary_plane_rotation
+  description projection onto binary (0/1) interpretation plane
+  composition p ∘ p = I
+  parity invariant
+
+operator q
+  name decimal_plane_rotation
+  description projection onto decimal (0-9) interpretation plane
+  composition q ∘ q = I
+  parity invariant
+
+operator r
+  name hex_plane_rotation
+  description projection onto hex (0-F) interpretation plane
+  composition r ∘ r = I
+  parity invariant
+
+; Extended composition rules
+; F∘M = M∘F (F and M commute)
+; p∘q = q∘p (plane rotations commute)
+; p∘r = r∘p
+; q∘r = r∘q
+
+; ============================================================================
+; SECTION 2: STRATA LAYOUT
+; ============================================================================
+
+; Control kernel stratum: 0x00..0x1F
+; System control transitions, separators, control flow primitives
+
+stratum control_kernel
+  range 0x00 0x1f
+  role system_control_automata
+
+; Operator algebra stratum: 0x20..0x2F
+; GAUGE-heavy layer, pure transformation symbols
+
+stratum operator_algebra
+  range 0x20 0x2f
+  role gauge_transformation_symbols
+
+; Evaluation/query stratum: 0x30..0x3F
+; Numeric basis, relational operators, recursion trigger
+
+stratum evaluation_query
+  range 0x30 0x3f
+  role numeric_basis_relational_operators
+  note 0x3F '?' is special recursion probe
+
+; Extended symbolic manifold: 0x40..0x7F
+; Higher grammar, identity-preserving region
+
+stratum symbolic_manifold
+  range 0x40 0x7f
+  role extended_grammar_identity_region
+
+; ============================================================================
+; SECTION 3: GAUGE TRANSITION TABLE (0x00..0x7F)
+; ============================================================================
+; Format: gauge DEC HEX CHAR ACTION PARITY ROLE
+
+gauge 0 0x00 NUL    I       invariant null_gauge
+gauge 1 0x01 SOH    I       invariant start_of_header
+gauge 2 0x02 STX    I       invariant start_of_text_boundary
+gauge 3 0x03 ETX    I       invariant end_of_text_boundary
+gauge 4 0x04 EOT    I       invariant end_of_transmission
+gauge 5 0x05 ENQ    I       invariant enquiry_probe_gauge
+gauge 6 0x06 ACK    I       invariant acknowledge_valid
+gauge 7 0x07 BEL    I       invariant alert_singularity
+
+gauge 8 0x08 BS     F∘M     invert  backspace_undo_fold
+gauge 9 0x09 HT     p       invariant tab_binary_alignment
+gauge 10 0x0A LF    q       invariant line_feed_decimal_step
+gauge 11 0x0B VT    r       invariant vertical_tab_hex_nibble
+gauge 12 0x0C FF    s       flip   form_feed_s_toggle
+gauge 13 0x0D CR    p∘q     invariant carriage_return_bindec
+gauge 14 0x0E SO    F       flip   shift_out_enter_control
+gauge 15 0x0F SI    F       flip   shift_in_exit_control
+
+gauge 16 0x10 DLE   I       invariant data_link_escape
+gauge 17 0x11 DC1   p       invariant device_control_binary_on
+gauge 18 0x12 DC2   p       invariant device_control_binary_off
+gauge 19 0x13 DC3   q       invariant device_control_decimal_on
+gauge 20 0x14 DC4   q       invariant device_control_decimal_off
+gauge 21 0x15 NAK   M       invert  negative_ack_parity_fail
+gauge 22 0x16 SYN   I       invariant synchronous_idle_wait
+gauge 23 0x17 ETB   I       invariant end_transmission_block
+
+gauge 24 0x18 CAN   F∘M∘F  invert  cancel_abort_holonomy
+gauge 25 0x19 EM    I       invariant end_of_medium
+gauge 26 0x1A SUB   M       invert  substitute_replace_gauge
+gauge 27 0x1B ESC   s       flip   escape_enter_s1_mode
+gauge 28 0x1C FS    r∘q     invariant file_separator_hexdec
+gauge 29 0x1D GS    r∘p     invariant group_separator_hexbin
+gauge 30 0x1E RS    q∘p     invariant record_separator_decbin
+gauge 31 0x1F US    p∘q∘r   invariant unit_separator_full_mix
+
+gauge 32 0x20 SPACE I       invariant identity_no_operation
+gauge 33 0x21 EXCL   M       invert  negation_invert_parity
+gauge 34 0x22 QUOT  I       invariant quote_literal_gauge
+gauge 35 0x23 HASH  p∘q∘r   invariant hash_three_plane_mix
+gauge 36 0x24 DOLL  s∘M     flip    dollar_value_with_sign
+gauge 37 0x25 PERC  r       invariant percent_hex_ratio
+gauge 38 0x26 AMP   p∘q     invariant ampersand_binANDdec
+gauge 39 0x27 APOS  I       invariant apostrophe_literal
+
+gauge 40 0x28 LPAR  F       flip   left_paren_open_control
+gauge 41 0x29 RPAR  F       flip   right_paren_close_control
+gauge 42 0x2A STAR  p∘q∘r∘s flip   star_full_gauge_rotation
+gauge 43 0x2B PLUS  s       flip   plus_enter_utf7base64
+gauge 44 0x2C COMMA I       invariant comma_pause_transport
+gauge 45 0x2D MINUS s       flip   minus_exit_utf7base64
+gauge 46 0x2E DOT   I       invariant period_lattice_point
+gauge 47 0x2F SLASH I       invariant slash_repeat_relation
+
+gauge 48 0x30 ZERO  I       invariant zero_null_position
+gauge 49 0x31 ONE   p       invariant one_binary_unit
+gauge 50 0x32 TWO   p∘p     invariant two_binary_pair
+gauge 51 0x33 THR   p∘p∘p   invariant three_binary_triple
+gauge 52 0x34 FOUR  q       invariant four_decimal_unit
+gauge 53 0x35 FIVE  q∘p     invariant five_decimal_binary
+gauge 54 0x36 SIX   r       invariant six_hex_unit
+gauge 55 0x37 SEV   r∘p     invariant seven_hex_binary
+gauge 56 0x38 EIGH  r∘q     invariant eight_hex_decimal
+gauge 57 0x39 NINE  r∘q∘p   invariant nine_all_three_planes
+
+gauge 58 0x3A COLON M       invert  colon_parity_assignment
+gauge 59 0x3B SEMI  I       invariant semicolon_statement_end
+gauge 60 0x3C LESS  F∘p     flip   less_left_fold
+gauge 61 0x3D EQUAL I       invariant equals_gauge_equivalence
+gauge 62 0x3E GREA  F∘p     flip   greater_right_fold
+gauge 63 0x3F QUES  M∘F     flip    question_probe_parity
+gauge 64 0x40 AT    s∘p∘q∘r flip   at_full_context_switch
+
+gauge 65 0x41 A     I       invariant uppercase_invariant_data
+gauge 66 0x42 B     I       invariant uppercase_invariant_data
+gauge 67 0x43 C     I       invariant uppercase_invariant_data
+gauge 68 0x44 D     I       invariant uppercase_invariant_data
+gauge 69 0x45 E     I       invariant uppercase_invariant_data
+gauge 70 0x46 F     I       invariant uppercase_invariant_data
+gauge 71 0x47 G     I       invariant uppercase_invariant_data
+gauge 72 0x48 H     I       invariant uppercase_invariant_data
+gauge 73 0x49 I     I       invariant uppercase_invariant_data
+gauge 74 0x4A J     I       invariant uppercase_invariant_data
+gauge 75 0x4B K     I       invariant uppercase_invariant_data
+gauge 76 0x4C L     I       invariant uppercase_invariant_data
+gauge 77 0x4D M     I       invariant uppercase_invariant_data
+gauge 78 0x4E N     I       invariant uppercase_invariant_data
+gauge 79 0x4F O     I       invariant uppercase_invariant_data
+
+gauge 80 0x50 P     I       invariant uppercase_invariant_data
+gauge 81 0x51 Q     I       invariant uppercase_invariant_data
+gauge 82 0x52 R     I       invariant uppercase_invariant_data
+gauge 83 0x53 S     I       invariant uppercase_invariant_data
+gauge 84 0x54 T     I       invariant uppercase_invariant_data
+gauge 85 0x55 U     I       invariant uppercase_invariant_data
+gauge 86 0x56 V     I       invariant uppercase_invariant_data
+gauge 87 0x57 W     I       invariant uppercase_invariant_data
+gauge 88 0x58 X     I       invariant uppercase_invariant_data
+gauge 89 0x59 Y     I       invariant uppercase_invariant_data
+gauge 90 0x5A Z     I       invariant uppercase_invariant_data
+
+gauge 91 0x5B LBRAC F       flip   left_bracket_open_array
+gauge 92 0x5C BACKS s       flip   backslash_escape_next
+gauge 93 0x5D RBRAC F       flip   right_bracket_close_array
+gauge 94 0x5E CARET p       invariant caret_xor_operator
+gauge 95 0x5F UNDS  I       invariant underscore_identity
+gauge 96 0x60 GRAVE I       invariant backtick_literal
+
+gauge 97 0x61 a     I       invariant lowercase_invariant_data
+gauge 98 0x62 b     I       invariant lowercase_invariant_data
+gauge 99 0x63 c     I       invariant lowercase_invariant_data
+gauge 100 0x64 d    I       invariant lowercase_invariant_data
+gauge 101 0x65 e    I       invariant lowercase_invariant_data
+gauge 102 0x66 f    I       invariant lowercase_invariant_data
+gauge 103 0x67 g    I       invariant lowercase_invariant_data
+gauge 104 0x68 h    I       invariant lowercase_invariant_data
+gauge 105 0x69 i    I       invariant lowercase_invariant_data
+gauge 106 0x6A j    I       invariant lowercase_invariant_data
+gauge 107 0x6B k    I       invariant lowercase_invariant_data
+gauge 108 0x6C l    I       invariant lowercase_invariant_data
+gauge 109 0x6D m    I       invariant lowercase_invariant_data
+gauge 110 0x6E n    I       invariant lowercase_invariant_data
+gauge 111 0x6F o    I       invariant lowercase_invariant_data
+
+gauge 112 0x70 p    I       invariant lowercase_invariant_data
+gauge 113 0x71 q    I       invariant lowercase_invariant_data
+gauge 114 0x72 r    I       invariant lowercase_invariant_data
+gauge 115 0x73 s    I       invariant lowercase_invariant_data
+gauge 116 0x74 t    I       invariant lowercase_invariant_data
+gauge 117 0x75 u    I       invariant lowercase_invariant_data
+gauge 118 0x76 v    I       invariant lowercase_invariant_data
+gauge 119 0x77 w    I       invariant lowercase_invariant_data
+gauge 120 0x78 x    I       invariant lowercase_invariant_data
+gauge 121 0x79 y    I       invariant lowercase_invariant_data
+gauge 122 0x7A z    I       invariant lowercase_invariant_data
+
+gauge 123 0x7B LBRAC F       flip   left_brace_open_block
+gauge 124 0x7C PIPE  p       invariant pipe_or_operator
+gauge 125 0x7D RBRAC F       flip   right_brace_close_block
+gauge 126 0x7E TILD s       flip   tilde_bitwise_not
+gauge 127 0x7F DEL  F∘M∘F∘M invert  delete_erase_holonomy
+
+; ============================================================================
+; SECTION 4: INVARIANTS
+; ============================================================================
+
+invariant GAUGE_CLOSURE:
+  ; The operator basis is closed under composition
+  ; All compositions of basis operators remain within {I, F, M, p, q, r, s}
+  proof F∘F = I, M∘M = I, p∘p = I, q∘q = I, r∘r = I
+
+invariant GNOMON_SELF_SIMILARITY:
+  ; Deeper recursion preserves structural equivalence
+  ; For any depth d: GAUGE^d(State) maintains equivalent operator grammar
+  description recursive_interpretation_preserves_operator_basis
+
+invariant ASCII_OPERATIONAL_NOT_SEMANTIC:
+  ; ASCII codepoints perform state transformations, not carry meaning
+  ; Meaning is a side-effect of GAUGE application to interpreter state
+  description codepoint_transforms_state_not_semantics
+
+; ============================================================================
+; END GAUGE TABLE
+; ============================================================================

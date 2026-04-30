@@ -93,12 +93,17 @@ static void print_symbols(const omi_symbol_table_t *symbols)
     printf("SYMBOL TABLE count=%u\n", symbols ? symbols->count : 0u);
     for (uint32_t i = 0; symbols && i < limit; i++) {
         const omi_symbol_entry_t *symbol = &symbols->entries[i];
-        printf("SYMBOL %u: start=0x%08x len=%u value=0x%02x orbit=0x%08x\n",
+        printf("SYMBOL %u: id=0x%08x content=0x%08x orbit=0x%08x start=0x%08x len=%u value=0x%02x\n",
                i,
+               symbol->symbol_id,
+               symbol->content_hash,
+               symbol->orbit_id,
                symbol->region_start,
                symbol->region_len,
-               symbol->value,
-               symbol->orbit_id);
+               symbol->value);
+        if (symbol->reused) {
+            printf("REUSE DETECTED content=0x%08x\n", symbol->content_hash);
+        }
     }
     if (symbols && symbols->count > limit) {
         printf("SYMBOL ... remaining=%u\n", symbols->count - limit);
@@ -121,6 +126,39 @@ static void print_rule_table(void)
     }
 }
 
+static void print_diagnostic_table(void)
+{
+    printf("DIAGNOSTIC TABLE count=%u\n", omi_diagnostic_rule_count());
+    for (uint32_t i = 1; i <= omi_diagnostic_rule_count(); i++) {
+        const omi_diagnostic_rule_t *rule = omi_find_diagnostic_rule((omi_diagnostic_id_t)i);
+        if (!rule) {
+            continue;
+        }
+
+        printf("DIAG %u: %s %s\n",
+               (unsigned)rule->id,
+               rule->severity == OMI_DIAGNOSTIC_VIOLATION ? "violation" : "warning",
+               rule->name);
+    }
+}
+
+static void print_diagnostic_report(const omi_diagnostic_report_t *report)
+{
+    for (uint32_t i = 0; report && i < report->count; i++) {
+        const omi_diagnostic_result_t *result = &report->results[i];
+        if (!result->rule) {
+            continue;
+        }
+
+        printf("%s %s subject=0x%08x\n",
+               result->rule->severity == OMI_DIAGNOSTIC_VIOLATION ? "VIOLATION" : "WARNING",
+               result->rule->name,
+               result->subject);
+    }
+
+    puts(omi_diagnostic_report_valid(report) ? "VALID STATE" : "OMI INVALID STATE");
+}
+
 int main(int argc, char **argv)
 {
     const char *path = argc > 1 ? argv[1] : "vm_image/omi.img";
@@ -134,6 +172,7 @@ int main(int argc, char **argv)
 
     omi_bom_init(&clock);
     print_rule_table();
+    print_diagnostic_table();
     omi_cons_summary_t first = omi_compute_cons_summary(memory);
     print_tick(clock.tick, memory);
 
@@ -164,7 +203,7 @@ int main(int argc, char **argv)
 
         if (current.region_count > 0) {
             printf("CONS REGION FORMED size=%u\n", current.region_count);
-            omi_symbols_from_regions(current.regions, current.region_count, current.orbit_id, &symbols);
+            omi_symbols_from_regions(current.regions, current.region_count, memory, current.orbit_id, &symbols);
             print_symbols(&symbols);
         }
 
@@ -172,7 +211,9 @@ int main(int argc, char **argv)
             const omi_rewrite_rule_t *rule = omi_first_rewrite_rule();
             uint32_t symbol_index = 0;
             if (rewrites < 1u && omi_apply_rewrite_rule(memory, &symbols, rule, &symbol_index)) {
-                printf("REWRITE rule=%s symbol=%u\n", rule->name, symbol_index);
+                printf("REWRITE rule=%s symbol_id=0x%08x\n",
+                       rule->name,
+                       symbols.entries[symbol_index].symbol_id);
                 rewrites++;
                 previous = (omi_rules_state_t){0};
                 addr = 0x00000001u;
@@ -180,6 +221,9 @@ int main(int argc, char **argv)
             }
 
             puts("OMI STABLE FIXPOINT");
+            omi_diagnostic_report_t report;
+            omi_evaluate_diagnostics(&current, &report);
+            print_diagnostic_report(&report);
             break;
         }
 

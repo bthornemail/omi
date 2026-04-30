@@ -18,9 +18,11 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 3. `ONTOLOGY.omi` defines the core OMI types and relations.
 4. `RULES_GUIDE.md` explains how to read the normative rule file.
 5. `RULES.omi` defines the RFC 2119-style graph constraints.
-6. `GRAPH_MEMORY_SPEC.md` defines the Phase 1 byte-level graph memory ABI.
-7. `BOOT_MODEL.md` explains how the current kernel boots and evaluates memory.
-8. `CONS_THEOREMS.md` records the claims the implementation is trying to make
+6. `FRAMES.omi` defines the future frame/user-space interpretation contract.
+7. `FRAME_ABI.md` explains the frame model in implementation-facing prose.
+8. `GRAPH_MEMORY_SPEC.md` defines the Phase 1 byte-level graph memory ABI.
+9. `BOOT_MODEL.md` explains how the current kernel boots and evaluates memory.
+10. `CONS_THEOREMS.md` records the claims the implementation is trying to make
    mechanically checkable.
 
 ## File Roles
@@ -37,6 +39,13 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 `RULES.omi`
 : Normative constraint layer. Treat this as the source for validity language.
 
+`FRAMES.omi`
+: Normative target for frame interpretation, resolution scaling, and future
+  user-space opening.
+
+`FRAME_ABI.md`
+: Human-readable ABI for control-bound, header-scaled, plane-selected frames.
+
 `RULES_GUIDE.md`
 : Commentary on the rule syntax, modal operators, and Phase 1 subset.
 
@@ -52,6 +61,7 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 ## Source Of Truth
 
 - For validity: use `RULES.omi`.
+- For frame interpretation: use `FRAMES.omi` and `FRAME_ABI.md`.
 - For byte layout: use `GRAPH_MEMORY_SPEC.md`.
 - For boot behavior: use `BOOT_MODEL.md`.
 - For terminology: use `LEXICON.omi`.

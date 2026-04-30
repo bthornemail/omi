@@ -5,6 +5,8 @@
 
 extern const omi_rewrite_rule_t omi_rewrite_rules[];
 extern const uint32_t omi_rewrite_rules_count;
+extern const omi_diagnostic_rule_t omi_diagnostic_rules[];
+extern const uint32_t omi_diagnostic_rules_count;
 
 static void record_cons_edge(omi_rules_state_t *state, uint32_t a, uint32_t b)
 {
@@ -124,8 +126,36 @@ uint32_t omi_extract_cons_regions(omi_memory_view_t memory,
     return count;
 }
 
+uint32_t omi_symbol_content_hash(omi_memory_view_t memory, uint32_t start, uint32_t len)
+{
+    uint32_t hash = 2166136261u;
+
+    if (!memory.bytes || start >= memory.len) {
+        return hash;
+    }
+
+    for (uint32_t i = 0; i < len && start + i < memory.len; i++) {
+        hash ^= memory.bytes[start + i];
+        hash *= 16777619u;
+    }
+
+    return hash;
+}
+
+uint32_t omi_symbol_id(uint32_t content_hash, uint32_t orbit_id)
+{
+    uint32_t x = content_hash ^ orbit_id;
+    x ^= x >> 16;
+    x *= 0x7feb352du;
+    x ^= x >> 15;
+    x *= 0x846ca68bu;
+    x ^= x >> 16;
+    return x;
+}
+
 void omi_symbols_from_regions(const omi_cons_region_t *regions,
                               uint32_t region_count,
+                              omi_memory_view_t memory,
                               uint32_t orbit_id,
                               omi_symbol_table_t *symbols)
 {
@@ -140,11 +170,24 @@ void omi_symbols_from_regions(const omi_cons_region_t *regions,
 
     uint32_t limit = region_count < OMI_MAX_SYMBOLS ? region_count : OMI_MAX_SYMBOLS;
     for (uint32_t i = 0; i < limit; i++) {
+        uint32_t content_hash =
+            omi_symbol_content_hash(memory, regions[i].start, regions[i].length);
+        uint8_t reused = 0;
+        for (uint32_t j = 0; j < i; j++) {
+            if (symbols->entries[j].content_hash == content_hash) {
+                reused = 1;
+                symbols->entries[j].reused = 1;
+            }
+        }
+
         symbols->entries[i] = (omi_symbol_entry_t){
             .region_start = regions[i].start,
             .region_len = regions[i].length,
             .orbit_id = orbit_id,
+            .content_hash = content_hash,
+            .symbol_id = omi_symbol_id(content_hash, orbit_id),
             .value = regions[i].value,
+            .reused = reused,
         };
         symbols->count++;
     }
@@ -210,4 +253,63 @@ int omi_apply_rewrite_rule(omi_memory_view_t memory,
     }
 
     return 0;
+}
+
+const omi_diagnostic_rule_t *omi_find_diagnostic_rule(omi_diagnostic_id_t id)
+{
+    for (uint32_t i = 0; i < omi_diagnostic_rules_count; i++) {
+        if (omi_diagnostic_rules[i].id == id) {
+            return &omi_diagnostic_rules[i];
+        }
+    }
+
+    return 0;
+}
+
+uint32_t omi_diagnostic_rule_count(void)
+{
+    return omi_diagnostic_rules_count;
+}
+
+static void record_diagnostic(omi_diagnostic_report_t *report,
+                              const omi_diagnostic_rule_t *rule,
+                              uint32_t subject)
+{
+    if (!report || !rule || report->count >= OMI_MAX_DIAGNOSTIC_RESULTS) {
+        return;
+    }
+
+    report->results[report->count++] = (omi_diagnostic_result_t){
+        .rule = rule,
+        .subject = subject,
+    };
+
+    if (rule->severity == OMI_DIAGNOSTIC_VIOLATION) {
+        report->violations++;
+    } else if (rule->severity == OMI_DIAGNOSTIC_WARNING) {
+        report->warnings++;
+    }
+}
+
+void omi_evaluate_diagnostics(const omi_rules_state_t *state, omi_diagnostic_report_t *report)
+{
+    if (!report) {
+        return;
+    }
+
+    *report = (omi_diagnostic_report_t){0};
+    if (!state) {
+        return;
+    }
+
+    if (state->summary.transients > 0) {
+        record_diagnostic(report,
+                          omi_find_diagnostic_rule(OMI_DIAGNOSTIC_TRANSIENT_PRESSURE),
+                          state->summary.transients);
+    }
+}
+
+int omi_diagnostic_report_valid(const omi_diagnostic_report_t *report)
+{
+    return report && report->violations == 0;
 }

@@ -36,6 +36,20 @@ $(BUILD_DIR)/image_builder: tools/image_builder.c | $(BUILD_DIR)
 $(BUILD_DIR)/rules_extract: tools/rules_extract.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
+$(BUILD_DIR)/gauge_extract: tools/gauge_extract.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BUILD_DIR)/gauge_table.c: docs/GAUGE_TABLE.omi $(BUILD_DIR)/gauge_extract | $(BUILD_DIR)
+	./$(BUILD_DIR)/gauge_extract docs/GAUGE_TABLE.omi $@
+
+$(BUILD_DIR)/gauge_table.o: $(BUILD_DIR)/gauge_table.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/gauge_replay: tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c $(BUILD_DIR)/gauge_table.o -o $@
+
+gauge: $(BUILD_DIR)/gauge_table.c
+
 $(BUILD_DIR)/rewrite_table.c: docs/RULES.omi $(BUILD_DIR)/rules_extract | $(BUILD_DIR)
 	./$(BUILD_DIR)/rules_extract docs/RULES.omi $@
 
@@ -100,7 +114,7 @@ iso: image kernel
 	printf '%s\n' \
 		'set timeout=0' \
 		'set default=0' \
-		'menuentry "OMI Phase 4" {' \
+		'menuentry "OMI Phase 6" {' \
 		'  multiboot2 /boot/omi-kernel.elf' \
 		'  module2 /boot/omi.img omi.img' \
 		'  boot' \
