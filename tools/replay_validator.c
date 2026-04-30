@@ -1,8 +1,11 @@
 #include "../kernel/include/bom.h"
 #include "../kernel/include/graph.h"
+#include "../kernel/include/rules.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#define SYMBOL_TRACE_LIMIT 4u
 
 static int load_file(const char *path, omi_memory_view_t *memory)
 {
@@ -57,7 +60,7 @@ static uint32_t checksum(omi_memory_view_t memory)
     return hash;
 }
 
-static omi_cons_summary_t print_tick(omi_tick_t tick, omi_memory_view_t memory)
+static void print_tick(omi_tick_t tick, omi_memory_view_t memory)
 {
     omi_cons_summary_t summary = omi_compute_cons_summary(memory);
     printf("BOM tick %u: bytes=%zu bindings=%zu null=%zu transient=%zu checksum=%08x\n",
@@ -67,7 +70,39 @@ static omi_cons_summary_t print_tick(omi_tick_t tick, omi_memory_view_t memory)
            summary.null_collapses,
            summary.transients,
            checksum(memory));
-    return summary;
+}
+
+static void print_orbit(uint32_t step, uint32_t addr, const omi_rules_state_t *state)
+{
+    printf("STEP %u: addr=0x%08x steps=%u bindings=%u null=%u transient=%u cons_edges=%u regions=%u orbit=0x%08x\n",
+           step,
+           addr,
+           state->steps,
+           state->summary.bindings,
+           state->summary.nulls,
+           state->summary.transients,
+           state->cons_edge_count,
+           state->region_count,
+           state->orbit_id);
+}
+
+static void print_symbols(const omi_symbol_table_t *symbols)
+{
+    uint32_t limit = symbols && symbols->count < SYMBOL_TRACE_LIMIT ? symbols->count : SYMBOL_TRACE_LIMIT;
+
+    printf("SYMBOL TABLE count=%u\n", symbols ? symbols->count : 0u);
+    for (uint32_t i = 0; symbols && i < limit; i++) {
+        const omi_symbol_entry_t *symbol = &symbols->entries[i];
+        printf("SYMBOL %u: start=0x%08x len=%u value=0x%02x orbit=0x%08x\n",
+               i,
+               symbol->region_start,
+               symbol->region_len,
+               symbol->value,
+               symbol->orbit_id);
+    }
+    if (symbols && symbols->count > limit) {
+        printf("SYMBOL ... remaining=%u\n", symbols->count - limit);
+    }
 }
 
 int main(int argc, char **argv)
@@ -82,12 +117,13 @@ int main(int argc, char **argv)
     }
 
     omi_bom_init(&clock);
-    omi_cons_summary_t first = print_tick(clock.tick, memory);
+    omi_cons_summary_t first = omi_compute_cons_summary(memory);
+    print_tick(clock.tick, memory);
 
     for (unsigned i = 0; i < ticks; i++) {
         omi_invert_byte_order(memory);
         omi_bom_advance(&clock);
-        (void)print_tick(clock.tick, memory);
+        print_tick(clock.tick, memory);
     }
 
     omi_invert_byte_order(memory);
@@ -98,6 +134,43 @@ int main(int argc, char **argv)
         fprintf(stderr, "replay mismatch after BOM inversion cycle\n");
         free(memory.bytes);
         return 1;
+    }
+
+    uint32_t addr = 0x00000001u;
+    omi_rules_state_t previous = {0};
+    omi_rules_state_t current = {0};
+    omi_symbol_table_t symbols = {0};
+    uint32_t rewrites = 0;
+    for (uint32_t step = 0; step < 1024u; step++) {
+        omi_rules_evaluate(memory, addr, 64u, &current, omi_bom_permute);
+        print_orbit(step, addr, &current);
+
+        if (current.region_count > 0) {
+            printf("CONS REGION FORMED size=%u\n", current.region_count);
+            omi_symbols_from_regions(current.regions, current.region_count, current.orbit_id, &symbols);
+            print_symbols(&symbols);
+        }
+
+        if (step > 0 && omi_rules_summary_equal(&previous.summary, &current.summary)) {
+            if (rewrites < 1u && omi_apply_split_rewrite(memory, &symbols)) {
+                puts("REWRITE: split(symbol=0)");
+                rewrites++;
+                previous = (omi_rules_state_t){0};
+                addr = 0x00000001u;
+                continue;
+            }
+
+            puts("OMI STABLE FIXPOINT");
+            break;
+        }
+
+        if (current.orbit_closed) {
+            puts("OMI ORBIT CLOSED");
+            break;
+        }
+
+        previous = current;
+        addr = omi_bom_permute(addr);
     }
 
     puts("replay deterministic");

@@ -11,7 +11,10 @@ The boot model exists to answer one question:
 Can OMI define a machine, load graph memory into it, run deterministic graph
 evaluation, and prove that the same image can be replayed outside the machine?
 
-Phase 1 answers this with a GRUB Multiboot2 kernel and serial output.
+Phase 1 answered this with a GRUB Multiboot2 kernel and serial output. Phase 2
+kept that boot path and replaced the core loop with BOM address traversal,
+runtime rules evaluation, and fixed-point/orbit halt conditions. Phase 3 adds
+symbol extraction and a single rewrite before final re-stabilization.
 
 ## Phase 1 Target
 
@@ -33,7 +36,10 @@ host shell
   -> Multiboot2 kernel
   -> OMI kernel entry
   -> graph memory module scan
-  -> BOM/CONS loop
+  -> BOM address traversal
+  -> RULES/CONS evaluation
+  -> symbol extraction
+  -> rewrite
 ```
 
 Current artifacts:
@@ -93,15 +99,19 @@ image path.
 
 ## Runtime Loop
 
-The current runtime loop is bounded:
+The current runtime loop is bounded but semantic:
 
-1. print tick `0` summary
-2. invert byte order
-3. advance BOM clock
-4. print tick summary
-5. repeat for three ticks
-6. print `OMI HALT`
-7. exit QEMU through the debug-exit device
+1. begin at orbit seed address `0x00000001`
+2. evaluate executable rules over a fixed orbit window
+3. derive CONS/null/transient relations from traversed address pairs
+4. record a small fixed-size set of CONS edges
+5. extract contiguous CONS regions as symbols
+6. compare the current summary with the previous summary
+7. on the first fixed point, split one symbol region
+8. re-run from the orbit seed
+9. halt on the next stable fixed point or orbit closure
+10. print `OMI HALT`
+11. exit QEMU through the debug-exit device
 
 This loop is deliberately finite so `make run` can be automated.
 

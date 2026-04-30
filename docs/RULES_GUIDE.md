@@ -9,7 +9,8 @@ two ideas:
   checked from the resulting graph of facts
 
 The file is not currently parsed by the kernel. It is a formal design target
-that the kernel and host tools implement in slices.
+that the kernel and host tools implement in slices. Phase 2 adds a hardcoded
+minimal executable subset in `kernel/runtime/rules_engine.c`.
 
 ## Why This Exists
 
@@ -107,12 +108,21 @@ Phase 1 conformance:
 matches the kernel summary.
 
 Phase 2 conformance:
-: The implementation exposes rule violations as named diagnostics.
+: The implementation evaluates the CONS subset through BOM address traversal,
+stores a bounded set of derived CONS edges, and halts on fixed-point or orbit
+closure.
 
 Phase 3 conformance:
-: `RULES.omi` is parsed or compiled rather than hand-translated.
+: The implementation extracts CONS regions as symbols, assigns orbit identity,
+applies one deterministic rewrite, and re-stabilizes.
 
 Phase 4 conformance:
+: The implementation exposes rule violations as named diagnostics.
+
+Phase 5 conformance:
+: `RULES.omi` is parsed or compiled rather than hand-translated.
+
+Phase 6 conformance:
 : regions, SID/OID promotion, and soft pressure metrics become executable.
 
 ## Non-Goals

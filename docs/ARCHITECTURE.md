@@ -4,8 +4,10 @@ OMI is an experimental bootable graph-machine substrate. It starts with a flat
 memory image, boots a tiny kernel in QEMU, interprets bytes as graph material,
 and advances the state through bounded BOM-clocked evaluation.
 
-Phase 1 is deliberately modest: prove that a small graph memory image can be
-loaded, interpreted, summarized, and replayed deterministically.
+Phase 1 proved that a small graph memory image can be loaded, interpreted,
+summarized, and replayed deterministically. Phase 2 made the runtime execute
+through address traversal and a minimal executable rules engine. Phase 3 makes
+detected structure nameable and rewritable through a fixed symbol table.
 
 ## Core Claim
 
@@ -50,8 +52,9 @@ The current implementation treats adjacent byte pairs as pressure sites:
 
 ### BOM Layer
 
-BOM is the temporal operator. In Phase 1, a BOM tick is represented by inverting
-the byte order of the loaded memory view.
+BOM is the temporal and address interpretation operator. Phase 1 used byte-order
+inversion as a visible tick. Phase 2 adds `omi_bom_permute(addr)`, so execution
+is a path through graph memory rather than only a counter loop.
 
 This is intentionally simple. It makes two-tick replay visible:
 
@@ -72,6 +75,9 @@ The same image and rules should produce the same summary in both places.
 
 `RULES.omi` is the normative layer. It says what states are valid, forbidden,
 permitted, and preferred. It does not directly mutate memory.
+
+Phase 2 implements a minimal hardcoded subset in `kernel/runtime/rules_engine.c`.
+This is not a full parser yet; it is the first executable enforcement layer.
 
 Think of it as a fixed-point filter:
 
@@ -108,6 +114,13 @@ vm_image/omi.img
 - BOM clock
 - byte-order inversion
 - byte-pair CONS/null/transient summary
+- BOM address permutation
+- executable rules evaluation over orbit traversal
+- fixed-point/orbit-closure halt conditions
+- CONS region extraction
+- orbit identity hashes
+- symbol table entries
+- one deterministic split rewrite
 - image builder
 - host replay validator
 - unit tests for the low-level primitives
