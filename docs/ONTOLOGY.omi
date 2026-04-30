@@ -1,0 +1,23 @@
+system OMI
+
+type NULL
+type NODE
+type EDGE
+type CONTROL
+type BYTE_NODE
+type CONS
+type BOM_TICK
+
+relation ADJACENT(NODE, NODE)
+relation BINDS(CONS, NODE, NODE)
+relation COLLAPSES(EDGE, NULL)
+relation OSCILLATES(EDGE, BOM_TICK)
+
+invariant GRAPH_INVARIANCE:
+  state := NODE | EDGE | CONTROL | BYTE_NODE
+
+invariant CONS_CLOSURE:
+  adjacency_pressure -> CONS | NULL | transient_oscillation
+
+invariant BOM_TEMPORALITY:
+  time := endian_inversion | byte_order_reinterpretation

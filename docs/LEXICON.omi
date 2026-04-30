@@ -1,0 +1,16 @@
+OMI-GRAPH:
+  The authoritative representation of all system state.
+
+BOM:
+  Byte Order Mark used as a clock principle: each tick is an endian
+  reinterpretation boundary.
+
+CONS:
+  A stable adjacency binding between graph nodes.
+
+NULL field:
+  Memory interpreted as graph nodes before stable adjacency emerges.
+
+Polyform:
+  A reversible external projection of graph state, such as Braille, Aegean, or
+  mixed-base encoding.
