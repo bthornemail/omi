@@ -11,14 +11,16 @@ The guiding model is simple and strict:
 - time is a BOM-clocked byte-order reinterpretation event
 - external encodings are projections, not the source of truth
 
-See [AGENTS.md](/root/omi/AGENTS.md) for the repository coordination contract
-and [docs/BOOT_MODEL.md](/root/omi/docs/BOOT_MODEL.md) for the first boot
-target.
+See [AGENTS.md](/root/omi/AGENTS.md) for the repository coordination contract,
+[docs/README.md](/root/omi/docs/README.md) for the documentation map, and
+[docs/BOOT_MODEL.md](/root/omi/docs/BOOT_MODEL.md) for the first boot target.
+
+The normative graph constraint layer is [docs/RULES.omi](/root/omi/docs/RULES.omi).
 
 ## Layout
 
 ```text
-docs/       OMI ontology, boot model, theorem notes, and graph memory spec
+docs/       OMI ontology, rules, boot model, theorem notes, and memory spec
 kernel/     Bare-metal boot path, runtime loop, and graph VM core
 compiler/   OMI-LISP to graph IR pipeline
 polyform/   Reversible symbolic encodings and render projections

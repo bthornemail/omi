@@ -1,16 +1,76 @@
 OMI-GRAPH:
   The authoritative representation of all system state.
 
+OMI:
+  Experimental bootable graph-machine substrate. OMI begins as a flat memory
+  image interpreted through graph rules and grows toward an OMI-LISP runtime.
+
 BOM:
   Byte Order Mark used as a clock principle: each tick is an endian
   reinterpretation boundary.
 
+BOM tick:
+  One application of the BOM temporal operator. In Phase 1 this reverses the
+  loaded byte array and advances the tick counter.
+
 CONS:
   A stable adjacency binding between graph nodes.
+
+CONS closure:
+  Transitive closure of CONS bindings. Future region formation is expected to
+  derive from this closure.
 
 NULL field:
   Memory interpreted as graph nodes before stable adjacency emerges.
 
+NULL collapse:
+  Resolution outcome for an adjacency pair that contains a NULL node.
+
+Transient:
+  Resolution outcome for an adjacency pair that is neither NULL collapse nor
+  stable CONS binding.
+
 Polyform:
   A reversible external projection of graph state, such as Braille, Aegean, or
   mixed-base encoding.
+
+RULES.omi:
+  Normative constraint layer for OMI-GRAPH state transitions. It uses
+  Datalog-like predicates and RFC2119-style modal operators.
+
+MUST:
+  Hard invariant. A graph state that violates a MUST rule is invalid.
+
+MUST_NOT:
+  Hard prohibition. A graph state that satisfies a MUST_NOT rule is invalid.
+
+SHOULD:
+  Soft constraint or optimization pressure. Exceptions are valid only when the
+  implication is understood and intentionally accepted.
+
+MAY:
+  Permitted extension point. A MAY rule does not create a validity requirement.
+
+OPTIONAL:
+  Implementation choice with no validity penalty.
+
+Region:
+  A graph component derived from CONS closure. Regions are future runtime
+  objects and are not yet implemented in Phase 1.
+
+SID:
+  Stable identifier promoted from an OID after sufficient region stability.
+
+OID:
+  Observed identifier that has not yet reached stable semantic closure.
+
+Projection:
+  External view of graph state. A projection may encode or display OMI-GRAPH
+  but must not become the source of graph truth.
+
+Replay:
+  Host-side recomputation of graph evolution from an image and rule version.
+
+Multiboot2:
+  Boot protocol used by GRUB to load the current OMI kernel and graph image
+  module.

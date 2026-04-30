@@ -1,0 +1,352 @@
+ruleset OMI_RULES
+version 0.1
+
+; STATUS
+;
+; This ruleset is a normative design target. Phase 1 implements the byte-pair
+; CONS subset in C inside the QEMU kernel and host replay validator. A future
+; rule engine may parse or compile this file directly.
+
+; RFC2119/BCP14 MODAL KEYWORDS
+;
+; The key words MUST, MUST_NOT, REQUIRED, SHALL, SHALL_NOT, SHOULD,
+; SHOULD_NOT, RECOMMENDED, MAY, and OPTIONAL in this ruleset are to be
+; interpreted as requirement-level operators in the spirit of RFC 2119.
+;
+; OMI maps those words onto graph-state validation:
+;
+;   MUST        hard invariant; invalid if false
+;   MUST_NOT    hard prohibition; invalid if true
+;   SHOULD      soft constraint; valid exceptions require justification
+;   SHOULD_NOT  discouraged state; non-fatal but pressure should reduce it
+;   MAY         permitted extension point
+;   OPTIONAL    implementation choice with no validity penalty
+
+modal MUST
+modal MUST_NOT
+modal SHOULD
+modal SHOULD_NOT
+modal MAY
+modal OPTIONAL
+
+; DOCUMENT MODEL
+;
+; This file has three kinds of statements:
+;
+;   modal declarations
+;   predicate declarations
+;   modal rules
+;
+; A modal rule has the form:
+;
+;   MODAL conclusion :-
+;     premise,
+;     premise,
+;     condition.
+;
+; A graph state is valid when all MUST conclusions that apply are true and no
+; MUST_NOT conclusion that applies is true.
+
+; PRIMITIVE PREDICATES
+
+predicate memory(N)
+predicate byte(N, V)
+predicate node(N)
+predicate null(N)
+predicate candidate(N)
+predicate control(N)
+predicate hybrid(N)
+predicate adjacent(A, B)
+predicate edge(A, B)
+predicate cons(A, B)
+predicate null_collapse(A, B)
+predicate transient(A, B)
+predicate bom_tick(T)
+predicate bom_aligned(A, B)
+predicate bom_invariant(R, Period)
+predicate boot_start
+predicate byte_order_reinterpreted(T, T_next)
+predicate byte_order_symmetric(A, B)
+predicate region(R)
+predicate region_member(R, N)
+predicate region_stable(R)
+predicate cons_closure(A, B, R)
+predicate consensus_axes(R, Count)
+predicate sid(N)
+predicate oid(N)
+predicate cycle(A, B)
+predicate bom_path(A, B)
+predicate all_must_constraints_hold
+predicate no_must_not_constraints_hold
+predicate valid_state
+
+; DIAGNOSTIC PREDICATES
+
+predicate violation(Code, Subject)
+predicate warning(Code, Subject)
+predicate summary(Key, Value)
+predicate rule_version(V)
+
+; CONFORMANCE PREDICATES
+
+predicate implements_phase(Phase)
+predicate implements_rule(Name)
+predicate deterministic_replay(Image, Ticks)
+predicate kernel_summary(Tick, Bindings, Nulls, Transients)
+predicate replay_summary(Tick, Bindings, Nulls, Transients)
+predicate same_image(Image)
+predicate same_rule_version(V)
+predicate count(Query, Count)
+
+; RULESET IDENTITY
+
+MUST rule_version(0.1) :-
+  valid_state.
+
+; BYTE CLASSIFICATION
+
+MUST node(N) :-
+  memory(N).
+
+MUST null(N) :-
+  byte(N, 0x00).
+
+MUST candidate(N) :-
+  byte(N, V),
+  V >= 0x01,
+  V <= 0x7f.
+
+MUST control(N) :-
+  byte(N, V),
+  V >= 0x80,
+  V <= 0xbf.
+
+MUST hybrid(N) :-
+  byte(N, V),
+  V >= 0xc0,
+  V <= 0xff.
+
+MUST_NOT null(N) :-
+  candidate(N).
+
+MUST_NOT null(N) :-
+  control(N).
+
+MUST_NOT null(N) :-
+  hybrid(N).
+
+MUST_NOT candidate(N) :-
+  control(N).
+
+MUST_NOT candidate(N) :-
+  hybrid(N).
+
+MUST_NOT control(N) :-
+  hybrid(N).
+
+; NULL COLLAPSE
+
+MUST_NOT edge(N, _) :-
+  null(N).
+
+MUST_NOT edge(_, N) :-
+  null(N).
+
+MUST null_collapse(A, B) :-
+  adjacent(A, B),
+  null(A).
+
+MUST null_collapse(A, B) :-
+  adjacent(A, B),
+  null(B).
+
+; PHASE 1 CONS EMERGENCE
+;
+; Phase 1 evaluates memory as adjacent byte pairs. Later rules may refine
+; bom_aligned/2, but this version keeps the kernel and host replay validator
+; byte-sized and deterministic.
+
+MUST cons(A, B) :-
+  adjacent(A, B),
+  node(A),
+  node(B),
+  not null(A),
+  not null(B),
+  byte(A, V),
+  byte(B, V).
+
+MUST transient(A, B) :-
+  adjacent(A, B),
+  node(A),
+  node(B),
+  not null(A),
+  not null(B),
+  byte(A, VA),
+  byte(B, VB),
+  VA != VB.
+
+MUST_NOT cons(A, B) :-
+  null(A).
+
+MUST_NOT cons(A, B) :-
+  null(B).
+
+MUST_NOT transient(A, B) :-
+  cons(A, B).
+
+MUST_NOT transient(A, B) :-
+  null_collapse(A, B).
+
+; BOM TEMPORALITY
+
+MUST bom_tick(0) :-
+  boot_start.
+
+MUST bom_tick(T_next) :-
+  bom_tick(T),
+  T_next = T + 1,
+  byte_order_reinterpreted(T, T_next).
+
+SHOULD bom_aligned(A, B) :-
+  adjacent(A, B),
+  byte_order_symmetric(A, B).
+
+MUST_NOT bom_tick(T_next) :-
+  bom_tick(T),
+  T_next <= T,
+  byte_order_reinterpreted(T, T_next).
+
+; CONS CLOSURE AND REGIONS
+
+MAY region(R) :-
+  cons_closure(A, B, R).
+
+MAY region_member(R, A) :-
+  region(R),
+  cons_closure(A, _, R).
+
+MAY region_member(R, B) :-
+  region(R),
+  cons_closure(_, B, R).
+
+MUST region_stable(R) :-
+  region(R),
+  bom_invariant(R, 2).
+
+; OID TO SID PROMOTION
+
+MAY sid(N) :-
+  region(R),
+  region_member(R, N),
+  region_stable(R),
+  consensus_axes(R, Count),
+  Count >= 2.
+
+MUST oid(N) :-
+  node(N),
+  not sid(N).
+
+MUST_NOT sid(N) :-
+  oid(N),
+  not region_stable(_).
+
+; OPTIMIZATION PRESSURE
+
+SHOULD minimize_transient(A, B) :-
+  transient(A, B).
+
+SHOULD_NOT transient(A, B) :-
+  region_stable(R),
+  region_member(R, A),
+  region_member(R, B).
+
+; GRAPH CORRUPTION CONSTRAINTS
+
+MUST_NOT cycle_without_bom(A, B) :-
+  cycle(A, B),
+  not bom_path(A, B).
+
+; DIAGNOSTICS
+
+MUST violation("null_edge", N) :-
+  null(N),
+  edge(N, _).
+
+MUST violation("null_edge", N) :-
+  null(N),
+  edge(_, N).
+
+MUST violation("null_cons", N) :-
+  null(N),
+  cons(N, _).
+
+MUST violation("null_cons", N) :-
+  null(N),
+  cons(_, N).
+
+SHOULD warning("transient_pressure", A) :-
+  transient(A, _).
+
+SHOULD summary("bindings", Count) :-
+  count(cons(_, _), Count).
+
+SHOULD summary("null_collapses", Count) :-
+  count(null_collapse(_, _), Count).
+
+SHOULD summary("transients", Count) :-
+  count(transient(_, _), Count).
+
+; PHASE 1 CONFORMANCE
+
+MUST implements_phase(1) :-
+  implements_rule("byte_classification"),
+  implements_rule("null_collapse"),
+  implements_rule("phase1_cons_emergence"),
+  implements_rule("bom_tick"),
+  implements_rule("summary_counts").
+
+MUST deterministic_replay(Image, Ticks) :-
+  same_image(Image),
+  same_rule_version(0.1),
+  Ticks >= 2.
+
+MUST replay_summary(T, B, N, X) :-
+  kernel_summary(T, B, N, X),
+  deterministic_replay(_, _).
+
+; VALIDITY
+
+MUST valid_state :-
+  all_must_constraints_hold,
+  no_must_not_constraints_hold.
+
+; EVALUATION ORDER
+;
+; for each BOM tick:
+;   1. interpret memory as byte nodes
+;   2. classify nodes
+;   3. derive adjacency
+;   4. resolve NULL, CONS, and transient relations
+;   5. compute optional regions and SID/OID promotion
+;   6. reject states that violate MUST or MUST_NOT rules
+
+; PHASE 1 EVALUATION NOTES
+;
+; Phase 1 does not store every derived fact. It computes summary counts:
+;
+;   bindings
+;   null_collapses
+;   transients
+;
+; Those counts are acceptable Phase 1 evidence for the implemented subset.
+; Future phases should expose named violations and derived fact tables.
+
+; FUTURE EXTENSION RULES
+;
+; Any future expansion of adjacency MUST preserve replay determinism.
+; Any future projection encoding MUST be reversible or explicitly lossy.
+; Any future SID promotion MUST be based on region stability, not first
+; observation.
+; Any future rule compiler MUST emit a rule version into snapshots.
+
+END OMI_RULES

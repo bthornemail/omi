@@ -7,11 +7,27 @@ type CONTROL
 type BYTE_NODE
 type CONS
 type BOM_TICK
+type RULE
+type MODAL
+type REGION
+type SID
+type OID
+type IMAGE
+type SNAPSHOT
+type PROJECTION
+type CHECKSUM
 
 relation ADJACENT(NODE, NODE)
 relation BINDS(CONS, NODE, NODE)
 relation COLLAPSES(EDGE, NULL)
 relation OSCILLATES(EDGE, BOM_TICK)
+relation CONSTRAINS(RULE, NODE)
+relation STABILIZES(REGION, BOM_TICK)
+relation PROMOTES(OID, SID)
+relation LOADS(IMAGE, NODE)
+relation SNAPSHOTS(SNAPSHOT, IMAGE)
+relation PROJECTS(PROJECTION, REGION)
+relation VERIFIES(CHECKSUM, SNAPSHOT)
 
 invariant GRAPH_INVARIANCE:
   state := NODE | EDGE | CONTROL | BYTE_NODE
@@ -21,3 +37,12 @@ invariant CONS_CLOSURE:
 
 invariant BOM_TEMPORALITY:
   time := endian_inversion | byte_order_reinterpretation
+
+invariant RULE_VALIDITY:
+  valid_state := all(MUST) & none(MUST_NOT)
+
+invariant PROJECTION_NON_AUTHORITY:
+  projection_truth <= graph_truth
+
+invariant REPLAY_DETERMINISM:
+  same(image, tick, rules) -> same(cons_summary)
