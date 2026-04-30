@@ -3,6 +3,9 @@
 #include "../include/bom.h"
 #include "../include/cons.h"
 
+extern const omi_rewrite_rule_t omi_rewrite_rules[];
+extern const uint32_t omi_rewrite_rules_count;
+
 static void record_cons_edge(omi_rules_state_t *state, uint32_t a, uint32_t b)
 {
     if (state->cons_edge_count >= OMI_MAX_CONS_EDGES) {
@@ -149,13 +152,47 @@ void omi_symbols_from_regions(const omi_cons_region_t *regions,
 
 int omi_apply_split_rewrite(omi_memory_view_t memory, const omi_symbol_table_t *symbols)
 {
-    if (!memory.bytes || !symbols || symbols->count == 0) {
+    uint32_t ignored = 0;
+    return omi_apply_rewrite_rule(memory, symbols, omi_find_rewrite_rule(OMI_REWRITE_SPLIT_REGION), &ignored);
+}
+
+const omi_rewrite_rule_t *omi_find_rewrite_rule(omi_rewrite_id_t id)
+{
+    for (uint32_t i = 0; i < omi_rewrite_rules_count; i++) {
+        if (omi_rewrite_rules[i].id == id) {
+            return &omi_rewrite_rules[i];
+        }
+    }
+
+    return 0;
+}
+
+const omi_rewrite_rule_t *omi_first_rewrite_rule(void)
+{
+    return omi_rewrite_rules_count > 0 ? &omi_rewrite_rules[0] : 0;
+}
+
+uint32_t omi_rewrite_rule_count(void)
+{
+    return omi_rewrite_rules_count;
+}
+
+int omi_apply_rewrite_rule(omi_memory_view_t memory,
+                           const omi_symbol_table_t *symbols,
+                           const omi_rewrite_rule_t *rule,
+                           uint32_t *symbol_index)
+{
+    if (!memory.bytes || !symbols || symbols->count == 0 || !rule) {
+        return 0;
+    }
+
+    if (rule->id != OMI_REWRITE_SPLIT_REGION) {
         return 0;
     }
 
     for (uint32_t i = 0; i < symbols->count; i++) {
         const omi_symbol_entry_t *symbol = &symbols->entries[i];
-        if (symbol->region_len < 2u) {
+        if (symbol->region_len < rule->min_region_len) {
             continue;
         }
 
@@ -166,6 +203,9 @@ int omi_apply_split_rewrite(omi_memory_view_t memory, const omi_symbol_table_t *
 
         uint8_t value = memory.bytes[split_at];
         memory.bytes[split_at] = value == 0xffu ? 0x01u : (uint8_t)(value + 1u);
+        if (symbol_index) {
+            *symbol_index = i;
+        }
         return 1;
     }
 

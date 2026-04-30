@@ -15,6 +15,8 @@ Phase 1 answered this with a GRUB Multiboot2 kernel and serial output. Phase 2
 kept that boot path and replaced the core loop with BOM address traversal,
 runtime rules evaluation, and fixed-point/orbit halt conditions. Phase 3 adds
 symbol extraction and a single rewrite before final re-stabilization.
+Phase 4 derives the rewrite rule from `RULES.omi` through a host-generated rule
+table linked into the kernel.
 
 ## Phase 1 Target
 
@@ -107,11 +109,12 @@ The current runtime loop is bounded but semantic:
 4. record a small fixed-size set of CONS edges
 5. extract contiguous CONS regions as symbols
 6. compare the current summary with the previous summary
-7. on the first fixed point, split one symbol region
-8. re-run from the orbit seed
-9. halt on the next stable fixed point or orbit closure
-10. print `OMI HALT`
-11. exit QEMU through the debug-exit device
+7. on the first fixed point, select the extracted rewrite rule
+8. split one symbol region through that rule
+9. re-run from the orbit seed
+10. halt on the next stable fixed point or orbit closure
+11. print `OMI HALT`
+12. exit QEMU through the debug-exit device
 
 This loop is deliberately finite so `make run` can be automated.
 

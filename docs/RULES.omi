@@ -97,6 +97,9 @@ predicate replay_summary(Tick, Bindings, Nulls, Transients)
 predicate same_image(Image)
 predicate same_rule_version(V)
 predicate count(Query, Count)
+predicate rewrite_rule(Id, Name)
+predicate rewrite_min_region_len(Id, Len)
+predicate rewrite_authorized(Id)
 
 ; RULESET IDENTITY
 
@@ -259,6 +262,26 @@ SHOULD_NOT transient(A, B) :-
   region_stable(R),
   region_member(R, A),
   region_member(R, B).
+
+; PHASE 4 REWRITE AUTHORITY
+;
+; This section is intentionally tiny. The host extractor reads the compact
+; rewrite declaration below and emits a C rule table for the kernel and replay
+; validator. This is not a full RULES.omi compiler yet.
+
+rewrite split_region min_region_len 2.
+
+MUST rewrite_rule(1, "split_region") :-
+  region(R),
+  region_length(R, Len),
+  Len >= 2.
+
+MUST rewrite_min_region_len(1, 2) :-
+  rewrite_rule(1, "split_region").
+
+MUST rewrite_authorized(1) :-
+  rewrite_rule(1, "split_region"),
+  rewrite_min_region_len(1, 2).
 
 ; GRAPH CORRUPTION CONSTRAINTS
 

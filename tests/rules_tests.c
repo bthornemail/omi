@@ -27,8 +27,15 @@ int main(void)
     assert(symbols.count == state.region_count || symbols.count == OMI_MAX_SYMBOLS);
     assert(symbols.count > 0);
 
+    const omi_rewrite_rule_t *rule = omi_first_rewrite_rule();
+    uint32_t symbol_index = 99;
     uint8_t before = bytes[symbols.entries[0].region_start + (symbols.entries[0].region_len / 2u)];
-    assert(omi_apply_split_rewrite(memory, &symbols) == 1);
+    assert(omi_rewrite_rule_count() == 1);
+    assert(rule);
+    assert(rule->id == OMI_REWRITE_SPLIT_REGION);
+    assert(rule->min_region_len == 2);
+    assert(omi_apply_rewrite_rule(memory, &symbols, rule, &symbol_index) == 1);
+    assert(symbol_index == 0);
     assert(bytes[symbols.entries[0].region_start + (symbols.entries[0].region_len / 2u)] != before);
     return 0;
 }

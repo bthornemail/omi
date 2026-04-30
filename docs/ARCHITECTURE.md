@@ -8,6 +8,8 @@ Phase 1 proved that a small graph memory image can be loaded, interpreted,
 summarized, and replayed deterministically. Phase 2 made the runtime execute
 through address traversal and a minimal executable rules engine. Phase 3 makes
 detected structure nameable and rewritable through a fixed symbol table.
+Phase 4 makes the rewrite rule come from `RULES.omi` through a tiny extracted
+rule table.
 
 ## Core Claim
 
@@ -121,6 +123,7 @@ vm_image/omi.img
 - orbit identity hashes
 - symbol table entries
 - one deterministic split rewrite
+- RULES.omi-derived rewrite table
 - image builder
 - host replay validator
 - unit tests for the low-level primitives

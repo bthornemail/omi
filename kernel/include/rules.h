@@ -10,6 +10,17 @@
 #define OMI_MAX_CONS_REGIONS 64u
 #define OMI_MAX_SYMBOLS 64u
 
+typedef enum omi_rewrite_id {
+    OMI_REWRITE_NONE = 0,
+    OMI_REWRITE_SPLIT_REGION = 1
+} omi_rewrite_id_t;
+
+typedef struct omi_rewrite_rule {
+    omi_rewrite_id_t id;
+    const char *name;
+    uint16_t min_region_len;
+} omi_rewrite_rule_t;
+
 typedef struct omi_edge {
     uint32_t a;
     uint32_t b;
@@ -67,5 +78,12 @@ void omi_symbols_from_regions(const omi_cons_region_t *regions,
                               uint32_t orbit_id,
                               omi_symbol_table_t *symbols);
 int omi_apply_split_rewrite(omi_memory_view_t memory, const omi_symbol_table_t *symbols);
+const omi_rewrite_rule_t *omi_find_rewrite_rule(omi_rewrite_id_t id);
+const omi_rewrite_rule_t *omi_first_rewrite_rule(void);
+uint32_t omi_rewrite_rule_count(void);
+int omi_apply_rewrite_rule(omi_memory_view_t memory,
+                           const omi_symbol_table_t *symbols,
+                           const omi_rewrite_rule_t *rule,
+                           uint32_t *symbol_index);
 
 #endif

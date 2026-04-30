@@ -8,7 +8,7 @@ ISO_ROOT := $(BUILD_DIR)/iso
 KERNEL_ELF := $(BUILD_DIR)/omi-kernel.elf
 OMI_ISO := $(BUILD_DIR)/omi.iso
 
-.PHONY: all test image kernel iso run replay clean
+.PHONY: all test image kernel iso run replay rules clean
 
 all: test image replay kernel iso
 
@@ -27,14 +27,28 @@ $(BUILD_DIR)/cons_tests: tests/cons_tests.c kernel/vm/cons_engine.c | $(BUILD_DI
 $(BUILD_DIR)/bom_tests: tests/bom_tests.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(BUILD_DIR)/rules_tests: tests/rules_tests.c kernel/runtime/rules_engine.c kernel/runtime/bom.c kernel/vm/cons_engine.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ -o $@
+$(BUILD_DIR)/rules_tests: tests/rules_tests.c kernel/runtime/rules_engine.c kernel/runtime/bom.c kernel/vm/cons_engine.c $(BUILD_DIR)/rewrite_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/rules_tests.c kernel/runtime/rules_engine.c kernel/runtime/bom.c kernel/vm/cons_engine.c $(BUILD_DIR)/rewrite_table.o -o $@
 
 $(BUILD_DIR)/image_builder: tools/image_builder.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(BUILD_DIR)/replay_validator: tools/replay_validator.c kernel/boot/bom_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c | $(BUILD_DIR)
+$(BUILD_DIR)/rules_extract: tools/rules_extract.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
+
+$(BUILD_DIR)/rewrite_table.c: docs/RULES.omi $(BUILD_DIR)/rules_extract | $(BUILD_DIR)
+	./$(BUILD_DIR)/rules_extract docs/RULES.omi $@
+
+$(BUILD_DIR)/rewrite_table.o: $(BUILD_DIR)/rewrite_table.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/rewrite_table.kernel.o: $(BUILD_DIR)/rewrite_table.c | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c $< -o $@
+
+rules: $(BUILD_DIR)/rewrite_table.c
+
+$(BUILD_DIR)/replay_validator: tools/replay_validator.c kernel/boot/bom_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tools/replay_validator.c kernel/boot/bom_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o -o $@
 
 $(BUILD_DIR)/boot.o: kernel/boot/boot.S | $(BUILD_DIR)
 	$(CC) $(KERNEL_ASFLAGS) -c $< -o $@
@@ -60,8 +74,8 @@ $(BUILD_DIR)/bom.kernel.o: kernel/runtime/bom.c | $(BUILD_DIR)
 $(BUILD_DIR)/rules_engine.kernel.o: kernel/runtime/rules_engine.c | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c $< -o $@
 
-$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o kernel/linker.ld
-	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o -o $@
+$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o kernel/linker.ld
+	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o -o $@
 
 test: $(BUILD_DIR)/boot_tests $(BUILD_DIR)/graph_tests $(BUILD_DIR)/cons_tests $(BUILD_DIR)/bom_tests $(BUILD_DIR)/rules_tests
 	./$(BUILD_DIR)/boot_tests
@@ -86,7 +100,7 @@ iso: image kernel
 	printf '%s\n' \
 		'set timeout=0' \
 		'set default=0' \
-		'menuentry "OMI Phase 3" {' \
+		'menuentry "OMI Phase 4" {' \
 		'  multiboot2 /boot/omi-kernel.elf' \
 		'  module2 /boot/omi.img omi.img' \
 		'  boot' \

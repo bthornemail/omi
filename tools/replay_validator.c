@@ -105,6 +105,22 @@ static void print_symbols(const omi_symbol_table_t *symbols)
     }
 }
 
+static void print_rule_table(void)
+{
+    printf("RULE TABLE count=%u\n", omi_rewrite_rule_count());
+    for (uint32_t i = 0; i < omi_rewrite_rule_count(); i++) {
+        const omi_rewrite_rule_t *rule = omi_find_rewrite_rule((omi_rewrite_id_t)(i + 1u));
+        if (!rule) {
+            continue;
+        }
+
+        printf("RULE %u: %s min_region_len=%u\n",
+               (unsigned)rule->id,
+               rule->name,
+               rule->min_region_len);
+    }
+}
+
 int main(int argc, char **argv)
 {
     const char *path = argc > 1 ? argv[1] : "vm_image/omi.img";
@@ -117,6 +133,7 @@ int main(int argc, char **argv)
     }
 
     omi_bom_init(&clock);
+    print_rule_table();
     omi_cons_summary_t first = omi_compute_cons_summary(memory);
     print_tick(clock.tick, memory);
 
@@ -152,8 +169,10 @@ int main(int argc, char **argv)
         }
 
         if (step > 0 && omi_rules_summary_equal(&previous.summary, &current.summary)) {
-            if (rewrites < 1u && omi_apply_split_rewrite(memory, &symbols)) {
-                puts("REWRITE: split(symbol=0)");
+            const omi_rewrite_rule_t *rule = omi_first_rewrite_rule();
+            uint32_t symbol_index = 0;
+            if (rewrites < 1u && omi_apply_rewrite_rule(memory, &symbols, rule, &symbol_index)) {
+                printf("REWRITE rule=%s symbol=%u\n", rule->name, symbol_index);
                 rewrites++;
                 previous = (omi_rules_state_t){0};
                 addr = 0x00000001u;

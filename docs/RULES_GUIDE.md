@@ -117,12 +117,16 @@ Phase 3 conformance:
 applies one deterministic rewrite, and re-stabilizes.
 
 Phase 4 conformance:
-: The implementation exposes rule violations as named diagnostics.
+: `RULES.omi` names at least one rewrite, a host extractor emits a C rule
+table, and the kernel executes a rewrite by rule id.
 
 Phase 5 conformance:
-: `RULES.omi` is parsed or compiled rather than hand-translated.
+: The implementation exposes rule violations as named diagnostics.
 
 Phase 6 conformance:
+: `RULES.omi` is parsed or compiled beyond the tiny rewrite declaration.
+
+Phase 7 conformance:
 : regions, SID/OID promotion, and soft pressure metrics become executable.
 
 ## Non-Goals

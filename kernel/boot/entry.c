@@ -105,6 +105,28 @@ static void print_symbols(const omi_symbol_table_t *symbols)
     }
 }
 
+static void print_rule_table(void)
+{
+    omi_serial_write_string("RULE TABLE count=");
+    omi_serial_write_u32(omi_rewrite_rule_count());
+    omi_serial_write_string("\n");
+
+    for (uint32_t i = 0; i < omi_rewrite_rule_count(); i++) {
+        const omi_rewrite_rule_t *rule = omi_find_rewrite_rule((omi_rewrite_id_t)(i + 1u));
+        if (!rule) {
+            continue;
+        }
+
+        omi_serial_write_string("RULE ");
+        omi_serial_write_u32((uint32_t)rule->id);
+        omi_serial_write_string(": ");
+        omi_serial_write_string(rule->name);
+        omi_serial_write_string(" min_region_len=");
+        omi_serial_write_u32(rule->min_region_len);
+        omi_serial_write_string("\n");
+    }
+}
+
 static void qemu_debug_exit(void)
 {
     __asm__ volatile("outb %0, %1" : : "a"((uint8_t)0x10), "Nd"((uint16_t)0x00f4));
@@ -115,7 +137,7 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
     omi_serial_init();
 
     omi_serial_write_string("OMI BOOT\n");
-    omi_serial_write_string("OMI PHASE 3 SYMBOLIC REWRITE FIELD\n");
+    omi_serial_write_string("OMI PHASE 4 RULE-DERIVED REWRITE EXECUTION\n");
     omi_serial_write_string("multiboot magic=");
     omi_serial_write_hex32(magic);
     omi_serial_write_string(" info=");
@@ -126,6 +148,7 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
     omi_serial_write_string("graph bytes=");
     omi_serial_write_size(memory.len);
     omi_serial_write_string("\n");
+    print_rule_table();
 
     uint32_t addr = OMI_ORBIT_SEED;
     omi_rules_state_t previous = {0};
@@ -146,8 +169,15 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
         }
 
         if (step > 0 && omi_rules_summary_equal(&previous.summary, &current.summary)) {
-            if (rewrites < OMI_MAX_REWRITE_PASSES && omi_apply_split_rewrite(memory, &symbols)) {
-                omi_serial_write_string("REWRITE: split(symbol=0)\n");
+            const omi_rewrite_rule_t *rule = omi_first_rewrite_rule();
+            uint32_t symbol_index = 0;
+            if (rewrites < OMI_MAX_REWRITE_PASSES &&
+                omi_apply_rewrite_rule(memory, &symbols, rule, &symbol_index)) {
+                omi_serial_write_string("REWRITE rule=");
+                omi_serial_write_string(rule->name);
+                omi_serial_write_string(" symbol=");
+                omi_serial_write_u32(symbol_index);
+                omi_serial_write_string("\n");
                 rewrites++;
                 previous = (omi_rules_state_t){0};
                 addr = OMI_ORBIT_SEED;
