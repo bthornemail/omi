@@ -1,5 +1,32 @@
 #include "../include/gauge.h"
+#include "../include/escape.h"
 #include <stdint.h>
+#include <string.h>
+
+uint8_t gauge_header_decode(uint8_t current_header, uint8_t byte)
+{
+    switch (current_header) {
+        case GAUGE_HEADER_PLAIN:
+            if (byte == 0x1B) {
+                return GAUGE_HEADER_ESCAPE;
+            }
+            if (byte <= 0x1F) {
+                return GAUGE_HEADER_CONTROL;
+            }
+            return GAUGE_HEADER_PLAIN;
+            
+        case GAUGE_HEADER_ESCAPE:
+            if (byte == 'Q' || byte == 'q') {
+                return GAUGE_HEADER_QUOTED;
+            }
+            return GAUGE_HEADER_PLAIN;
+            
+        case GAUGE_HEADER_CONTROL:
+        case GAUGE_HEADER_QUOTED:
+        default:
+            return GAUGE_HEADER_PLAIN;
+    }
+}
 
 #ifndef KERNEL_MODE
 #include <stdio.h>
@@ -203,13 +230,32 @@ int gauge_meta_equiv(omi_gauge_state_t *a, omi_gauge_state_t *b)
     return 1;
 }
 
-omi_gauge_state_t gauge_step(omi_gauge_state_t state, uint8_t byte, uint8_t omicron_mode)
+omi_gauge_state_t gauge_step(omi_gauge_state_t state, omi_escape_state_t *esc, uint8_t *header, uint8_t byte, uint8_t omicron_mode, uint8_t *op_out, uint8_t *resolved_out)
 {
-    uint8_t op = gauge_lookup(byte);
-    
     (void)omicron_mode;
-    
-    return gauge_apply(state, op);
+    *op_out = GAUGE_NOOP;
+    *resolved_out = 0; // Initialize to 0
+
+    uint8_t out;
+    int kind = escape_step(esc, byte, &out);
+
+    if (kind == 1) {
+        // We have a resolved byte from the escape processing
+        *resolved_out = out; // Store the resolved byte for header decoding
+        
+        // Update the header state using the resolved byte (ESC-resolved stream)
+        *header = gauge_header_decode(*header, out);
+
+        // Look up the gauge op for the resolved byte
+        uint8_t op = gauge_lookup(out);
+        *op_out = op;
+
+        // Apply the gauge op to the state
+        return gauge_apply(state, op);
+    }
+
+    // If kind != 1, then we don't have a resolved byte, so we don't update header or apply any op.
+    return state;
 }
 
 #ifndef KERNEL_MODE
@@ -227,11 +273,15 @@ void gauge_print_state(omi_gauge_state_t state, uint8_t omicron_mode, size_t dep
 void gauge_trace(uint8_t *bytes, size_t len, uint8_t omicron_mode)
 {
     omi_gauge_state_t state = { .core = { .parity = 0, .plane = 0, .mode_bit = 0 } };
+    omi_escape_state_t esc;
+    escape_init(&esc);
+    uint8_t header = GAUGE_HEADER_PLAIN;
     
     printf("GAUGE TRACE:\n");
     for (size_t i = 0; i < len; i++) {
-        uint8_t op = gauge_lookup(bytes[i]);
-        state = gauge_step(state, bytes[i], omicron_mode);
+        uint8_t op;
+        uint8_t resolved_byte;
+        state = gauge_step(state, &esc, &header, bytes[i], omicron_mode, &op, &resolved_byte);
         
         size_t depth = (omicron_mode == OMICRON_RECURSIVE) ? i + 1 : 0;
         

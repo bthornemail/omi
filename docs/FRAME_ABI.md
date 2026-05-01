@@ -411,16 +411,32 @@ Formal: state_{t+1} = GAUGE_APPLY(state_t, Γ(byte_t))
 This invariant is enforced in `gauge_step()`:
 
 ```c
-omi_gauge_state_t gauge_step(omi_gauge_state_t state, uint8_t byte)
+omi_gauge_state_t gauge_step(omi_gauge_state_t state, omi_escape_state_t *esc, uint8_t *header, uint8_t byte, uint8_t omicron_mode, uint8_t *op_out, uint8_t *resolved_out)
 {
-    uint8_t op = gauge_lookup(byte);      // step 1: pure lookup
-    // OMICRON mode modifies depth only
-    switch (omicron_mode) {
-        case OMICRON_RECURSIVE:
-            state.depth++;            // metadata only
-            break;
+    (void)omicron_mode;
+    *op_out = GAUGE_NOOP;
+    *resolved_out = 0; // Initialize to 0
+
+    uint8_t out;
+    int kind = escape_step(esc, byte, &out);
+
+    if (kind == 1) {
+        // We have a resolved byte from the escape processing
+        *resolved_out = out; // Store the resolved byte for header decoding
+        
+        // Update the header state using the resolved byte (ESC-resolved stream)
+        *header = gauge_header_decode(*header, out);
+
+        // Look up the gauge op for the resolved byte
+        uint8_t op = gauge_lookup(out);
+        *op_out = op;
+
+        // Apply the gauge op to the state
+        return gauge_apply(state, op);
     }
-    return gauge_apply(state, op);    // step 3: exactly one apply
+
+    // If kind != 1, then we don't have a resolved byte, so we don't update header or apply any op.
+    return state;
 }
 ```
 

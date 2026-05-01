@@ -35,14 +35,13 @@ static int pop_scope(omi_escape_state_t *state)
 
 int escape_step(omi_escape_state_t *state, uint8_t input, uint8_t *output)
 {
-    *output = 0;
-    
     switch (state->mode) {
         case ESC_MODE_DATA:
             if (input == 0x1B) {
                 state->mode = ESC_MODE_ESCAPE_PENDING;
                 return 0;
             }
+            *output = input;
             return 1;
             
         case ESC_MODE_ESCAPE_PENDING:

@@ -45,8 +45,8 @@ $(BUILD_DIR)/gauge_table.c: docs/GAUGE_TABLE.omi $(BUILD_DIR)/gauge_extract | $(
 $(BUILD_DIR)/gauge_table.o: $(BUILD_DIR)/gauge_table.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/gauge_replay: tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c $(BUILD_DIR)/gauge_table.o -o $@
+$(BUILD_DIR)/gauge_replay: tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o -o $@
 
 gauge: $(BUILD_DIR)/gauge_table.c
 
