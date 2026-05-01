@@ -1,0 +1,397 @@
+#+TITLE: OMI 10-Layer OSI Model
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:3
+
+* OMI Extended OSI Model
+:PROPERTIES:
+:ID:       omi-osi-root
+:END:
+
+This document defines the extended 10-layer OSI model for OMI systems,
+using S-P-O (Subject-Predicate-Object) triangular coordination for
+grouping and reference links.
+
+The base layers (1-7) follow standard OSI semantics adapted for OMI.
+Layers 8-10 extend the model for macros, adapters, and organization.
+
+* Layer Architecture Overview
+
+| Layer | Name          | S-P-O Role             | Scope            |
+|-------+---------------+------------------------+------------------|
+|    10 | Organization  | node/links_to/node     | Structure        |
+|     9 | Adapters      | repr_A/adapts_to/repr_B| Translation      |
+|     8 | Macros        | structure/rewrites_to/ | Transformation   |
+|     7 | Application   | trace/is_interpreted/  | Semantics        |
+|     6 | Presentation  | trace+mode/derives/    | Projection       |
+|     5 | Session       | mode/controls/         | OMICRON          |
+|     4 | Transport     | stream/produces/Γ      | Trace            |
+|     3 | Network       | state+op/transforms/   | Gauge            |
+|     2 | Data Link     | byte/maps_to/operator  | Encoding         |
+|     1 | Physical      | bitstream/is/raw       | Bits             |
+
+* Layer 1 — Physical (Bits)
+:PROPERTIES:
+:ID:       omi-osi-l1
+:END:
+
+** S-P-O Definition
+
+| Subject    | Predicate       | Object         |
+|------------+-----------------+----------------|
+| bitstream  | is_transmitted  | raw_signal     |
+| raw_signal | decodes_to      | byte_stream    |
+
+** Contract
+- Input: raw electrical/optical signals
+- Output: byte stream
+- Responsibility: transmission and reception of raw bits
+
+** OMI Mapping
+- Raw bytes entering the system
+- Byte Order Mark (BOM) detection boundary
+- No interpretation at this layer
+
+* Layer 2 — Data Link (Encoding)
+:PROPERTIES:
+:ID:       omi-osi-l2
+:END:
+
+** S-P-O Definition
+
+| Subject | Predicate | Object         |
+|---------+-----------+----------------|
+| byte    | maps_to   | gauge_operator |
+| byte    | belongs   | codepoint_space|
+
+** Contract
+- Input: byte stream
+- Output: GAUGE operator mapping
+- Responsibility: frame delimiting, byte-to-operator translation
+
+** OMI Mapping
+- ASCII codepoint lookup (0x00–0x7F)
+- GAUGE_TABLE.omi operator resolution
+- Γ(byte) = gauge_lookup(byte) — deterministic
+
+* Layer 3 — Network (Gauge)
+:PROPERTIES:
+:ID:       omi-osi-l3
+:END:
+
+** S-P-O Definition
+
+| Subject  | Predicate   | Object        |
+|----------+-------------+---------------|
+| state    | applies     | operator      |
+| operator | transforms  | new_state     |
+| state    | has         | core {parity, plane, mode_bit} |
+
+** Contract
+- Input: (state, operator)
+- Output: new state
+- Responsibility: state transition logic
+
+** OMI Mapping
+- gauge_apply(state, op) → new state
+- CORE state: {parity, plane, mode_bit}
+- 32 states × 22 operators = 704 transitions (exhaustively verified)
+
+** Determinism Contract
+All transitions must be deterministic:
+#+BEGIN_SRC
+∀ s ∈ State, ∀ op ∈ Operator:
+  gauge_apply(s, op) = gauge_apply(s, op)
+#+END_SRC
+
+* Layer 4 — Transport (Trace)
+:PROPERTIES:
+:ID:       omi-osi-l4
+:END:
+
+** S-P-O Definition
+
+| Subject     | Predicate | Object             |
+|-------------+-----------+--------------------|
+| byte_stream | produces  | Γ (operator sequence)|
+| Γ           | preserves | execution_order     |
+
+** Contract
+- Input: byte stream
+- Output: Γ (ordered operator sequence)
+- Responsibility: reliable operator sequence delivery
+- Invariant: Γ is IDENTICAL across all OMICRON modes
+
+** OMI Mapping
+- Trace is a free monoid over Γ
+- Mode-independent: Γ_linear = Γ_recursive = Γ_replay
+
+* Layer 5 — Session (OMICRON)
+:PROPERTIES:
+:ID:       omi-osi-l5
+:END:
+
+** S-P-O Definition
+
+| Subject     | Predicate | Object             |
+|-------------+-----------+--------------------|
+| mode        | controls  | execution_strategy |
+| OMICRON     | wraps     | gauge_step        |
+
+** Contract
+- Input: execution mode
+- Output: session control metadata
+- Responsibility: managing execution sessions
+- Critical constraint: MUST NOT modify Γ
+
+** OMI Mapping
+- OMICRON modes: LINEAR, RECURSIVE, REPLAY
+- Controls traversal metadata only (depth, mode)
+- π projection operators
+
+* Layer 6 — Presentation (Projection π)
+:PROPERTIES:
+:ID:       omi-osi-l6
+:END:
+
+** S-P-O Definition
+
+| Subject      | Predicate | Object        |
+|--------------+-----------+---------------|
+| (trace,mode) | derives   | META          |
+| π_linear     | projects  | identity_view |
+| π_recursive  | projects  | depth_view    |
+| π_replay     | projects  | replay_view   |
+
+** Contract
+- Input: trace + OMICRON mode
+- Output: derived META state
+- Responsibility: data representation and projection
+- META is derived, not mutated from CORE
+
+** OMI Mapping
+- META = π(trace, omicron_mode)
+- π_composition laws: π_a ∘ π_b = π_{a⊗b}
+- π_replay is idempotent for canonical replay
+
+* Layer 7 — Application (Semantics)
+:PROPERTIES:
+:ID:       omi-osi-l7
+:END:
+
+** S-P-O Definition
+
+| Subject | Predicate         | Object       |
+|---------+-------------------+--------------|
+| trace   | is_interpreted_as | structure    |
+| graph   | represents        | computation  |
+| state   | means             | meaning      |
+
+** Contract
+- Input: trace/state
+- Output: semantic interpretation
+- Responsibility: high-level meaning assignment
+- Constraint: interpretation only, no mutation
+
+** OMI Mapping
+- Category theory interpretation (admitted, not proven)
+- CONS regions as graph semantics
+- ASCII is operational, not semantic
+
+* Layer 8 — Macros (Transform Surface)
+:PROPERTIES:
+:ID:       omi-osi-l8
+:END:
+
+** S-P-O Definition
+
+| Subject   | Predicate     | Object         |
+|-----------+---------------+----------------|
+| structure | rewrites_to   | new_structure  |
+| dot       | expands_to    | pre-lisp       |
+| macro     | transforms    | expression     |
+
+** Contract
+- Input: syntactic structure
+- Output: expanded/transformed structure
+- Responsibility: structural rewriting
+- Constraint: deterministic, replayable, no hidden state
+
+** OMI Mapping
+- dot-notation expansion
+- pre-lisp normalization
+- RULES.omi macro definitions
+- Template transformations
+
+** Example: Dot Notation Expansion
+#+BEGIN_SRC lisp
+  ;; Before macro expansion
+  (. a b c)
+
+  ;; After macro expansion
+  (cons a (cons b (cons c nil)))
+#+END_SRC
+
+* Layer 9 — Adapters (Boundary Interfaces)
+:PROPERTIES:
+:ID:       omi-osi-l9
+:END:
+
+** S-P-O Definition
+
+| Subject          | Predicate  | Object           |
+|------------------+------------+------------------|
+| representation_A | adapts_to  | representation_B |
+| text             | parses_to  | AST              |
+| AST              | compiles_to| omi_ir           |
+| trace            | renders_to | org_document     |
+| org              | extracts_to| build_artifacts  |
+
+** Contract
+- Input: representation in domain A
+- Output: representation in domain B
+- Responsibility: cross-domain translation
+- Must declare: INVARIANTS (preserved) and LOSSES (dropped)
+
+** Adapter Declarations
+| Adapter    | Invariants              | Losses               |
+|------------+-------------------------+----------------------|
+| dot→ast    | structure, ordering     | comments, whitespace |
+| ast→omi    | operator identity       | syntactic sugar      |
+| trace→org  | execution order, state  | raw binary           |
+| org→build  | file dependencies       | formatting           |
+
+** Tree-Sitter Integration
+#+BEGIN_SRC
+  ;; Adapter: text → AST via Tree-sitter
+  (defadapter text->ast
+    :tool tree-sitter
+    :preserves (structure ordering)
+    :loses (comments whitespace formatting))
+#+END_SRC
+
+* Layer 10 — Organization (Structure Surface)
+:PROPERTIES:
+:ID:       omi-osi-l10
+:END:
+
+** S-P-O Definition
+
+| Subject | Predicate | Object |
+|---------+-----------+--------|
+| node    | links_to  | node   |
+| file    | contains  | section|
+| concept | references| concept|
+
+** Contract
+- Input: all lower-layer entities
+- Output: graph structure (links, hierarchy, grouping)
+- Responsibility: arrangement and navigation
+- Constraint: NO transformation, NO interpretation, NO execution
+- MUST NOT introduce new information — only arrange existing nodes
+
+** Organization handles:
+- Hierarchy (trees, tries, graphs)
+- Naming and addressing
+- Grouping and classification
+- Cross-references between layers
+- Layout in org files
+- Navigation paths
+
+** Organization does NOT:
+- Execute (L3–L5)
+- Interpret (L7)
+- Transform (L8)
+- Translate (L9)
+
+** Sparse Radix Trie Structure
+The S-P-O system creates a navigable radix trie:
+
+#+BEGIN_EXAMPLE
+  L10-organization.org
+  ├── gauge/transforms/state
+  │   └── [[file:L3-gauge.org::state-transitions]]
+  ├── trace/produces/Γ
+  │   └── [[file:L4-trace.org::operator-sequence]]
+  ├── macros/rewrites_to/pre-lisp
+  │   └── [[file:L8-macros.org::dot-expansion]]
+  ├── adapters/adapts_to/AST
+  │   └── [[file:L9-adapters.org::tree-sitter]]
+  └── omicron/controls/execution
+      └── [[file:L5-omicron.org::mode-selection]]
+#+END_EXAMPLE
+
+* Cross-Layer S-P-O Index
+:PROPERTIES:
+:ID:       omi-osi-index
+:END:
+
+See [[file:S-P-O.org]] for the complete formal specification of all S-P-O triples
+across all layers as a navigable, executable graph.
+
+* Invariants Across All Layers
+
+** CORE/META Separation
+- GAUGE_APPLY mutates CORE only (parity, plane, mode_bit)
+- OMICRON/π mutates META only (depth, mode)
+- META = π(trace, mode) — derived, not stored independently
+
+** Execution Invariance
+- Γ(byte) is identical across all OMICRON modes
+- state_{t+1} = GAUGE_APPLY(state_t, Γ(byte_t)) — exactly once per byte
+
+** Layer Contracts
+- Lower layers (1–3): deterministic, no observation
+- Middle layers (4–6): trace and projection, no execution mutation
+- Upper layers (7–8): interpretation and transformation
+- Boundary layers (9): declared invariants and losses
+- Top layer (10): arrangement only, no new information
+
+** Adapter Invariants
+Every adapter must declare:
+1. What structure is preserved
+2. What information is lost
+3. What domain mapping is performed
+
+* Documentation Structure
+
+Each layer maps to a dedicated Org file:
+
+| Layer | File                          |
+|-------+-------------------------------|
+|     1 | L1-physical.org               |
+|     2 | L2-encoding.org               |
+|     3 | L3-gauge.org                  |
+|     4 | L4-trace.org                  |
+|     5 | L5-session-omicron.org        |
+|     6 | L6-projection-pi.org          |
+|     7 | L7-semantics.org              |
+|     8 | L8-macros.org                 |
+|     9 | L9-adapters.org               |
+|    10 | L10-organization.org          |
+
+* Verification
+
+All layers maintain these verification criteria:
+
+- [ ] Each layer has defined input/output types
+- [ ] Each layer operates only on its contract
+- [ ] No layer mutates state belonging to another layer
+- [ ] All S-P-O triples are bidirectional (navigable both ways)
+- [ ] Adapters declare invariants and losses
+- [ ] Organization layer introduces no new information
+
+* Meta
+:PROPERTIES:
+:ID:       omi-osi-meta
+:END:
+
+This document is itself an instance of L10 (Organization).
+It arranges and links concepts without transforming them.
+
+The S-P-O structure within this document forms a navigable
+graph that can be traversed in multiple directions:
+
+- Subject → Object (forward navigation)
+- Object → Subject (reverse navigation)
+- Predicate → all relations (relationship index)

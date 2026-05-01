@@ -1,0 +1,56 @@
+#+TITLE: Layer 9 — Adapters (Boundary Interfaces)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 9 — Adapters (Boundary Interfaces)
+:PROPERTIES:
+:ID:       omi-osi-l9
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject          | Predicate  | Object           | MODALITY |
+|------------------+------------+------------------+----------|
+| representation_A | adapts_to  | representation_B | MUST     |
+| adapter          | declares   | invariants       | MUST     |
+| adapter          | declares   | losses           | MUST     |
+| adapter          | mutates    | lower_layer_state| MUST_NOT |
+| adapter          | preserves  | declared_inv     | MUST     |
+| adapter          | drops      | declared_loss    | MAY      |
+
+** Contract (Normative)
+- Input: representation in domain A — MUST be valid
+- Output: representation in domain B — MUST be valid
+- Responsibility: cross-domain translation — MUST preserve declared invariants
+- Constraint: MUST NOT mutate lower-layer state
+- Constraint: MAY drop declared losses
+
+** Adapter Declarations (with modal validation)
+| Adapter    | Invariants (MUST preserve) | Losses (MAY drop)      |
+|------------+----------------------------+------------------------|
+| dot→ast    | structure, ordering        | comments, whitespace   |
+| ast→omi    | operator identity          | syntactic sugar        |
+| trace→org  | execution order, state     | raw binary             |
+| org→build  | file dependencies          | formatting             |
+
+** Tree-Sitter Integration
+#+BEGIN_SRC
+  ;; Adapter: text → AST via Tree-sitter
+  (defadapter text->ast
+    :tool tree-sitter
+    :preserves (structure ordering)
+    :loses (comments whitespace formatting))
+#+END_SRC
+
+** Implementation Notes
+- This layer handles translation between different representations — MUST not alter lower-layer state
+- Each adapter must declare what is preserved (invariants) and what is lost — MUST do so explicitly
+- The adapters are the boundaries between the OMI system and external domains — MUST respect layer boundaries
+- Examples include parsing text to an AST, compiling AST to OMI IR, rendering traces to Org documents, and extracting build artifacts from Org files

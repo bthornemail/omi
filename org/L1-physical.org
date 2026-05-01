@@ -1,0 +1,39 @@
+#+TITLE: Layer 1 — Physical (Bits)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 1 — Physical (Bits)
+:PROPERTIES:
+:ID:       omi-osi-l1
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject    | Predicate       | Object         | MODALITY |
+|------------+-----------------+----------------+----------|
+| bitstream  | is_transmitted  | raw_signal     | MUST     |
+| raw_signal | decodes_to      | byte_stream    | MUST     |
+
+** Contract (Normative)
+- Input: raw electrical/optical signals — MUST be well-formed
+- Output: byte stream — MUST preserve bit integrity
+- Responsibility: transmission and reception of raw bits — MUST NOT introduce errors
+- Constraint: MUST NOT perform interpretation of bit meaning
+
+** OMI Mapping
+- Raw bytes entering the system — MUST be processed in order
+- Byte Order Mark (BOM) detection boundary — MUST be respected
+- No interpretation at this layer — MUST NOT assign meaning to bits
+
+** Implementation Notes
+- Corresponds to the physical input interface of the OMI system
+- Handles raw bitstream from memory or I/O devices — MUST preserve bit ordering
+- BOM detection occurs at the boundary between L1 and L2 — MUST be performed correctly
+- No processing or interpretation of bit meaning occurs here — MUST remain oblivious to semantics

@@ -1,0 +1,40 @@
+#+TITLE: Layer 5 — Session (OMICRON)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 5 — Session (OMICRON)
+:PROPERTIES:
+:ID:       omi-osi-l5
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject     | Predicate | Object             | MODALITY |
+|-------------+-----------+--------------------+----------|
+| mode        | controls  | execution_strategy | MUST     |
+| OMICRON     | wraps     | gauge_step         | MUST     |
+
+** Contract (Normative)
+- Input: execution mode — MUST be valid OMICRON mode
+- Output: session control metadata — MUST be accurate
+- Responsibility: managing execution sessions — MUST NOT modify Γ
+- Critical constraint: MUST NOT modify Γ
+
+** OMI Mapping
+- OMICRON modes: LINEAR, RECURSIVE, REPLAY — MUST be the only valid modes
+- Controls traversal metadata only (depth, mode) — MUST NOT affect trace or state
+- π projection operators — MUST be derived from (trace, mode)
+
+** Implementation Notes
+- This layer does not alter the trace Γ, but only how it is traversed — MUST preserve Γ integrity
+- LINEAR: process each operator in sequence once — MUST follow sequential order
+- RECURSIVE: allow recursive descent into sub-expressions (as defined by macros) — MUST maintain trace integrity
+- REPLAY: re-execute a previously recorded trace with the same Γ and resulting state — MUST produce identical results
+- The mode controls the execution strategy but the underlying Γ remains the same — MUST NOT alter Γ

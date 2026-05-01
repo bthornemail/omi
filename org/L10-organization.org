@@ -1,0 +1,67 @@
+#+TITLE: Layer 10 — Organization (Structure Surface)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 10 — Organization (Structure Surface)
+:PROPERTIES:
+:ID:       omi-osi-l10
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject | Predicate | Object | MODALITY |
+|---------+-----------+--------+----------|
+| node    | links_to  | node   | SHOULD   |
+| file    | contains  | section| MUST     |
+| concept | references| concept| MAY      |
+
+** Contract (Normative)
+- Input: all lower-layer entities — MUST be valid entities from L1-L9
+- Output: graph structure (links, hierarchy, grouping) — MUST accurately represent inputs
+- Responsibility: arrangement and navigation — MUST NOT introduce new information
+- Constraint: NO transformation, NO interpretation, NO execution — MUST remain passive
+
+** Organization handles:
+- Hierarchy (trees, tries, graphs) — SHOULD preserve structural relationships
+- Naming and addressing — MUST be unique and resolvable
+- Grouping and classification — MAY overlap or be hierarchical
+- Cross-references between layers — MUST maintain layer boundaries
+- Layout in org files — SHOULD follow readability guidelines
+- Navigation paths — MUST be functional and correct
+
+** Organization does NOT:
+- Execute (L3–L5) — MUST NOT perform state transitions
+- Interpret (L7) — MUST NOT assign semantic meaning
+- Transform (L8) — MUST NOT alter structure
+- Translate (L9) — MUST NOT change representation
+
+** Sparse Radix Trie Structure
+The S-P-O system creates a navigable radix trie:
+
+#+BEGIN_EXAMPLE
+  L10-organization.org
+  ├── gauge/transforms/state
+  │   └── [[file:L3-gauge.org::state-transitions]]
+  ├── trace/produces/Γ
+  │   └── [[file:L4-trace.org::operator-sequence]]
+  ├── macros/rewrites_to/pre-lisp
+  │   └── [[file:L8-macros.org::dot-expansion]]
+  ├── adapters/adapts_to/AST
+  │   └── [[file:L9-adapters.org::tree-sitter]]
+  └── omicron/controls/execution
+      └── [[file:L5-omicron.org::mode-selection]]
+#+END_EXAMPLE
+
+** Implementation Notes
+- This layer is responsible for the structure of the documentation itself — MUST accurately reflect the system
+- It creates links between nodes (e.g., from a concept in one file to another) — MUST maintain referential integrity
+- It does not alter the content of the nodes, only how they are connected — MUST NOT modify node content
+- The example shows a hierarchical organization of concepts by layer and topic — SHOULD follow logical grouping
+- Each leaf node is a link to a specific point in another Org file (using Org mode links) — MUST be valid links

@@ -1,0 +1,157 @@
+#+TITLE: Formal S-P-O Graph Specification
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Introduction
+This document formalizes the S-P-O (Subject-Predicate-Object) graph as a navigable, executable structure.
+Each triple represents a directed edge in the graph, and the collection of all triples forms a
+bidirectional knowledge graph that can be traversed in multiple directions.
+
+* S-P-O Triples by Layer
+
+** Layer 1 — Physical (Bits)
+- bitstream →[is_transmitted]→ raw_signal
+- raw_signal →[decodes_to]→ byte_stream
+
+** Layer 2 — Data Link (Encoding)
+- byte →[maps_to]→ gauge_operator
+- byte →[belongs]→ codepoint_space
+
+** Layer 3 — Network (Gauge)
+- state →[applies]→ operator
+- operator →[transforms]→ new_state
+- state →[has]→ core_fields
+
+** Layer 4 — Transport (Trace)
+- byte_stream →[produces]→ Γ
+- Γ →[preserves]→ execution_order
+
+** Layer 5 — Session (OMICRON)
+- mode →[controls]→ execution_strategy
+- OMICRON →[wraps]→ gauge_step
+
+** Layer 6 — Presentation (Projection π)
+- (trace,mode) →[derives]→ META
+- π_linear →[projects]→ identity_view
+- π_recursive →[projects]→ depth_view
+- π_replay →[projects]→ replay_view
+
+** Layer 7 — Application (Semantics)
+- trace →[is_interpreted_as]→ structure
+- graph →[represents]→ computation
+- state →[means]→ meaning
+
+** Layer 8 — Macros (Transform Surface)
+- structure →[rewrites_to]→ new_structure
+- dot →[expands_to]→ pre-lisp
+- macro →[transforms]→ expression
+
+** Layer 9 — Adapters (Boundary Interfaces)
+- representation_A →[adapts_to]→ representation_B
+- text →[parses_to]→ AST
+- AST →[compiles_to]→ omi_ir
+- trace →[renders_to]→ org_document
+- org →[extracts_to]→ build_artifacts
+
+** Layer 10 — Organization (Structure Surface)
+- node →[links_to]→ node
+- file →[contains]→ section
+- concept →[references]→ concept
+
+* Bidirectional Navigation Rules
+For every S-P-O triple (subject, predicate, object), the following navigations are defined:
+
+1. Forward: subject --[predicate]--> object
+2. Backward: object <--[predicate_inverse]-- subject
+3. Predicate lookup: predicate --> [all_relations]--> (subject, object) pairs
+
+** Inverse Predicates
+The following inverse predicates are defined for backward navigation:
+
+- is_transmitted ←[is_received_by]← bitstream
+- decodes_to ←[is_encoded_from]← raw_signal
+- maps_to ←[is_mapped_from]← byte
+- belongs ←[contains_codepoint]← byte
+- applies ←[is_applied_by]← state
+- transforms ←[is_transformed_by]← operator
+- has ←[is_had_by]← state
+- produces ←[is_produced_by]← byte_stream
+- preserves ←[is_preserved_in]← Γ
+- controls ←[is_controlled_by]← mode
+- wraps ←[is_wrapped_by]← OMICRON
+- derives ←[is_derived_from]← (trace,mode)
+- projects ←[is_projected_by]← π_[linear|recursive|replay]
+- is_interpreted_as ←[interprets]← trace
+- represents ←[is_represented_by]← graph
+- means ←[is_meant_by]← state
+- rewrites_to ←[is_rewritten_from]← structure
+- expands_to ←[is_expanded_from]← dot
+- transforms ←[is_transformed_by]← macro
+- adapts_to ←[is_adapted_from]← representation_A
+- parses_to ←[is_parsed_from]← text
+- compiles_to ←[is_compiled_from]← AST
+- renders_to ←[is_rendered_from]← trace
+- extracts_to ←[is_extracted_from]← org
+- links_to ←[is_linked_from]← node
+- contains ←[is_contained_in]← file
+- references ←[is_referenced_by]← concept
+
+* Executable Graph Queries
+The following query patterns are supported:
+
+** Find all objects related to a subject via a predicate:
+#+BEGIN_SRC org
+subject:byte
+predicate:maps_to
+#-> gauge_operator
+#+END_SRC
+
+** Find all subjects related to an object via a predicate:
+#+BEGIN_SRC org
+object:gauge_operator
+predicate:inverse_of(maps_to)
+#-> byte
+#+END_SRC
+
+** Find all triples containing a specific predicate:
+#+BEGIN_SRC org
+predicate:maps_to
+#-> (byte, gauge_operator)
+#+END_SRC
+
+** Find all triples containing a specific subject:
+#+BEGIN_SRC org
+subject:byte
+#-> [(byte, maps_to, gauge_operator), (byte, belongs, codepoint_space)]
+#+END_SRC
+
+* Graph Properties
+The S-P-O graph has the following properties:
+
+1. **Layered Structure**: Triples are organized by layer (L1-L10)
+2. **Bidirectional**: Every triple can be traversed forward and backward
+3. **Typed**: Subjects, predicates, and objects have semantic types
+4. **Executable**: The graph can be queried and traversed programmatically
+5. **Consistent**: No contradictory triples exist within the same context
+
+* Implementation Notes
+This S-P-O graph specification can be implemented as:
+
+1. A set of Prolog facts for logical querying
+2. A database table with (subject, predicate, object) columns
+3. A graph database with nodes and edges
+4. In-memory data structures for runtime traversal
+
+Each triple represents a valid transformation or relationship in the OMI system,
+and the graph as a whole represents the complete semantic structure of the
+10-layer OSI model.
+
+* Verification
+To verify the S-P-O graph is correct:
+
+1. Every triple appears in exactly one layer specification
+2. All predicates are defined with clear semantics
+3. Bidirectional navigation rules are consistent
+4. No layer violations exist (e.g., L1 triple depending on L5 concepts)
+5. The graph is acyclic when considering layer dependencies (L1→L2→...→L10)

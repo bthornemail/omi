@@ -1,0 +1,41 @@
+#+TITLE: Layer 7 — Application (Semantics)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 7 — Application (Semantics)
+:PROPERTIES:
+:ID:       omi-osi-l7
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject | Predicate         | Object       | MODALITY |
+|---------+-------------------+--------------+----------|
+| trace   | is_interpreted_as | structure    | MAY      |
+| graph   | represents        | computation  | MAY      |
+| state   | means             | meaning      | MAY      |
+
+** Contract (Normative)
+- Input: trace/state — MUST be valid trace/state from lower layers
+- Output: semantic interpretation — MAY vary by context
+- Responsibility: high-level meaning assignment — MUST NOT mutate trace or state
+- Constraint: interpretation only, no mutation — MUST NOT alter system state
+
+** OMI Mapping
+- Category theory interpretation (admitted, not proven) — MAY be used for understanding
+- CONS regions as graph semantics — MAY be identified in trace
+- ASCII is operational, not semantic — MUST NOT assign semantic meaning to raw ASCII
+
+** Implementation Notes
+- This layer assigns meaning to the trace and state without altering them — MUST NOT write to trace or state
+- It interprets the trace as a structure (e.g., a list, tree, or graph) — MAY produce different structures based on context
+- The graph represents a computation (e.g., a reduction or transformation) — MAY be interpreted as different computations
+- The state's meaning is derived from its role in the computation — MAY depend on observer context
+- No mutation occurs at this layer; it is purely observational — MUST remain read-only with respect to trace and state

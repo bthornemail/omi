@@ -1,0 +1,130 @@
+#+TITLE: OMI 10-Layer OSI Model Development Walkthrough
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Introduction
+This walkthrough guides you through the OMI 10-layer OSI model documentation organized in the org/ folder. Each layer corresponds to a specific Org file that details its S-P-O (Subject-Predicate-Object) definitions, contracts, and OMI mappings.
+
+* Navigation Structure
+The org/ folder contains:
+- OSI-MODEL.org: The master document defining all 10 layers
+- L1-physical.org through L10-organization.org: Individual layer specifications
+- This WALKTHROUGH.org: Guidance on using the documentation
+
+* How to Use This Documentation
+** For Developers
+1. Start with OSI-MODEL.org to understand the overall architecture
+2. Refer to individual layer files for detailed specifications
+3. Use the S-P-O triples to understand data flow between layers
+4. Follow the verification checklist to ensure layer compliance
+
+** For Documentation Contributors
+1. Maintain the S-P-O structure when adding new information
+2. Ensure each layer only operates within its defined contract
+3. Update the cross-layer index when adding new triples
+4. Preserve the invariant declarations
+
+* Layer-by-Layer Walkthrough
+** Layer 1: Physical (L1-physical.org)
+- Deals with raw bitstream transmission
+- No interpretation occurs at this layer
+- Boundary with Layer 2 handles BOM detection
+
+** Layer 2: Data Link (L2-encoding.org)
+- Maps bytes to GAUGE operators
+- Uses ASCII codepoint lookup (0x00-0x7F)
+- Implements Γ(byte) = gauge_lookup(byte)
+
+** Layer 3: Network (L3-gauge.org)
+- Implements state transition logic
+- gauge_apply(state, op) → new_state
+- CORE state: {parity, plane, mode_bit}
+- 32 states × 22 operators = 704 transitions
+
+** Layer 4: Transport (L4-trace.org)
+- Produces Γ (operator sequence) from byte stream
+- Γ is identical across all OMICRON modes
+- Trace is a free monoid over Γ
+
+** Layer 5: Session (L5-session-omicron.org)
+- Controls execution strategy via OMICRON modes
+- MODES: LINEAR, RECURSIVE, REPLAY
+- Critical constraint: MUST NOT modify Γ
+
+** Layer 6: Presentation (L6-projection-pi.org)
+- Derives META state from (trace, mode)
+- Different π projections for different modes:
+  - π_linear: identity_view
+  - π_recursive: depth_view
+  - π_replay: replay_view
+
+** Layer 7: Application (L7-semantics.org)
+- Assigns semantic interpretation to trace/state
+- No mutation occurs at this layer
+- trace → structure, graph → computation, state → meaning
+
+** Layer 8: Macros (L8-macros.org)
+- Handles structural rewriting/transformations
+- Examples: dot-notation expansion, pre-lisp normalization
+- Constraint: deterministic, replayable, no hidden state
+
+** Layer 9: Adapters (L9-adapters.org)
+- Cross-domain translation between representations
+- Each adapter must declare INVARIANTS and LOSSES
+- Examples: text→AST, AST→OMI-IR, trace→org, org→build
+
+** Layer 10: Organization (L10-organization.org)
+- Pure structural arrangement, no transformation
+- Handles hierarchy, naming, grouping, cross-references
+- Creates navigable radix trie structure via S-P-O links
+
+* Verification Checklist
+When implementing or modifying any layer, verify:
+- [ ] Each layer has defined input/output types
+- [ ] Each layer operates only on its contract
+- [ ] No layer mutates state belonging to another layer
+- [ ] All S-P-O triples are bidirectional (navigable both ways)
+- [ ] Adapters declare invariants and losses
+- [ ] Organization layer introduces no new information
+
+* Cross-Layer Navigation
+Use Org mode links to navigate between layers:
+- Example: [[file:L3-gauge.org]] links to the Gauge layer specification
+- Example: [[file:L4-trace.org::operator-sequence]] links to a specific subsection
+- The S-P-O index in OSI-MODEL.org provides a complete reference
+
+* Development Workflow
+1. Identify which layer your change affects
+2. Ensure your change stays within that layer's contract
+3. Update the corresponding Org file with S-P-O definitions
+4. Verify against the layer contract and invariants
+5. Update cross-references if needed
+6. Run any validation checks for determinism/replayability
+
+* Common Patterns
+** Adding New S-P-O Triples
+1. Add to the appropriate layer's S-P-O Definition table
+2. Add to the Cross-Layer S-P-O Index in OSI-MODEL.org
+3. Verify the triple doesn't violate layer contracts
+4. Ensure bidirectional navigability is maintained
+
+** Modifying Layer Contracts
+1. Rarely done - contracts are meant to be stable
+2. Requires updating all dependent layers
+3. Must update verification criteria
+4. Requires consensus across OMI development team
+
+* Troubleshooting
+** If you encounter non-deterministic behavior:**
+- Check Layers 1-3 for proper implementation of gauge_apply
+- Verify that Γ is identical across OMICRON modes (Layer 4)
+- Ensure META is derived, not stored independently (Layer 6)
+
+** If you encounter unexpected state mutations:**
+- Verify that Layers 1-3 only mutate CORE state
+- Ensure Layers 5-6 only mutate META state
+- Check that upper layers (7-8) don't mutate state at all
+
+* Conclusion
+This 10-layer OSI model provides a rigorous framework for understanding and developing OMI systems. By strictly adhering to layer contracts and maintaining the S-P-O coordination structure, we ensure determinism, replayability, and clear separation of concerns across the system.

@@ -1,0 +1,42 @@
+#+TITLE: Layer 8 — Macros (Transform Surface)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 8 — Macros (Transform Surface)
+:PROPERTIES:
+:ID:       omi-osi-l8
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject   | Predicate     | Object         | MODALITY |
+|-----------+---------------+----------------+----------|
+| structure | rewrites_to   | new_structure  | MUST     |
+| dot       | expands_to    | pre-lisp       | MUST     |
+| macro     | transforms    | expression     | MUST     |
+
+** Contract (Normative)
+- Input: syntactic structure — MUST be valid OMI-LISP/AST
+- Output: expanded/transformed structure — MUST be valid OMI-LISP/AST
+- Responsibility: structural rewriting — MUST be deterministic and replayable
+- Constraint: MUST be deterministic, replayable, no hidden state
+
+** OMI Mapping
+- dot-notation expansion — MUST follow defined expansion rules
+- pre-lisp normalization — MUST produce canonical form
+- RULES.omi macro definitions — MUST be explicitly defined
+- Template transformations — MUST preserve semantic equivalence
+
+** Implementation Notes
+- This layer handles structural transformations of the OMI representation — MUST not change semantics
+- It implements macro expansion, such as dot-notation to cons-cells — MUST produce correct expansion
+- Transformations are deterministic and replayable — MUST produce same output for same input
+- No hidden state is introduced during transformation — MUST be stateless
+- Example: Dot notation expansion converts (. a b c) to (cons a (cons b (cons c nil))) — MUST be exact

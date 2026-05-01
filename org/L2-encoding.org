@@ -1,0 +1,40 @@
+#+TITLE: Layer 2 — Data Link (Encoding)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 2 — Data Link (Encoding)
+:PROPERTIES:
+:ID:       omi-osi-l2
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject | Predicate | Object         | MODALITY |
+|---------+-----------+----------------+----------|
+| byte    | maps_to   | gauge_operator | MUST     |
+| byte    | belongs   | codepoint_space| MUST     |
+
+** Contract (Normative)
+- Input: byte stream — MUST be valid byte sequence
+- Output: GAUGE operator mapping — MUST be bijective
+- Responsibility: frame delimiting, byte-to-operator translation — MUST NOT lose synchronization
+- Constraint: MUST preserve byte ordering
+
+** OMI Mapping
+- ASCII codepoint lookup (0x00–0x7F) — MUST use standard ASCII mapping
+- GAUGE_TABLE.omi operator resolution — MUST be complete and unambiguous
+- Γ(byte) = gauge_lookup(byte) — MUST be deterministic and side-effect free
+
+** Implementation Notes
+- Maps each incoming byte to a corresponding GAUGE operator — MUST maintain one-to-one mapping
+- Uses ASCII codepoint space (0x00-0x7F) for operator resolution — MUST reject non-ASCII bytes
+- Implements the gauge lookup function: Γ(byte) = gauge_lookup(byte) — MUST be pure function
+- Deterministic mapping with no side effects — MUST NOT modify system state
+- Frame delimiting handled through special start/end byte sequences — MUST maintain frame integrity

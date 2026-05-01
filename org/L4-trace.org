@@ -1,0 +1,39 @@
+#+TITLE: Layer 4 — Transport (Trace)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 4 — Transport (Trace)
+:PROPERTIES:
+:ID:       omi-osi-l4
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject     | Predicate | Object             | MODALITY |
+|-------------+-----------+--------------------+----------|
+| byte_stream | produces  | Γ (operator sequence) | MUST     |
+| Γ           | preserves | execution_order     | MUST     |
+
+** Contract (Normative)
+- Input: byte stream — MUST be valid sequence
+- Output: Γ (ordered operator sequence) — MUST be mode-independent
+- Responsibility: reliable operator sequence delivery — MUST NOT reorder operations
+- Invariant: Γ is IDENTICAL across all OMICRON modes — MUST hold for all executions
+
+** OMI Mapping
+- Trace is a free monoid over Γ — MUST satisfy monoid properties
+- Mode-independent: Γ_linear = Γ_recursive = Γ_replay — MUST be equal
+- Γ preserves execution order — MUST NOT change sequence semantics
+
+** Implementation Notes
+- The trace Γ is the sequence of gauge operators applied in order — MUST maintain sequence
+- This layer ensures that the operator sequence is delivered reliably — MUST not drop or duplicate
+- The invariant means that the same input byte stream produces the same Γ — MUST hold regardless of the OMICRON mode (linear, recursive, replay)
+- The trace is used by higher layers for projection and interpretation — MUST remain unchanged by upper layers

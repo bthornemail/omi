@@ -1,0 +1,44 @@
+#+TITLE: Layer 6 — Presentation (Projection π)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 6 — Presentation (Projection π)
+:PROPERTIES:
+:ID:       omi-osi-l6
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject      | Predicate | Object        | MODALITY |
+|--------------+-----------+---------------+----------|
+| (trace,mode) | derives   | META          | MUST     |
+| π_linear     | projects  | identity_view | MUST     |
+| π_recursive  | projects  | depth_view    | MUST     |
+| π_replay     | projects  | replay_view   | MUST     |
+
+** Contract (Normative)
+- Input: trace + OMICRON mode — MUST be valid inputs
+- Output: derived META state — MUST be derived, not stored independently
+- Responsibility: data representation and projection — MUST NOT mutate CORE state
+- Constraint: MUST NOT mutate CORE state (belongs to Layers 1-3)
+
+** OMI Mapping
+- META = π(trace, omicron_mode) — MUST be a pure function
+- π_composition laws: π_a ∘ π_b = π_{a⊗b} — MUST hold for all projections
+- π_replay is idempotent for canonical replay — MUST satisfy idempotence
+
+** Implementation Notes
+- The projection layer takes the trace Γ and the current OMICRON mode to produce META — MUST treat inputs as read-only
+- META is a derived state that depends on the trace and the mode, but does not affect the CORE state — MUST NOT write to CORE
+- Different modes produce different views of the same trace:
+   - LINEAR: identity view (each operator in order) — MUST show each operator once
+   - RECURSIVE: depth view (showing recursion levels) — MUST reflect call stack depth
+   - REPLAY: replay view (showing the state at each step during replay) — MUST show historical states
+- The projection is used by the application layer for semantic interpretation — MUST remain unchanged by application layer

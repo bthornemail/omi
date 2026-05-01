@@ -1,0 +1,52 @@
+#+TITLE: Layer 3 — Network (Gauge)
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Layer 3 — Network (Gauge)
+:PROPERTIES:
+:ID:       omi-osi-l3
+:END:
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this layer specification are to be interpreted
+as described in RFC 2119.
+
+** S-P-O Definition (with RFC 2119 Modalities)
+
+| Subject  | Predicate   | Object        | MODALITY |
+|----------+-------------+---------------+----------|
+| state    | applies     | operator      | MUST     |
+| operator | transforms  | new_state     | MUST     |
+| state    | has         | core_fields   | MUST     |
+| state    | observes    | meta_fields   | MUST_NOT |
+| gauge    | modifies    | trace         | MUST_NOT |
+| system   | replays     | deterministically | MUST |
+
+** Contract (Normative)
+- Input: (state, operator) — MUST be well-formed
+- Output: new_state — MUST be deterministic
+- Responsibility: state transition logic — MUST NOT have side effects
+- Constraint: MUST NOT mutate META fields
+- Constraint: MUST NOT modify Γ (belongs to Layer 4)
+
+** OMI Mapping
+- gauge_apply(state, op) → new_state — MUST produce valid state
+- CORE state: {parity, plane, mode_bit} — MUST be exactly 3 bits
+- 32 states × 22 operators = 704 transitions — MUST be exhaustively verified
+- Γ lookup from byte — MUST be consistent with Layer 2
+
+** Determinism Contract
+All transitions must be deterministic:
+#+BEGIN_SRC
+∀ s ∈ State, ∀ op ∈ Operator:
+  gauge_apply(s, op) = gauge_apply(s, op)
+#+END_SRC
+
+** Implementation Notes
+- The gauge operator is looked up from the byte via Γ(byte) in Layer 2 — MUST use same mapping
+- The state transition function is implemented in the kernel/vm — MUST be pure function
+- The CORE state consists of three bits: parity, plane, and mode_bit — MUST NOT include other bits
+- All state transitions are precomputed and verified for determinism — MUST pass verification
