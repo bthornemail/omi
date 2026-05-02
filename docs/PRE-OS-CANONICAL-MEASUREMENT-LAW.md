@@ -2,6 +2,8 @@
 
 Implementation evidence:
 [Implementation Audit: Phases 20-29](IMPLEMENTATION-AUDIT-PHASES-20-29.md).
+Foundation proof:
+[Foundation Audit: Pre-OS OSI Chain](FOUNDATION-AUDIT-PRE-OS-OSI.md).
 
 ## Root Statement
 

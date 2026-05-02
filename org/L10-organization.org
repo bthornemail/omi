@@ -75,6 +75,8 @@ The S-P-O system creates a navigable radix trie:
   │   └── [[file:../docs/IMPLEMENTATION-AUDIT-PHASES-20-29.md][Implementation Audit Phases 20-29]]
   ├── osi/projection/integration-law
   │   └── [[file:PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.org][Phase 30 OSI Projection Integration Law]]
+  ├── foundation/audit/pre-os-osi
+  │   └── [[file:../docs/FOUNDATION-AUDIT-PRE-OS-OSI.md][Foundation Audit Pre-OS OSI]]
   ├── macros/rewrites_to/pre-lisp
   │   └── [[file:L8-macros.org::dot-expansion]]
   ├── adapters/adapts_to/AST

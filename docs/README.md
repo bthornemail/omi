@@ -28,6 +28,8 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
     projection, and pre-OS law implementation evidence.
 12. `PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md` describes the OSI lens-stack
     bridge over Phase 28 replay.
+13. `FOUNDATION-AUDIT-PRE-OS-OSI.md` proves the Phase 28 -> Phase 29 -> Phase
+    30 foundation chain.
 
 ## File Roles
 
@@ -69,6 +71,10 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 `PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md`
 : Integration law for treating OSI layers as non-causal projections over the
   Phase 28 bitwise kernel state.
+
+`FOUNDATION-AUDIT-PRE-OS-OSI.md`
+: Foundation proof that deterministic bitwise replay, pre-OS measurement, and
+  OSI projections compose without creating a new authority path.
 
 ## Source Of Truth
 

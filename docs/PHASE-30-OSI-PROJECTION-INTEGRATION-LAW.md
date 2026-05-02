@@ -1,5 +1,8 @@
 # Phase 30 - OSI Projection Integration Law
 
+Foundation proof:
+[Foundation Audit: Pre-OS OSI Chain](FOUNDATION-AUDIT-PRE-OS-OSI.md).
+
 Phase 30 integrates the verified Phase 28 bitwise kernel with the pre-OS
 measurement stack by making the OSI model a projection stack over deterministic
 replay.

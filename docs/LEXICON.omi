@@ -103,6 +103,11 @@ OSI projection integration:
   observer metadata, and must not call kernel_tick, gauge_lookup, or
   gauge_apply. See docs/PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md.
 
+Foundation audit:
+  The proof artifact for the Phase 28 -> Phase 29 -> Phase 30 chain. It records
+  the executable witnesses for bitwise replay, pre-OS measurement, and OSI
+  projection integration. See docs/FOUNDATION-AUDIT-PRE-OS-OSI.md.
+
 Replay:
   Host-side recomputation of graph evolution from an image and rule version.
 
