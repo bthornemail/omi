@@ -1,0 +1,102 @@
+#+TITLE: Phase 26 - Projection Lens Space
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 26 - Projection Lens Space
+:PROPERTIES:
+:ID:       omi-phase-26-projection-lens-space
+:END:
+
+Phase 26 formalizes the lens space over the CONS algebra. It does not replace
+Phase 25. It explains how topology, positional encoding, geometry, and later
+numeric declarations coexist without collapsing into one another.
+
+Phase 27 adds the pre-OS reading: the digit codomain is the first visible
+measurement surface before alphabet, user space, or OS interpretation.
+
+#+BEGIN_EXAMPLE
+C = free ordered CONS algebra over ASCII atoms
+D = {0x30..0x3F}
+π_lens : C -> D
+#+END_EXAMPLE
+
+Digits are the codomain of canonical projection functions. They are not the
+source of meaning.
+
+* Core Law
+
+#+BEGIN_EXAMPLE
+OMI is a free ordered CONS algebra over ASCII atoms.
+Digits 0x30..0x3F are canonical projection outputs.
+ESC selects or gates the active projection regime.
+Topology, position, and geometry are lenses over the same CONS structure.
+#+END_EXAMPLE
+
+* Projection Regimes
+
+| Lens       | Reads CONS structure as                         | Digit role                         |
+|------------+--------------------------------------------------+------------------------------------|
+| topological| simplex class, Betti-like rank, recursion tag    | topology / recursion descriptor    |
+| positional | coefficient or place-value observation           | positional coefficient display     |
+| geometric  | boundary, surface, embedding, metric line        | geometry descriptor                |
+| address    | projection address / witness class              | address observation                |
+
+Same digit, different lens:
+
+#+BEGIN_EXAMPLE
+π_topological(L) = "3"  means triangle / 3-cycle descriptor
+π_positional(L)  = "3"  means coefficient display under chosen base
+π_geometric(L)   = "3"  means shape/boundary observation under geometry lens
+#+END_EXAMPLE
+
+The CONS structure is unchanged. The projection lens changes.
+
+* ESC Boundary
+
+=ESC= is a projection gate. It MAY select or gate the projection regime, but it
+does not define the projection and does not alter the CONS algebra.
+
+#+BEGIN_EXAMPLE
+ESC gates projection regime
+ESC does not rewrite C
+ESC does not make digits primitive numbers
+#+END_EXAMPLE
+
+* Relationship To Phase 25
+
+Phase 25 defines the topological digit derivation law:
+
+#+BEGIN_EXAMPLE
+digit != primitive number
+digit = topology / recursion descriptor
+#+END_EXAMPLE
+
+Phase 26 generalizes the projection framework:
+
+#+BEGIN_EXAMPLE
+digit = π_lens(CONS structure)
+#+END_EXAMPLE
+
+Under the topological lens, Phase 25 remains authoritative. Under a later
+positional lens, userspace MAY read digit outputs as coefficients. That is a
+projection, not a kernel primitive.
+
+* Non-Causality
+
+Projection lenses are observer-only:
+
+#+BEGIN_EXAMPLE
+π_lens ∉ ESC execution
+π_lens ∉ Γ lookup
+π_lens ∉ GAUGE_APPLY
+#+END_EXAMPLE
+
+The locked execution boundary remains:
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ ∘ ESC
+projection = π_lens(trace or CONS structure)
+projection does not feed back into Γ
+#+END_EXAMPLE

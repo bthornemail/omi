@@ -1,0 +1,67 @@
+#+TITLE: Phase 21 - Aegean Header Plane
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 21 - Aegean Header Plane
+:PROPERTIES:
+:ID:       omi-phase-21-aegean-header-plane
+:END:
+
+Phase 21 defines the Aegean Numbers block as an observer-only projection
+surface. The normative Unicode names remain authoritative. OMI projection
+rows, triads, and selectors are address metadata only.
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ o ESC
+header = H(trace)
+Aegean projection = display/address metadata over header
+#+END_EXAMPLE
+
+The Aegean projection MUST NOT feed Γ, =gauge_step=, =gauge_lookup=, or
+=gauge_apply=.
+
+* Normative Categories
+
+| Code points       | Normative role                    | OMI projection role              |
+|-------------------+-----------------------------------+----------------------------------|
+| U+10100..U+10102 | Aegean separator/check-mark signs | header delimiters                |
+| U+10107..U+10133 | Aegean number signs               | exponent/coordinate rows         |
+| U+10137..U+1013F | Aegean weight/measure signs       | observer/unit row                |
+
+The positions U+10103..U+10106 and U+10134..U+10136 are unassigned in the
+projection table and MUST NOT be assigned OMI semantics.
+
+* Projection Table Spec
+
+Each assigned Aegean code point is classified as:
+
+| Field          | Meaning                                      |
+|----------------+----------------------------------------------|
+| codepoint      | Unicode scalar value                         |
+| category       | separator/check-mark, number, weight/measure |
+| unicode_name   | normative Unicode character name             |
+| projection_row | observer row index                           |
+| triad_index    | group of three inside the row                |
+| selector_index | position inside the triad                    |
+
+Projection rows are OMI metadata and are not Unicode names:
+
+| Row | Source range       | Triad shape                 |
+|-----+--------------------+-----------------------------|
+|   0 | U+10100..U+10102   | one delimiter triad         |
+| 1-5 | U+10107..U+10133   | five number rows, 3x3 each  |
+|   6 | U+10137..U+1013F   | one weight/measure 3x3 row  |
+
+* Boundary Rules
+
+- Aegean projection MAY enrich header display and address metadata.
+- Aegean projection MAY be reused by tools and documentation.
+- Aegean projection MUST remain non-causal.
+- Normative Unicode naming MUST be used in permanent APIs and docs.
+- Exploratory geometry labels MUST NOT become API names.
+
+* Source
+
+Official Unicode chart: https://unicode.org/charts/PDF/U10100.pdf

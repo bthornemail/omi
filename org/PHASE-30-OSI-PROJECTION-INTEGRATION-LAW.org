@@ -1,0 +1,54 @@
+#+TITLE: Phase 30 - OSI Projection Integration Law
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 30 - OSI Projection Integration Law
+:PROPERTIES:
+:ID:       omi-phase-30-osi-projection-integration-law
+:END:
+
+Phase 30 makes the OSI model a projection stack over deterministic Phase 28
+replay.
+
+#+BEGIN_EXAMPLE
+Phase 28 bitwise kernel
+  -> Phase 29 pre-OS measurement machine
+  -> OSI projection stack
+#+END_EXAMPLE
+
+Canonical reference:
+
+#+BEGIN_EXAMPLE
+docs/PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md
+#+END_EXAMPLE
+
+* Core Law
+
+#+BEGIN_EXAMPLE
+state_t = phase28_tick(seed, t)
+OSI_layer_n(state_t) = projection_n(state_t)
+projection_n must not mutate state_t
+#+END_EXAMPLE
+
+* Layer Mapping
+
+| Layer | Projection role                         |
+|-------+-----------------------------------------|
+| 1     | physical bit motion                     |
+| 2     | data-link structural planes             |
+| 3     | network address projection              |
+| 4     | transport replay window                 |
+| 5     | session projection regime               |
+| 6     | presentation digit/simplex output       |
+| 7     | application user-space tag              |
+
+* Boundary
+
+#+BEGIN_EXAMPLE
+omi_project_osi_layer reads kernel_state_t
+omi_project_osi_layer does not call kernel_tick
+omi_project_osi_layer does not call gauge_lookup
+omi_project_osi_layer does not call gauge_apply
+omi_project_osi_layer does not mutate kernel_state_t
+#+END_EXAMPLE

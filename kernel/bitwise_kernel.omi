@@ -1,0 +1,39 @@
+;; Phase 28 - Bitwise Kernel Law
+;; Canonical specification in .omi
+;;
+;; This file is the constitutional surface for the bitwise kernel law.
+;; The C runtime implementation is a boot/runtime translation of this law.
+
+(define-bitwise-kernel
+  (law delta8
+    (inputs
+      (K 8-bit)
+      (GS 0x1D))
+    (operations
+      (rotl1 (ROTL K 1))
+      (rotl3 (ROTL K 3))
+      (rotr2 (ROTR K 2))
+      (xor1 (XOR rotl1 rotl3))
+      (xor2 (XOR xor1 rotr2))
+      (xor3 (XOR xor2 GS))
+      (K-prime (MASK xor3 0xFF)))
+    (transition
+      (set! K K-prime))))
+
+(define-clock
+  (fano-clock
+    (period 7)
+    (state one-hot-7)
+    (tick (ROTL7 state 1))))
+
+(define-clock
+  (sonar-clock
+    (period 60)
+    (state one-hot-60)
+    (tick (ROTL60 state 1))))
+
+(define
+  (tick
+    (delta8 K GS)
+    (tick fano-clock)
+    (tick sonar-clock)))

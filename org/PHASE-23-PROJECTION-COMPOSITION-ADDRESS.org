@@ -1,0 +1,60 @@
+#+TITLE: Phase 23 - Projection Composition Address
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 23 - Projection Composition Address
+:PROPERTIES:
+:ID:       omi-phase-23-projection-composition-address
+:END:
+
+Phase 23 composes Aegean header projection and Braille body projection into a
+single observer address. The address is projection metadata only.
+
+#+BEGIN_EXAMPLE
+observer_address = compose(Aegean_projection, Braille_projection)
+observer_address not in execution
+#+END_EXAMPLE
+
+Hard invariant:
+
+#+BEGIN_EXAMPLE
+Aegean tensor Braille is address metadata, not evaluator input.
+#+END_EXAMPLE
+
+* Composition Record
+
+#+BEGIN_SRC c
+typedef struct {
+    omi_aegean_projection_t aegean;
+    omi_braille_projection_t braille;
+    uint32_t observer_address;
+    uint32_t witness;
+} omi_projection_address_t;
+#+END_SRC
+
+* Projection Contract
+
+| Subject                  | Predicate | Object                    | MODALITY |
+|--------------------------+-----------+---------------------------+----------|
+| Aegean projection        | composes  | observer address          | MUST     |
+| Braille projection       | composes  | observer address          | MUST     |
+| observer address         | identifies| projection pair           | MUST     |
+| observer address         | feeds     | ESC, Γ, or GAUGE_APPLY    | MUST_NOT |
+| projection composition   | mutates   | CORE                      | MUST_NOT |
+
+* Boundary Rules
+
+- Same Aegean projection plus same Braille projection MUST produce the same observer address.
+- Different Aegean projection SHOULD produce a different observer address for the same Braille projection.
+- Different Braille projection SHOULD produce a different observer address for the same Aegean projection.
+- Composition MAY be reused by tools and documentation.
+- Composition MUST remain non-causal.
+
+* Plane Split
+
+#+BEGIN_EXAMPLE
+ASCII / GAUGE = execution surface
+Aegean        = header / exponent coordinate projection
+Braille       = dense resolution / body projection
+#+END_EXAMPLE

@@ -8,7 +8,7 @@ ISO_ROOT := $(BUILD_DIR)/iso
 KERNEL_ELF := $(BUILD_DIR)/omi-kernel.elf
 OMI_ISO := $(BUILD_DIR)/omi.iso
 
-.PHONY: all test image kernel iso run replay rules clean
+.PHONY: all test image kernel iso run replay rules pre-os-test bitwise-test osi-test clean
 
 all: test image replay kernel iso
 
@@ -45,8 +45,23 @@ $(BUILD_DIR)/gauge_table.c: docs/GAUGE_TABLE.omi $(BUILD_DIR)/gauge_extract | $(
 $(BUILD_DIR)/gauge_table.o: $(BUILD_DIR)/gauge_table.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/gauge_replay: tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o -o $@
+$(BUILD_DIR)/gauge_replay: tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tools/gauge_replay.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c $(BUILD_DIR)/gauge_table.o -o $@
+
+$(BUILD_DIR)/pre_os_measurement_test: tests/pre_os_measurement_test.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/pre_os_measurement_test.c kernel/runtime/gauge_stepper.c kernel/runtime/escape.c kernel/runtime/trace.c polyform/encoding/aegean.c $(BUILD_DIR)/gauge_table.o -o $@
+
+$(BUILD_DIR)/bitwise_kernel.o: kernel/runtime/bitwise_kernel.c kernel/include/bitwise_kernel.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c kernel/runtime/bitwise_kernel.c -o $@
+
+$(BUILD_DIR)/bitwise_kernel_test: tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o -o $@
+
+$(BUILD_DIR)/osi_projection.o: kernel/runtime/osi_projection.c kernel/include/osi_projection.h kernel/include/bitwise_kernel.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c kernel/runtime/osi_projection.c -o $@
+
+$(BUILD_DIR)/osi_projection_test: tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o -o $@
 
 gauge: $(BUILD_DIR)/gauge_table.c
 
@@ -103,6 +118,15 @@ image: $(BUILD_DIR)/image_builder
 
 replay: image $(BUILD_DIR)/replay_validator
 	./$(BUILD_DIR)/replay_validator vm_image/omi.img 3
+
+pre-os-test: $(BUILD_DIR)/pre_os_measurement_test
+	./$(BUILD_DIR)/pre_os_measurement_test
+
+bitwise-test: $(BUILD_DIR)/bitwise_kernel_test
+	./$(BUILD_DIR)/bitwise_kernel_test
+
+osi-test: $(BUILD_DIR)/osi_projection_test
+	./$(BUILD_DIR)/osi_projection_test
 
 kernel: $(KERNEL_ELF)
 

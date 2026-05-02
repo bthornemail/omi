@@ -244,6 +244,44 @@ point representation. The structural mapping is:
 This is a **structural isomorphism over field decomposition**, not
 equivalence. The layout grammar is shared; the domain is transformed.
 
+### Topological Digit Derivation Before Numeric Encoding
+
+Sign, exponent, and significand are not kernel fields in OMI. Before userspace
+can declare numeric encodings, OMI derives digit descriptors from CONS-set
+topology:
+
+```text
+geometric firmware
+  -> pre-kernel structural metric
+  -> topological digit descriptors
+  -> kernel execution
+  -> userspace numeric declarations
+```
+
+The ASCII initiation band does not define numbers directly:
+
+```text
+0x20..0x2F defines structural alignment.
+0x30..0x39 labels topology / recursion descriptors.
+0x3A..0x3F closes relation / comparison / probe roles.
+```
+
+Digits are Betti-like counts or Schläfli-like recursion descriptors, not
+quantities. For example, `3` first labels the triangle/3-cycle descriptor; a
+later userspace projection may interpret it as the number three.
+
+An IEEE-like userspace declaration may read:
+
+| Declared Numeric Role | OMI Projection Source |
+|-----------------------|-----------------------|
+| sign | control / polarity regime |
+| exponent | AEGEAN scale coordinate |
+| significand | BRAILLE dense resolution body |
+
+This declaration is a projection over topological digit descriptors. It does
+not feed ESC, Γ, or GAUGE_APPLY. The kernel preserves execution truth;
+userspace chooses numeric interpretation later.
+
 ### Scale Hierarchy (Tower of Power)
 
 The addressing law scales with precision:

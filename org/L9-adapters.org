@@ -1,12 +1,22 @@
 #+TITLE: Layer 9 — Adapters (Boundary Interfaces)
 #+AUTHOR: OMI Project
 #+PROPERTY: header-args :exports both
-#+OPTIONS: toc:2
+#+OPTIONS: toc:3
 
 * Layer 9 — Adapters (Boundary Interfaces)
 :PROPERTIES:
 :ID:       omi-osi-l9
 :END:
+
+Layer 9 adapts between OMI representations and external representation
+domains. An adapter is a declared boundary: it MUST name what it preserves,
+what it may lose, and which lower-layer invariants it is forbidden to mutate.
+
+Tree-sitter is the structural adapter family for text to AST organization.
+OMI-DL is the declarative Datalog/Y-Z adapter family for logic evaluation over
+OMI graph facts. This layer intentionally does not define a Prolog adapter:
+logic evaluation in OMI is fixed-point and declarative, not clause-order
+procedural search.
 
 * Modal Tautology
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -16,41 +26,273 @@ as described in RFC 2119.
 
 ** S-P-O Definition (with RFC 2119 Modalities)
 
-| Subject          | Predicate  | Object           | MODALITY |
-|------------------+------------+------------------+----------|
-| representation_A | adapts_to  | representation_B | MUST     |
-| adapter          | declares   | invariants       | MUST     |
-| adapter          | declares   | losses           | MUST     |
-| adapter          | mutates    | lower_layer_state| MUST_NOT |
-| adapter          | preserves  | declared_inv     | MUST     |
-| adapter          | drops      | declared_loss    | MAY      |
+| Subject          | Predicate   | Object             | MODALITY |
+|------------------+-------------+--------------------+----------|
+| representation_A | adapts_to   | representation_B   | MUST     |
+| adapter          | declares    | invariants         | MUST     |
+| adapter          | declares    | losses             | MUST     |
+| adapter          | mutates     | lower_layer_state  | MUST_NOT |
+| adapter          | preserves   | declared_inv       | MUST     |
+| adapter          | drops       | declared_loss      | MAY      |
+| text             | parses_to   | AST                | MUST     |
+| AST              | organizes   | document_graph     | MUST     |
+| omi_triple       | compiles_to | datalog_fact       | MUST     |
+| datalog_rules    | evaluate_to | minimal_model      | MUST     |
+| Y_combinator     | enables     | recursive_closure  | MUST     |
+| Z_combinator     | enables     | guarded_recursion  | MAY      |
 
 ** Contract (Normative)
-- Input: representation in domain A — MUST be valid
-- Output: representation in domain B — MUST be valid
-- Responsibility: cross-domain translation — MUST preserve declared invariants
-- Constraint: MUST NOT mutate lower-layer state
-- Constraint: MAY drop declared losses
+- Input: representation in domain A — MUST be valid for that domain.
+- Output: representation in domain B — MUST be valid for that domain.
+- Responsibility: cross-domain translation — MUST preserve declared invariants.
+- Constraint: adapters MUST NOT mutate lower-layer state, Γ, CORE, or META.
+- Constraint: adapters MAY drop declared losses only when those losses are named.
+- Constraint: adapter output MUST be replay-checkable from the same input.
 
 ** Adapter Declarations (with modal validation)
-| Adapter    | Invariants (MUST preserve) | Losses (MAY drop)      |
-|------------+----------------------------+------------------------|
-| dot→ast    | structure, ordering        | comments, whitespace   |
-| ast→omi    | operator identity          | syntactic sugar        |
-| trace→org  | execution order, state     | raw binary             |
-| org→build  | file dependencies          | formatting             |
 
-** Tree-Sitter Integration
-#+BEGIN_SRC
-  ;; Adapter: text → AST via Tree-sitter
-  (defadapter text->ast
-    :tool tree-sitter
-    :preserves (structure ordering)
-    :loses (comments whitespace formatting))
+| Adapter       | Direction       | Invariants (MUST preserve)       | Losses (MAY drop)             | Feeds Layer |
+|---------------+-----------------+----------------------------------+-------------------------------+-------------|
+| tree-sitter   | text -> AST     | structure, ordering, byte ranges | comments, whitespace, trivia  | L10         |
+| OMI-DL        | graph -> logic  | facts, rules, fixed point        | proof trees, derivation order | L7          |
+| dot->ast      | dot -> cons     | structure, ordering              | comments, whitespace          | L8          |
+| ast->omi      | AST -> IR       | operator identity                | syntactic sugar               | L3          |
+| trace->org    | trace -> org    | execution order, state           | raw binary                    | L10         |
+| org->build    | org -> make     | file dependencies                | formatting                    | L1          |
+
+* Tree-Sitter Adapter (text -> AST)
+:PROPERTIES:
+:ID:       tree-sitter
+:END:
+
+** Purpose
+The Tree-sitter adapter bridges source text into structural ASTs. It directly
+feeds Layer 10 Organization because the output is navigable structure:
+documents, nodes, ranges, captures, and parent-child relationships.
+
+** S-P-O Specific Triples
+
+| Subject        | Predicate       | Object           | MODALITY |
+|----------------+-----------------+------------------+----------|
+| source_text    | ts_parses_to    | syntax_tree      | MUST     |
+| ts_parser      | sets            | language_grammar | MUST     |
+| syntax_tree    | exposes         | root_node        | MUST     |
+| ts_node        | wraps_as        | omi_ast_node     | MUST     |
+| ts_node        | preserves       | byte_range       | MUST     |
+| ts_node        | preserves       | node_type        | MUST     |
+| ts_query       | matches         | capture_set      | MAY      |
+| tree_cursor    | walks_to        | descendant_node  | MAY      |
+| omi_ast_node   | drops           | internal_node_id | MAY      |
+| tree_adapter   | mutates         | lower_layer_state| MUST_NOT |
+
+** API Mapping
+The bridge SHOULD use the Tree-sitter C API as the concrete parsing boundary
+when Tree-sitter is linked into a build.
+
+#+BEGIN_SRC c
+  TSParser *parser = ts_parser_new();
+  bool ok = ts_parser_set_language(parser, language);
+  TSTree *tree = ts_parser_parse_string(parser, old_tree, source, length);
+  TSNode root = ts_tree_root_node(tree);
+
+  ts_tree_delete(tree);
+  ts_parser_delete(parser);
 #+END_SRC
 
-** Implementation Notes
-- This layer handles translation between different representations — MUST not alter lower-layer state
-- Each adapter must declare what is preserved (invariants) and what is lost — MUST do so explicitly
-- The adapters are the boundaries between the OMI system and external domains — MUST respect layer boundaries
-- Examples include parsing text to an AST, compiling AST to OMI IR, rendering traces to Org documents, and extracting build artifacts from Org files
+Query and traversal support MAY be used for organization queries.
+
+#+BEGIN_SRC c
+  TSQuery *query = ts_query_new(language, query_source,
+                                query_len, &error_offset, &error_type);
+  TSQueryCursor *cursor = ts_query_cursor_new();
+  ts_query_cursor_exec(cursor, query, ts_tree_root_node(tree));
+
+  TSQueryMatch match;
+  while (ts_query_cursor_next_match(cursor, &match)) {
+      /* capture nodes become OMI organization nodes */
+  }
+#+END_SRC
+
+** OMI-AST Bridge Contract
+
+| Tree-sitter Type | OMI Type     | Preservation Rule              |
+|------------------+--------------+--------------------------------|
+| TSNode           | omi_ast_node | type, byte range, child count  |
+| TSTree           | omi_ast_root | root node, language identity   |
+| TSQueryMatch     | omi_capture  | pattern index, captures        |
+| TSPoint          | omi_position | row, column                    |
+
+** Verification (Derived from Modalities)
+
+#+BEGIN_SRC c
+  /* MUST: parser lifecycle */
+  TSParser *p = ts_parser_new();
+  assert(p != NULL);
+  assert(ts_parser_set_language(p, lang) == true);
+
+  /* MUST: valid source produces a valid tree */
+  TSTree *t = ts_parser_parse_string(p, NULL, source, len);
+  assert(t != NULL);
+  TSNode root = ts_tree_root_node(t);
+  assert(!ts_node_is_null(root));
+
+  /* MUST: OMI wrapper preserves type and byte range */
+  omi_ast_node omi = ts_wrap_node(root);
+  assert(strcmp(omi.type, ts_node_type(root)) == 0);
+  assert(omi.start_byte == ts_node_start_byte(root));
+  assert(omi.end_byte == ts_node_end_byte(root));
+#+END_SRC
+
+* OMI-DL Adapter (Datalog/Y-Z Fixed-Point Logic)
+:PROPERTIES:
+:ID:       datalog-yz
+:END:
+
+** Purpose
+The OMI-DL adapter bridges OMI graph structures into a Datalog-style logic
+evaluation layer. It supports declarative queries, transitive closure, and
+fixed-point computation over OMI facts. Recursive relations are named with
+Y/Z combinator intent rather than modeled as procedural routines or coroutines.
+
+** Why Datalog, Not Prolog
+Datalog evaluates a finite set of Horn clauses to a least fixed point. That
+matches OMI's replay/fixpoint discipline. Prolog's ordinary execution model is
+clause-order and search-strategy sensitive, so it is not the canonical adapter
+for this layer.
+
+In OMI:
+- Datalog facts are derived from S-P-O graph triples.
+- Datalog rules are fixed-point constraints over those facts.
+- Y denotes recursive closure.
+- Z denotes guarded recursion or bounded corecursive evaluation.
+- Routines and coroutines are represented as relations over transitions, not
+  as hidden procedural control flow.
+
+** S/M/F-Expression Cohomology
+
+| OMI Expression | Datalog Role      | Cohomology Interpretation     |
+|----------------+-------------------+-------------------------------|
+| S-expression   | fact base         | 0-cells, atomic propositions  |
+| M-expression   | rule head/body    | 1-cells, implications         |
+| F-expression   | query goal        | 2-cells, proof obligations    |
+| Y-combinator   | recursive rule    | boundary operator             |
+| Z-combinator   | guarded recursion | cycle operator                |
+
+The adapter treats this as a normative analogy and future ABI target. It does
+not require a full proof engine in the current runtime.
+
+** S-P-O Specific Triples
+
+| Subject        | Predicate    | Object              | MODALITY |
+|----------------+--------------+---------------------+----------|
+| omi_triple     | compiles_to  | datalog_fact        | MUST     |
+| datalog_rule   | asserts_to   | rule_base           | MUST     |
+| rule_base      | evaluates_to | minimal_model       | MUST     |
+| query_goal     | resolves_to  | binding_set         | MUST     |
+| binding_set    | reifies_as   | omi_substitution    | MUST     |
+| fixed_point    | satisfies    | GNOMON_constraint   | SHOULD   |
+| Y_combinator   | enables      | recursive_query     | MUST     |
+| Z_combinator   | enables      | guarded_recursion   | MAY      |
+| datalog_engine | depends_on   | clause_order        | MUST_NOT |
+| datalog_engine | mutates      | lower_layer_state   | MUST_NOT |
+
+** OMI-DL Clause Form
+
+#+BEGIN_SRC datalog
+  ;; Facts derived from S-P-O triples.
+  edge(a, b).
+  edge(b, c).
+  edge(c, d).
+
+  ;; Rules are Horn clauses.
+  path(X, Y) :- edge(X, Y).
+  path(X, Z) :- edge(X, Y), path(Y, Z).
+
+  ;; Queries are goals.
+  ?- path(a, d).
+  ?- path(a, X).
+#+END_SRC
+
+** Y/Z Interpretation
+Y names the least fixed point of a recursive relation.
+
+#+BEGIN_SRC lisp
+  (define path
+    (Y (lambda (path)
+         (lambda (X Z)
+           (or (edge X Z)
+               (exists (Y)
+                 (and (edge X Y)
+                      (path Y Z))))))))
+#+END_SRC
+
+Z names guarded recursion where the recursive step is bounded by an explicit
+guard such as depth, fuel, frame scope, or trace length.
+
+#+BEGIN_SRC lisp
+  (define bounded-path
+    (Z (lambda (bounded-path)
+         (lambda (X Z depth)
+           (or (edge X Z)
+               (and (> depth 0)
+                    (exists (Y)
+                      (and (edge X Y)
+                           (bounded-path Y Z (- depth 1))))))))))
+#+END_SRC
+
+** OMI-DL Bridge Contract
+
+| OMI Type        | Datalog Type     | Translation Rule              |
+|-----------------+------------------+-------------------------------|
+| omi_triple      | datalog_fact     | (s p o) -> p(s,o)             |
+| omi_rule        | datalog_clause   | head :- body                  |
+| omi_query       | datalog_goal     | ?- goal                       |
+| datalog_binding | omi_substitution | Var=Value -> binding node     |
+| Y_combinator    | recursive_rule   | relation fixed point          |
+| Z_combinator    | guarded_rule     | bounded recursive fixed point |
+
+** Invariants (Normative)
+- Transitive closure MUST hold iff the underlying edge path exists.
+- Recursive relations MUST converge over finite fact sets.
+- Stratification MUST reject negation through recursion.
+- Same knowledge base plus same query MUST produce the same result set.
+- Evaluation order MAY be discarded because Datalog uses set semantics.
+- Duplicate derivations MAY be absorbed into one derived fact.
+
+** Verification (Derived from Modalities)
+
+#+BEGIN_SRC datalog
+  % MUST: transitive closure is correct.
+  assert path(a,d) given edge(a,b), edge(b,c), edge(c,d).
+  assert not path(a,e) when e is unreachable.
+
+  % MUST: fixed-point semantics.
+  assert least_fixed_point(path) = transitive_closure(edge).
+
+  % MUST NOT: negation through recursion.
+  reject bad(X) :- not good(X), edge(X,Y), bad(Y).
+#+END_SRC
+
+* Adapter Invariant Registry
+:PROPERTIES:
+:ID:       l9-adapter-registry
+:END:
+
+| Adapter     | Direction      | MUST | MUST_NOT | SHOULD | MAY | Feeds Layer |
+|-------------+----------------+------+----------+--------+-----+-------------|
+| Tree-sitter | text -> AST    | 6    | 1        | 1      | 3   | L10         |
+| OMI-DL      | graph -> logic | 7    | 2        | 1      | 2   | L7          |
+| dot->ast    | dot -> cons    | 2    | 0        | 0      | 1   | L8          |
+| ast->omi    | AST -> IR      | 2    | 1        | 0      | 1   | L3          |
+| trace->org  | trace -> org   | 2    | 1        | 0      | 1   | L10         |
+| org->build  | org -> make    | 2    | 1        | 0      | 1   | L1          |
+
+* Verification Checklist
+- MUST constraints are enforced at compile time, runtime, or replay time.
+- MUST_NOT constraints have corresponding assertions or diagnostics.
+- MAY behaviors have documented defaults or declared losses.
+- Declared invariants are tested in replay validation.
+- Declared losses do not affect downstream correctness.
+- Tree-sitter output preserves structure, ordering, type, and byte range.
+- OMI-DL fixed-point evaluation preserves fact identity and deterministic query
+  results.

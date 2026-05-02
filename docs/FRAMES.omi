@@ -190,7 +190,7 @@ invariant OMICRON_RADIX4:
 ; GAUGE STRATA (4-LAYER CODEPOINT STRUCTURE):
 ;   0x00-0x1F: control_kernel    (system control automata)
 ;   0x20-0x2F: operator_algebra (transformation symbols)
-;   0x30-0x3F: evaluation_query (numeric basis + relational operators)
+;   0x30-0x3F: topology_relation (digit descriptors + relational operators)
 ;   0x40-0x7F: symbolic_manifold (extended grammar)
 ;
 ; OMICRON PIPELINE:

@@ -1,0 +1,58 @@
+#+TITLE: Phase 29 - Pre-OS Canonical Measurement Law
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 29 - Pre-OS Canonical Measurement Law
+:PROPERTIES:
+:ID:       omi-phase-29-pre-os-canonical-measurement-law
+:END:
+
+Phase 29 records the normalized root law:
+
+#+BEGIN_EXAMPLE
+Bytes are canonical.
+Replay is deterministic.
+Everything visible is derived by projection.
+#+END_EXAMPLE
+
+Canonical reference:
+
+#+BEGIN_EXAMPLE
+docs/PRE-OS-CANONICAL-MEASUREMENT-LAW.md
+#+END_EXAMPLE
+
+* Root Model
+
+#+BEGIN_EXAMPLE
+canonical bytes
+  -> deterministic replay
+  -> hidden structure
+  -> measurement operators
+  -> visible digits
+  -> optional numbers / text / files / OS behavior
+#+END_EXAMPLE
+
+* Authority Rule
+
+#+BEGIN_EXAMPLE
+canonical bytes = truth
+replay = motion
+structure = lawful interpretation
+projection = measurement
+rendering = display
+interpretation = user-space meaning
+#+END_EXAMPLE
+
+No projection may modify canonical byte structure.
+
+* Runtime Boundary
+
+The sealed runtime boundary remains:
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ ∘ ESC
+projection = π(trace or structure)
+projection does not feed back into Γ
+#+END_EXAMPLE

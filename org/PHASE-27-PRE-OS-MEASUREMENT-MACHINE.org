@@ -1,0 +1,95 @@
+#+TITLE: Phase 27 - Pre-OS Measurement Machine
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 27 - Pre-OS Measurement Machine
+:PROPERTIES:
+:ID:       omi-phase-27-pre-os-measurement-machine
+:END:
+
+Phase 27 states the pre-OS value of the CONS algebra. OMI does not begin with
+an alphabet, a file system, a process model, or user space. OMI begins with
+hidden structure and measurement.
+
+#+BEGIN_EXAMPLE
+OMI is a pre-OS measurement machine.
+#+END_EXAMPLE
+
+* Pre-OS Stack
+
+| ASCII band    | Pre-OS role                              |
+|---------------+------------------------------------------|
+| =0x00..0x1F=  | hidden CONS-level structure              |
+| =0x20..0x2F=  | measurement / projection operators       |
+| =0x30..0x3F=  | canonical visible measurement outputs    |
+| =0x40..0x7F=  | optional alphabet / user-space projection|
+
+=ESC= (=0x1B=) gates the active measurement regime. It does not make digits
+primitive numbers and it does not create user space.
+
+* Core Law
+
+#+BEGIN_EXAMPLE
+No printable symbol exists before measurement.
+Every printable symbol is a projection of hidden CONS-level structure.
+Digits 0x30..0x3F are the first visible codomain of measurement.
+Alphabet and user space are later optional projections.
+#+END_EXAMPLE
+
+Digits are therefore not primitive arithmetic. They are stable measurement
+outputs. Numbers are interpretations of those measurements under a selected
+projection lens.
+
+* Structural Precision
+
+Precision is not stored first as a user-space number. Precision MAY be derived
+from structural distance inside the hidden CONS layer.
+
+#+BEGIN_EXAMPLE
+precision(depth) = 1 / (1 + depth)^2
+#+END_EXAMPLE
+
+Near CONS structure receives higher precision. Farther CONS structure receives
+lower precision. A later stream encoder MAY use Golomb-like coding to compress
+that precision ladder.
+
+This is a projection law, not an execution law.
+
+* Relationship To Phase 26
+
+Phase 26 defines:
+
+#+BEGIN_EXAMPLE
+π_lens : CONS algebra -> {0x30..0x3F}
+#+END_EXAMPLE
+
+Phase 27 fixes the pre-OS interpretation of that codomain:
+
+#+BEGIN_EXAMPLE
+0x30..0x3F = first visible measurements
+#+END_EXAMPLE
+
+Under the topological lens, a digit is a topology descriptor. Under a
+positional lens, a digit MAY be read as a coefficient. Under a precision lens,
+a digit MAY be read as a structural-distance measurement. The hidden CONS
+structure is primary in all cases.
+
+* Non-Causality
+
+Measurement projections remain observer-only:
+
+#+BEGIN_EXAMPLE
+measurement ∉ ESC execution
+measurement ∉ Γ lookup
+measurement ∉ GAUGE_APPLY
+#+END_EXAMPLE
+
+The sealed boundary remains:
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ ∘ ESC
+measurement = π_lens(hidden CONS structure or trace)
+measurement does not feed back into Γ
+#+END_EXAMPLE

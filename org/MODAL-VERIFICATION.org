@@ -1,0 +1,97 @@
+#+TITLE: Modal Verification for S-P-O Layer Contracts
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Purpose
+This document maps RFC 2119 modalities in the OMI S-P-O layer files to
+verification obligations. It is a documentation-level contract for now: it does
+not generate tests yet, but it defines how future extractors should turn modal
+triples into assertions, diagnostics, and replay checks.
+
+* Modal Tautology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this specification are to be interpreted as described in RFC
+2119.
+
+* Modal Extraction Rule
+Each S-P-O row is treated as a 4-tuple:
+
+#+BEGIN_SRC text
+  (Subject, Predicate, Object, Modality)
+#+END_SRC
+
+Extraction produces a verification obligation:
+
+| Modality   | Verification Meaning                         | Failure Class |
+|------------+----------------------------------------------+---------------|
+| MUST       | required assertion                           | violation     |
+| MUST_NOT   | forbidden state or forbidden mutation        | violation     |
+| SHALL      | required assertion                           | violation     |
+| SHALL_NOT  | forbidden state or forbidden mutation        | violation     |
+| SHOULD     | recommended invariant or stability pressure  | warning       |
+| SHOULD_NOT | discouraged behavior                         | warning       |
+| MAY        | permitted behavior, documented if implemented| note          |
+| OPTIONAL   | permitted behavior, no assertion by default  | note          |
+
+* Pipeline
+
+#+BEGIN_SRC text
+  layer org table
+  -> modal tuple extraction
+  -> obligation registry
+  -> test assertion or diagnostic
+  -> replay report by layer
+#+END_SRC
+
+* Layer 9 Adapter Obligations
+
+** Tree-sitter Adapter
+
+| Obligation                                      | Modality | Check Type |
+|-------------------------------------------------+----------+------------|
+| source text parses to syntax tree               | MUST     | assertion  |
+| parser language is set before parsing           | MUST     | assertion  |
+| OMI AST preserves node type                     | MUST     | assertion  |
+| OMI AST preserves byte range                    | MUST     | assertion  |
+| adapter does not mutate lower-layer state       | MUST_NOT | diagnostic |
+| queries may produce capture sets                | MAY      | note       |
+
+** OMI-DL Adapter
+
+| Obligation                                      | Modality | Check Type |
+|-------------------------------------------------+----------+------------|
+| OMI triples compile to Datalog facts            | MUST     | assertion  |
+| Datalog rules evaluate to a minimal model       | MUST     | assertion  |
+| query goals resolve to deterministic bindings   | MUST     | assertion  |
+| Y-combinator enables recursive closure          | MUST     | assertion  |
+| Z-combinator may enable guarded recursion       | MAY      | note       |
+| engine does not depend on clause order          | MUST_NOT | diagnostic |
+| engine does not mutate lower-layer state        | MUST_NOT | diagnostic |
+| fixed point should satisfy GNOMON constraint    | SHOULD   | warning    |
+
+* Phase 5 Diagnostic Alignment
+The existing Phase 5 diagnostic shape already matches modal verification:
+
+| Existing Diagnostic       | Modal Equivalent | Meaning                         |
+|---------------------------+------------------+---------------------------------|
+| violation null_cons       | MUST_NOT         | NULL MUST NOT form CONS         |
+| violation null_edge       | MUST_NOT         | NULL MUST NOT have graph edges  |
+| warning transient_pressure| SHOULD           | unstable pressure SHOULD decay  |
+
+Future S-P-O modal extraction SHOULD emit diagnostics in the same style:
+
+#+BEGIN_SRC text
+  violation layer9_clause_order
+  violation layer9_lower_state_mutation
+  warning layer9_gnomon_not_satisfied
+#+END_SRC
+
+* Acceptance Criteria
+- Every layer table that uses modalities MUST include a `MODALITY` column.
+- Every MUST or MUST_NOT row MUST have a named verification obligation.
+- Every SHOULD row SHOULD have a warning diagnostic or a documented reason for
+  remaining advisory.
+- Every MAY or OPTIONAL row MAY remain documentation-only.
+- Adapter obligations MUST identify declared invariants and declared losses.

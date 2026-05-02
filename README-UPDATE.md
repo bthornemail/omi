@@ -14,6 +14,11 @@ This update introduces a formalized S-P-O (Subject-Predicate-Object) graph speci
 
 3. **Updated OSI-MODEL.org** - The master document now references the formal S-P-O.org specification
 
+4. **Modal verification** - RFC 2119 modalities turn S-P-O triples into explicit obligations
+   - `org/MODAL-VERIFICATION.org` maps MUST/MUST_NOT/SHOULD/MAY rows to assertions, diagnostics, warnings, and notes
+   - Layer 9 distinguishes Tree-sitter structural parsing from OMI-DL Datalog/Y-Z fixed-point logic evaluation
+   - The earlier Prolog direction is replaced by finite Datalog-style evaluation over S-P-O facts
+
 ## Directory Structure
 
 ```
@@ -30,6 +35,7 @@ org/
 ├── L8-macros.org          # Layer 8: Macros (Transform Surface)
 ├── L9-adapters.org        # Layer 9: Adapters (Boundary Interfaces)
 ├── L10-organization.org   # Layer 10: Organization (Structure Surface)
+├── MODAL-VERIFICATION.org # RFC 2119 obligation mapping
 └── WALKTHROUGH.org        # Development walkthrough guidance
 ```
 

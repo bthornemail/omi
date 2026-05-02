@@ -1,0 +1,98 @@
+#+TITLE: Phase 28 - Canonical Encoding Law
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 28 - Canonical Encoding Law
+:PROPERTIES:
+:ID:       omi-phase-28-canonical-encoding-law
+:END:
+
+Phase 28 normalizes the encoding law into primitive sets, projections, clocks,
+and invariants.
+
+Canonical reference:
+
+#+BEGIN_EXAMPLE
+docs/CANONICAL-ENCODING-LAW.md
+#+END_EXAMPLE
+
+Implementation evidence:
+
+#+BEGIN_EXAMPLE
+kernel/bitwise_kernel.omi
+kernel/include/bitwise_kernel.h
+kernel/runtime/bitwise_kernel.c
+tests/bitwise_kernel_test.c
+make bitwise-test
+#+END_EXAMPLE
+
+* Core Objects
+
+#+BEGIN_EXAMPLE
+C     = CONS cells
+Sigma = {0x00..0x7F}
+S     = structural bytes
+O     = operator bytes 0x20..0x2F
+D     = digit/measurement codomain 0x30..0x3F
+A     = optional alphabet/user-space projection 0x40..0x7F
+#+END_EXAMPLE
+
+* Projection Law
+
+#+BEGIN_EXAMPLE
+π : C -> Sigma
+same c -> same π(c)
+π(c) does not modify c
+#+END_EXAMPLE
+
+Projection observes CONS structure. Projection does not feed =ESC=, Γ, or
+=GAUGE_APPLY=.
+
+* Projection Hierarchy
+
+#+BEGIN_EXAMPLE
+CONS structure
+  -> π_B bitwise projection
+Word8 state
+  -> π_D digit/topology projection
+0x30..0x3F
+  -> π_P optional positional projection
+Natural number
+  -> π_S optional sexagesimal projection
+Unicode fraction
+  -> π_A optional alphabet projection
+#+END_EXAMPLE
+
+* Clock Law
+
+Clocks are unary rotation rings:
+
+#+BEGIN_EXAMPLE
+tick(b_i) = b_((i + 1) mod n)
+#+END_EXAMPLE
+
+The Fano clock has period 7. The sonar clock has period 60. The master period
+is:
+
+#+BEGIN_EXAMPLE
+LCM(7, 60, 8, 240, 360) = 5040 = 7!
+#+END_EXAMPLE
+
+* Invariants
+
+1. Determinism.
+2. Non-causality.
+3. Bitwise closure.
+4. Clock purity.
+5. Projection separation.
+6. Runtime boundary preservation.
+
+* Runtime Boundary
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ ∘ ESC
+projection = π(trace or CONS structure)
+projection does not feed back into Γ
+#+END_EXAMPLE

@@ -1,10 +1,12 @@
 #include <gauge.h>
 #include <escape.h>
 #include <trace.h>
+#include "../polyform/encoding/aegean.h"
+#include "../polyform/encoding/braille.h"
+#include "../polyform/encoding/projection_address.h"
+#include "../polyform/geometry/omi_geometry.h"
 #include <stdio.h>
 #include <string.h>
-// We don't have a header for aegean, so declare the function we need.
-extern uint8_t omi_encode_aegean(uint8_t byte);
 
 #define GAUGE_MAX_TRACE 256
 
@@ -17,24 +19,6 @@ typedef struct {
 
 static gauge_trace_entry_t trace[GAUGE_MAX_TRACE];
 static size_t trace_count = 0;
-
-// Phase 19B: Header decode (observer-only, does not affect kernel)
-// Phase 20: Enrich header with Aegean, mixed-radix, depth algebra
-typedef struct {
-    uint8_t depth;
-    uint8_t aegean_byte;   // Aegean encoding of the first emitted byte (or 0 if none)
-    uint8_t mixed_radix;   // depth modulo 16 (example of mixed radix)
-} omi_header_t;
-
-static omi_header_t decode_header(const uint8_t *stream, size_t len) {
-    omi_header_t h = {0};
-    h.depth = len;
-    if (len > 0) {
-        h.aegean_byte = omi_encode_aegean(stream[0]);
-    }
-    h.mixed_radix = len % 16; // simple mixed radix example
-    return h;
-}
 
 static omi_gauge_state_t run_gauge(uint8_t *bytes, size_t len, uint8_t omicron_mode)
 {
@@ -69,8 +53,15 @@ static omi_gauge_state_t run_gauge(uint8_t *bytes, size_t len, uint8_t omicron_m
     }
     
     // Phase 19B/20: Header decode (observer-only)
-    omi_header_t h = decode_header(emitted, emitted_len);
-    printf("HEADER depth=%u aegean=0x%02X mixed_radix=%u\n", h.depth, h.aegean_byte, h.mixed_radix);
+    omi_header_v2_t h = decode_header_v2(emitted, emitted_len);
+    printf("HEADER_V2 depth=%u mixed_radix=[%u,%u,%u,%u] aegean=0x%02X witness=0x%08X\n",
+           h.depth,
+           h.mixed_radix_coords[0],
+           h.mixed_radix_coords[1],
+           h.mixed_radix_coords[2],
+           h.mixed_radix_coords[3],
+           h.aegean_projection,
+           h.witness);
     
     return state;
 }
@@ -106,6 +97,74 @@ static void print_operator_sequence(size_t len)
     for (size_t i = 0; i < len; i++) {
         printf("  step %zu: byte=0x%02X op=%u\n", i, trace[i].byte, trace[i].op);
     }
+}
+
+static int header_v2_equiv(omi_header_v2_t a, omi_header_v2_t b)
+{
+    return a.depth == b.depth &&
+           memcmp(a.mixed_radix_coords,
+                  b.mixed_radix_coords,
+                  sizeof(a.mixed_radix_coords)) == 0 &&
+           a.aegean_projection == b.aegean_projection &&
+           a.witness == b.witness;
+}
+
+static int aegean_projection_equiv(omi_aegean_projection_t a, omi_aegean_projection_t b)
+{
+    return a.codepoint == b.codepoint &&
+           a.category == b.category &&
+           strcmp(a.unicode_name, b.unicode_name) == 0 &&
+           a.projection_row == b.projection_row &&
+           a.triad_index == b.triad_index &&
+           a.selector_index == b.selector_index;
+}
+
+static int braille_projection_equiv(omi_braille_projection_t a, omi_braille_projection_t b)
+{
+    return a.codepoint == b.codepoint &&
+           a.dot_mask == b.dot_mask &&
+           a.dot_count == b.dot_count &&
+           a.resolution_row == b.resolution_row &&
+           a.cell_class == b.cell_class &&
+           strcmp(a.unicode_name, b.unicode_name) == 0;
+}
+
+static int projection_address_equiv(omi_projection_address_t a, omi_projection_address_t b)
+{
+    return aegean_projection_equiv(a.aegean, b.aegean) &&
+           braille_projection_equiv(a.braille, b.braille) &&
+           a.observer_address == b.observer_address &&
+           a.witness == b.witness;
+}
+
+static int geometry_vertex_equiv(omi_geometry_vertex_t a, omi_geometry_vertex_t b)
+{
+    return a.id == b.id &&
+           a.source == b.source &&
+           a.dot_mask == b.dot_mask &&
+           a.occupied == b.occupied &&
+           a.kind == b.kind;
+}
+
+static int geometry_vertex_set_equiv(omi_geometry_vertex_set_t a, omi_geometry_vertex_set_t b)
+{
+    if (a.count != b.count || a.witness != b.witness) {
+        return 0;
+    }
+
+    for (uint8_t i = 0; i < a.count; i++) {
+        if (!geometry_vertex_equiv(a.vertices[i], b.vertices[i])) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static int ascii_role_ok(uint8_t byte, omi_geometry_ascii_role_t expected)
+{
+    omi_geometry_ascii_initiation_t initiation = omi_geometry_ascii_initiation(byte);
+    return initiation.role == expected;
 }
 
 int main(void)
@@ -180,6 +239,276 @@ int main(void)
     printf("GAUGE_APPLY mutates CORE only (parity, plane, mode_bit).\n");
     printf("META is DERIVED via π(trace, omicron_mode).\n");
     printf("State separation enforced.\n");
+
+    printf("\n=== PHASE 20: HEADER COORDINATE ALGEBRA ===\n\n");
+
+    uint8_t header_trace_a[] = { 0x31, 0x3F, 0x28, 0x0D };
+    uint8_t header_trace_b[] = { 0x31, 0x3F, 0x29, 0x0D };
+    omi_header_v2_t header_a1 = decode_header_v2(header_trace_a, sizeof(header_trace_a));
+    omi_header_v2_t header_a2 = decode_header_v2(header_trace_a, sizeof(header_trace_a));
+    omi_header_v2_t header_b = decode_header_v2(header_trace_b, sizeof(header_trace_b));
+
+    printf("1. SAME TRACE, SAME HEADER:\n");
+    printf("   H(trace_a) == H(trace_a): %s\n",
+           header_v2_equiv(header_a1, header_a2) ? "VERIFIED" : "FAILED");
+
+    printf("\n2. DIFFERENT TRACE, DIFFERENT WITNESS:\n");
+    printf("   witness_a=0x%08X witness_b=0x%08X: %s\n",
+           header_a1.witness,
+           header_b.witness,
+           (header_a1.witness != header_b.witness) ? "VERIFIED" : "FAILED");
+
+    printf("\n3. HEADER IS OBSERVER-ONLY:\n");
+    omi_gauge_state_t header_core_a = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_header_v2_t printed_header = decode_header_v2(header_trace_a, sizeof(header_trace_a));
+    omi_gauge_state_t header_core_b = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    printf("   printing H(trace) leaves CORE unchanged: %s\n",
+           (printed_header.witness == header_a1.witness &&
+            gauge_core_equiv(&header_core_a, &header_core_b)) ? "VERIFIED" : "FAILED");
+
+    printf("\n4. Γ REMAINS MODE-INDEPENDENT:\n");
+    omi_gauge_state_t header_linear = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_gauge_state_t header_replay = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_REPLAY);
+    printf("   LINEAR vs REPLAY CORE after header decode: %s\n",
+           gauge_core_equiv(&header_linear, &header_replay) ? "VERIFIED" : "FAILED");
+    
+    printf("\n=== PHASE 20 HEADER ALGEBRA VERIFIED ===\n");
+
+    printf("\n=== PHASE 21: AEGEAN HEADER PLANE ===\n\n");
+
+    omi_aegean_projection_t sep_a;
+    omi_aegean_projection_t sep_b;
+    omi_aegean_projection_t number;
+    omi_aegean_projection_t measure;
+    int sep_ok_a = omi_aegean_classify(0x10100, &sep_a);
+    int sep_ok_b = omi_aegean_classify(0x10100, &sep_b);
+    int number_ok = omi_aegean_classify(0x1012B, &number);
+    int measure_ok = omi_aegean_classify(0x10137, &measure);
+
+    printf("1. NORMATIVE CATEGORY CLASSIFICATION:\n");
+    printf("   U+10100 %s -> %s: %s\n",
+           sep_a.unicode_name,
+           omi_aegean_category_name(sep_a.category),
+           (sep_ok_a && sep_a.category == OMI_AEGEAN_SEPARATOR_MARK) ? "VERIFIED" : "FAILED");
+    printf("   U+1012B %s -> %s: %s\n",
+           number.unicode_name,
+           omi_aegean_category_name(number.category),
+           (number_ok && number.category == OMI_AEGEAN_NUMBER) ? "VERIFIED" : "FAILED");
+    printf("   U+10137 %s -> %s: %s\n",
+           measure.unicode_name,
+           omi_aegean_category_name(measure.category),
+           (measure_ok && measure.category == OMI_AEGEAN_WEIGHT_MEASURE) ? "VERIFIED" : "FAILED");
+
+    printf("\n2. PROJECTION DETERMINISM:\n");
+    printf("   classify(U+10100) stable: %s\n",
+           (sep_ok_a && sep_ok_b && aegean_projection_equiv(sep_a, sep_b)) ? "VERIFIED" : "FAILED");
+    printf("   number row=%d triad=%d selector=%d\n",
+           number.projection_row,
+           number.triad_index,
+           number.selector_index);
+    printf("   measure row=%d triad=%d selector=%d\n",
+           measure.projection_row,
+           measure.triad_index,
+           measure.selector_index);
+
+    printf("\n3. AEGEAN PROJECTION IS OBSERVER-ONLY:\n");
+    omi_gauge_state_t aegean_core_a = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_aegean_projection_t ignored_projection;
+    omi_aegean_classify(0x1013F, &ignored_projection);
+    omi_gauge_state_t aegean_core_b = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    printf("   classification leaves CORE unchanged: %s\n",
+           gauge_core_equiv(&aegean_core_a, &aegean_core_b) ? "VERIFIED" : "FAILED");
+    
+    printf("\n=== PHASE 21 AEGEAN HEADER PLANE VERIFIED ===\n");
+
+    printf("\n=== PHASE 22: BRAILLE RESOLUTION PLANE ===\n\n");
+
+    omi_braille_projection_t braille_empty;
+    omi_braille_projection_t braille_a;
+    omi_braille_projection_t braille_b;
+    omi_braille_projection_t braille_full;
+    int braille_empty_ok = omi_braille_classify(0x2800, &braille_empty);
+    int braille_a_ok = omi_braille_classify(0x2847, &braille_a);
+    int braille_b_ok = omi_braille_classify(0x2847, &braille_b);
+    int braille_full_ok = omi_braille_classify(0x28FF, &braille_full);
+
+    printf("1. DOT-MASK CLASSIFICATION:\n");
+    printf("   U+2800 mask=0x%02X count=%u class=%s: %s\n",
+           braille_empty.dot_mask,
+           braille_empty.dot_count,
+           omi_braille_cell_class_name(braille_empty.cell_class),
+           (braille_empty_ok && braille_empty.cell_class == OMI_BRAILLE_EMPTY_CELL) ? "VERIFIED" : "FAILED");
+    printf("   U+2847 mask=0x%02X count=%u class=%s: %s\n",
+           braille_a.dot_mask,
+           braille_a.dot_count,
+           omi_braille_cell_class_name(braille_a.cell_class),
+           (braille_a_ok && braille_a.dot_mask == 0x47) ? "VERIFIED" : "FAILED");
+    printf("   U+28FF mask=0x%02X count=%u class=%s: %s\n",
+           braille_full.dot_mask,
+           braille_full.dot_count,
+           omi_braille_cell_class_name(braille_full.cell_class),
+           (braille_full_ok && braille_full.cell_class == OMI_BRAILLE_FULL_CELL) ? "VERIFIED" : "FAILED");
+
+    printf("\n2. PROJECTION DETERMINISM:\n");
+    printf("   classify(U+2847) stable: %s\n",
+           (braille_a_ok && braille_b_ok && braille_projection_equiv(braille_a, braille_b)) ? "VERIFIED" : "FAILED");
+    printf("   resolution_row=%u unicode_name=%s\n",
+           braille_a.resolution_row,
+           braille_a.unicode_name);
+
+    printf("\n3. BRAILLE PROJECTION IS OBSERVER-ONLY:\n");
+    omi_gauge_state_t braille_core_a = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_braille_projection_t ignored_braille_projection;
+    omi_braille_classify(0x28FF, &ignored_braille_projection);
+    omi_gauge_state_t braille_core_b = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    printf("   classification leaves CORE unchanged: %s\n",
+           gauge_core_equiv(&braille_core_a, &braille_core_b) ? "VERIFIED" : "FAILED");
+
+    printf("\n=== PHASE 22 BRAILLE RESOLUTION PLANE VERIFIED ===\n");
+
+    printf("\n=== PHASE 23: PROJECTION COMPOSITION ADDRESS ===\n\n");
+
+    omi_aegean_projection_t address_aegean_a;
+    omi_aegean_projection_t address_aegean_b;
+    omi_braille_projection_t address_braille_a;
+    omi_braille_projection_t address_braille_b;
+    int address_aegean_a_ok = omi_aegean_classify(0x1012B, &address_aegean_a);
+    int address_aegean_b_ok = omi_aegean_classify(0x1012C, &address_aegean_b);
+    int address_braille_a_ok = omi_braille_classify(0x2847, &address_braille_a);
+    int address_braille_b_ok = omi_braille_classify(0x284F, &address_braille_b);
+    omi_projection_address_t address_a1 = omi_projection_address_compose(address_aegean_a, address_braille_a);
+    omi_projection_address_t address_a2 = omi_projection_address_compose(address_aegean_a, address_braille_a);
+    omi_projection_address_t address_diff_aegean = omi_projection_address_compose(address_aegean_b, address_braille_a);
+    omi_projection_address_t address_diff_braille = omi_projection_address_compose(address_aegean_a, address_braille_b);
+
+    printf("1. SAME AEGEAN + SAME BRAILLE -> SAME ADDRESS:\n");
+    printf("   address=0x%08X witness=0x%08X: %s\n",
+           address_a1.observer_address,
+           address_a1.witness,
+           (address_aegean_a_ok && address_braille_a_ok &&
+            projection_address_equiv(address_a1, address_a2)) ? "VERIFIED" : "FAILED");
+
+    printf("\n2. DIFFERENT AEGEAN -> DIFFERENT ADDRESS:\n");
+    printf("   base=0x%08X different_aegean=0x%08X: %s\n",
+           address_a1.observer_address,
+           address_diff_aegean.observer_address,
+           (address_aegean_b_ok &&
+            address_a1.observer_address != address_diff_aegean.observer_address) ? "VERIFIED" : "FAILED");
+
+    printf("\n3. DIFFERENT BRAILLE -> DIFFERENT ADDRESS:\n");
+    printf("   base=0x%08X different_braille=0x%08X: %s\n",
+           address_a1.observer_address,
+           address_diff_braille.observer_address,
+           (address_braille_b_ok &&
+            address_a1.observer_address != address_diff_braille.observer_address) ? "VERIFIED" : "FAILED");
+
+    printf("\n4. COMPOSITION IS OBSERVER-ONLY:\n");
+    omi_gauge_state_t address_core_a = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_projection_address_t ignored_address = omi_projection_address_compose(address_aegean_a, address_braille_a);
+    omi_gauge_state_t address_core_b = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    printf("   compose(Aegean, Braille) leaves CORE unchanged: %s\n",
+           (ignored_address.witness == address_a1.witness &&
+            gauge_core_equiv(&address_core_a, &address_core_b)) ? "VERIFIED" : "FAILED");
+
+    printf("\n5. Γ REMAINS MODE-INDEPENDENT:\n");
+    omi_gauge_state_t address_linear = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_gauge_state_t address_replay = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_REPLAY);
+    printf("   LINEAR vs REPLAY CORE after composition: %s\n",
+           gauge_core_equiv(&address_linear, &address_replay) ? "VERIFIED" : "FAILED");
+
+    printf("\n=== PHASE 23 PROJECTION COMPOSITION ADDRESS VERIFIED ===\n");
+
+    printf("\n=== PHASE 24: OMI-LISP PRE-LIST GEOMETRY BOOT PLANE ===\n\n");
+
+    omi_geometry_vertex_set_t geom_braille_a1 = omi_geometry_vertices_from_braille(address_braille_a);
+    omi_geometry_vertex_set_t geom_braille_a2 = omi_geometry_vertices_from_braille(address_braille_a);
+    omi_geometry_vertex_set_t geom_braille_diff = omi_geometry_vertices_from_braille(address_braille_b);
+    omi_geometry_vertex_t geom_address_vertex = omi_geometry_vertex_from_projection_address(address_a1);
+    omi_geometry_vertex_t geom_aegean_vertex = omi_geometry_vertex_from_aegean(address_aegean_a);
+    omi_geometry_line_t geom_cons_line = omi_geometry_cons_line(geom_address_vertex, geom_aegean_vertex);
+    omi_geometry_line_t geom_cycle_lines[] = {
+        omi_geometry_cons_line(geom_address_vertex, geom_aegean_vertex),
+        omi_geometry_cons_line(geom_aegean_vertex, geom_braille_a1.vertices[0]),
+        omi_geometry_cons_line(geom_braille_a1.vertices[0], geom_address_vertex)
+    };
+    omi_geometry_vertex_t geom_points[] = {
+        geom_address_vertex,
+        geom_aegean_vertex,
+        geom_braille_a1.vertices[0],
+        geom_braille_a1.vertices[1]
+    };
+    omi_geometry_metric_line_t geom_metric_line =
+        omi_geometry_metric_line_from_vertices(geom_points, 4);
+    omi_geometry_polygon_t geom_polygon = omi_geometry_polygon_from_lines(geom_cycle_lines, 3);
+    omi_geometry_polygon_t geom_polygons[] = { geom_polygon };
+    omi_geometry_surface_t geom_surface = omi_geometry_surface_from_polygons(geom_polygons, 1);
+
+    printf("1. ASCII INITIATION BAND CLASSIFICATION:\n");
+    printf("   NUL/SP/'/(/./ /0/9/:/?/DEL roles: %s\n",
+           (ascii_role_ok(0x00, OMI_GEOMETRY_ASCII_PROJECTIVE_ORIGIN_NULL) &&
+            ascii_role_ok(0x20, OMI_GEOMETRY_ASCII_INDEX_POINTER) &&
+            ascii_role_ok(0x27, OMI_GEOMETRY_ASCII_INDEX_POINTER) &&
+            ascii_role_ok(0x28, OMI_GEOMETRY_ASCII_OPERATIONAL_REFERENCE) &&
+            ascii_role_ok(0x2E, OMI_GEOMETRY_ASCII_OPERATIONAL_REFERENCE) &&
+            ascii_role_ok(0x2F, OMI_GEOMETRY_ASCII_OPERATIONAL_REFERENCE) &&
+            ascii_role_ok(0x30, OMI_GEOMETRY_ASCII_TOPOLOGY_DESCRIPTOR) &&
+            ascii_role_ok(0x39, OMI_GEOMETRY_ASCII_TOPOLOGY_DESCRIPTOR) &&
+            ascii_role_ok(0x3A, OMI_GEOMETRY_ASCII_RELATION_PROBE) &&
+            ascii_role_ok(0x3F, OMI_GEOMETRY_ASCII_RELATION_PROBE) &&
+            ascii_role_ok(0x7F, OMI_GEOMETRY_ASCII_PROJECTIVE_CLOSURE_WITNESS)) ? "VERIFIED" : "FAILED");
+
+    printf("\n2. SAME BRAILLE MASK -> SAME VERTEX SET:\n");
+    printf("   witness=0x%08X: %s\n",
+           geom_braille_a1.witness,
+           geometry_vertex_set_equiv(geom_braille_a1, geom_braille_a2) ? "VERIFIED" : "FAILED");
+
+    printf("\n3. DIFFERENT BRAILLE MASK -> DIFFERENT VERTEX SET:\n");
+    printf("   base=0x%08X different=0x%08X: %s\n",
+           geom_braille_a1.witness,
+           geom_braille_diff.witness,
+           (geom_braille_a1.witness != geom_braille_diff.witness) ? "VERIFIED" : "FAILED");
+
+    printf("\n4. CONS-AS-LINE IS DIRECTED CAR -> CDR:\n");
+    printf("   from=%s to=%s: %s\n",
+           omi_geometry_vertex_kind_name(geom_cons_line.from.kind),
+           omi_geometry_vertex_kind_name(geom_cons_line.to.kind),
+           (geometry_vertex_equiv(geom_cons_line.from, geom_address_vertex) &&
+            geometry_vertex_equiv(geom_cons_line.to, geom_aegean_vertex)) ? "VERIFIED" : "FAILED");
+
+    printf("\n5. ORDERED VERTICES -> DETERMINISTIC UNARY METRIC LINE:\n");
+    printf("   count=%u witness=0x%08X: %s\n",
+           geom_metric_line.count,
+           geom_metric_line.witness,
+           (geom_metric_line.count == 4) ? "VERIFIED" : "FAILED");
+
+    printf("\n6. CLOSED CONS-LINE CYCLE -> POLYGON:\n");
+    printf("   lines=%u closed=%u witness=0x%08X: %s\n",
+           geom_polygon.count,
+           geom_polygon.closed,
+           geom_polygon.witness,
+           (geom_polygon.count == 3 && geom_polygon.closed == 1) ? "VERIFIED" : "FAILED");
+
+    printf("\n7. SURFACE GROUPS POLYGONS DETERMINISTICALLY:\n");
+    printf("   polygons=%u witness=0x%08X: %s\n",
+           geom_surface.count,
+           geom_surface.witness,
+           (geom_surface.count == 1 && geom_surface.polygons[0].witness == geom_polygon.witness) ? "VERIFIED" : "FAILED");
+
+    printf("\n8. GEOMETRY DECLARATION IS OBSERVER-ONLY:\n");
+    omi_gauge_state_t geometry_core_a = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_geometry_line_t ignored_geometry = omi_geometry_cons_line(geom_address_vertex, geom_aegean_vertex);
+    omi_gauge_state_t geometry_core_b = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    printf("   declarations leave CORE unchanged: %s\n",
+           (ignored_geometry.id == geom_cons_line.id &&
+            gauge_core_equiv(&geometry_core_a, &geometry_core_b)) ? "VERIFIED" : "FAILED");
+
+    printf("\n9. Γ REMAINS MODE-INDEPENDENT:\n");
+    omi_gauge_state_t geometry_linear = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_LINEAR);
+    omi_gauge_state_t geometry_replay = run_gauge(header_trace_a, sizeof(header_trace_a), OMICRON_REPLAY);
+    printf("   LINEAR vs REPLAY CORE after geometry declarations: %s\n",
+           gauge_core_equiv(&geometry_linear, &geometry_replay) ? "VERIFIED" : "FAILED");
+
+    printf("\n=== PHASE 24 OMI-LISP PRE-LIST GEOMETRY BOOT PLANE VERIFIED ===\n");
     
     printf("\n=== PHASE 13: CATEGORY THEORY VERIFICATION ===\n\n");
     

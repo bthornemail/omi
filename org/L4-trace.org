@@ -37,3 +37,4 @@ as described in RFC 2119.
 - This layer ensures that the operator sequence is delivered reliably — MUST not drop or duplicate
 - The invariant means that the same input byte stream produces the same Γ — MUST hold regardless of the OMICRON mode (linear, recursive, replay)
 - The trace is used by higher layers for projection and interpretation — MUST remain unchanged by upper layers
+- Phase 20 Header Algebra observes the ESC-resolved trace only: [[file:PHASE-20-HEADER-ALGEBRA.org][Phase 20 Header]]

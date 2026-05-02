@@ -53,6 +53,10 @@ bidirectional knowledge graph that can be traversed in multiple directions.
 - AST →[compiles_to]→ omi_ir
 - trace →[renders_to]→ org_document
 - org →[extracts_to]→ build_artifacts
+- omi_triple →[compiles_to]→ datalog_fact
+- datalog_rules →[evaluate_to]→ minimal_model
+- Y_combinator →[enables]→ recursive_closure
+- Z_combinator →[enables]→ guarded_recursion
 
 ** Layer 10 — Organization (Structure Surface)
 - node →[links_to]→ node
@@ -93,6 +97,10 @@ The following inverse predicates are defined for backward navigation:
 - compiles_to ←[is_compiled_from]← AST
 - renders_to ←[is_rendered_from]← trace
 - extracts_to ←[is_extracted_from]← org
+- compiles_to ←[is_compiled_from]← omi_triple
+- evaluate_to ←[is_evaluated_from]← datalog_rules
+- enables ←[is_enabled_by]← Y_combinator
+- enables ←[is_enabled_by]← Z_combinator
 - links_to ←[is_linked_from]← node
 - contains ←[is_contained_in]← file
 - references ←[is_referenced_by]← concept
@@ -138,10 +146,15 @@ The S-P-O graph has the following properties:
 * Implementation Notes
 This S-P-O graph specification can be implemented as:
 
-1. A set of Prolog facts for logical querying
+1. A finite Datalog fact/rule set for fixed-point logical querying
 2. A database table with (subject, predicate, object) columns
 3. A graph database with nodes and edges
 4. In-memory data structures for runtime traversal
+
+The canonical logic adapter is Datalog-style least fixed-point evaluation, not
+ordinary Prolog search. Recursive relations SHOULD be modeled as explicit Y or
+Z fixed-point forms so ordering, suspension, and coroutine behavior do not
+silently enter the S-P-O graph.
 
 Each triple represents a valid transformation or relationship in the OMI system,
 and the graph as a whole represents the complete semantic structure of the

@@ -6,6 +6,7 @@
 #include "escape.h"
 
 #define GAUGE_TABLE_SIZE 128
+#define OMI_HEADER_V2_MIXED_RADIX_COORDS 4
 
 typedef struct {
     uint8_t dec;
@@ -75,12 +76,19 @@ typedef struct {
     omi_gauge_core_state_t core;
 } omi_gauge_state_t;
 
+typedef struct {
+    uint8_t depth;
+    uint8_t mixed_radix_coords[OMI_HEADER_V2_MIXED_RADIX_COORDS];
+    uint8_t aegean_projection;
+    uint32_t witness;
+} omi_header_v2_t;
+
 extern const omi_gauge_entry_t omi_gauge_table[];
 extern const uint32_t omi_gauge_count;
 
-uint8_t gauge_lookup(uint8_t header, uint8_t byte);
+uint8_t gauge_lookup(uint8_t byte);
 omi_gauge_state_t gauge_apply(omi_gauge_state_t state, uint8_t op);
-omi_gauge_state_t gauge_step(omi_gauge_state_t state, omi_escape_state_t *esc, uint8_t *header, uint8_t byte, uint8_t omicron_mode, uint8_t *op_out);
+omi_gauge_state_t gauge_step(omi_gauge_state_t state, omi_escape_state_t *esc, uint8_t *header, uint8_t byte, uint8_t omicron_mode, uint8_t *op_out, uint8_t *resolved_out);
 
 int gauge_set_omicron_mode(omi_gauge_state_t *state, uint8_t mode);
 uint8_t gauge_get_omicron_mode(omi_gauge_state_t *state);
@@ -94,5 +102,8 @@ int gauge_meta_equiv(omi_gauge_state_t *a, omi_gauge_state_t *b);
 omi_gauge_meta_state_t gauge_pi(omi_gauge_state_t *state, uint8_t *trace, size_t trace_len, uint8_t omicron_mode);
 
 uint8_t gauge_header_decode(uint8_t current_header, uint8_t byte);
+
+/* Observer-only projection: must never feed gauge_step, gauge_lookup, or gauge_apply. */
+omi_header_v2_t decode_header_v2(const uint8_t *resolved_trace, size_t len);
 
 #endif

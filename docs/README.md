@@ -24,6 +24,10 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 9. `BOOT_MODEL.md` explains how the current kernel boots and evaluates memory.
 10. `CONS_THEOREMS.md` records the claims the implementation is trying to make
    mechanically checkable.
+11. `IMPLEMENTATION-AUDIT-PHASES-20-29.md` records the current observer,
+    projection, and pre-OS law implementation evidence.
+12. `PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md` describes the OSI lens-stack
+    bridge over Phase 28 replay.
 
 ## File Roles
 
@@ -57,6 +61,14 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 
 `CONS_THEOREMS.md`
 : Closure, replay, projection, and validity claims.
+
+`IMPLEMENTATION-AUDIT-PHASES-20-29.md`
+: Evidence matrix and verification log for the Phase 20-29 observer/projection
+  stack.
+
+`PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md`
+: Integration law for treating OSI layers as non-causal projections over the
+  Phase 28 bitwise kernel state.
 
 ## Source Of Truth
 

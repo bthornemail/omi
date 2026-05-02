@@ -84,12 +84,12 @@ stratum operator_algebra
   range 0x20 0x2f
   role gauge_transformation_symbols
 
-; Evaluation/query stratum: 0x30..0x3F
-; Numeric basis, relational operators, recursion trigger
+; Topology/relation stratum: 0x30..0x3F
+; Digit descriptors, relational operators, recursion trigger
 
-stratum evaluation_query
+stratum topology_relation
   range 0x30 0x3f
-  role numeric_basis_relational_operators
+  role topology_descriptors_relational_operators
   note 0x3F '?' is special recursion probe
 
 ; Extended symbolic manifold: 0x40..0x7F

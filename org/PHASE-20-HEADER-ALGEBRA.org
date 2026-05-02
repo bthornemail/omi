@@ -1,0 +1,56 @@
+#+TITLE: Phase 20 - Header Coordinate Algebra
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 20 - Header Coordinate Algebra
+:PROPERTIES:
+:ID:       omi-phase-20-header-algebra
+:END:
+
+Phase 20 enriches =H(trace)= without changing Γ or GAUGE execution.
+
+#+BEGIN_EXAMPLE
+ESC -> Γ -> GAUGE_APPLY
+trace = Γ o ESC
+header = H(trace)
+header does not feed back into Γ
+#+END_EXAMPLE
+
+* S-P-O Definition
+
+| Subject            | Predicate | Object                       | MODALITY |
+|--------------------+-----------+------------------------------+----------|
+| ESC-resolved trace | derives   | header coordinate projection | MUST     |
+| header             | observes  | trace                        | MUST     |
+| header             | mutates   | CORE                         | MUST_NOT |
+| header             | feeds     | Γ                            | MUST_NOT |
+
+* Header V2 Projection
+
+=decode_header_v2(resolved_trace, len)= is a public runtime observer API.
+It MAY be reused by tools, tests, and documentation projections. It MUST
+remain non-causal.
+
+The header projection contains:
+
+| Field              | Meaning                                      |
+|--------------------+----------------------------------------------|
+| depth              | length of the ESC-resolved trace             |
+| mixed_radix_coords | coordinate view over the resolved trace      |
+| aegean_projection  | Aegean header/display carrier                |
+| witness            | deterministic trace witness                  |
+
+* Boundary Rules
+
+- Γ is execution authority.
+- ESC is the only pre-Γ gate.
+- Header is projection only.
+- Aegean is coordinate/display only and is specified by [[file:PHASE-21-AEGEAN-HEADER-PLANE.org][Phase 21 Aegean Header Plane]].
+- Header changes MUST NOT alter execution.
+
+* Layer Links
+
+- [[file:L4-trace.org::omi-osi-l4][L4 Trace]] produces the ESC-resolved Γ trace observed by Phase 20.
+- [[file:L6-projection-pi.org::omi-osi-l6][L6 Projection π]] hosts the header observer.
+- [[file:L10-organization.org::omi-osi-l10][L10 Organization]] arranges the header address trie.

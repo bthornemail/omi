@@ -1,0 +1,101 @@
+#+TITLE: Phase 24 - OMI-LISP Pre-List Geometry Boot Plane
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 24 - OMI-LISP Pre-List Geometry Boot Plane
+:PROPERTIES:
+:ID:       omi-phase-24-omi-lisp-pre-list-geometry
+:END:
+
+Phase 24 defines the ASCII initiation rows as pre-list boot geometry. This is
+the bridge from canonical C0 control into structural alignment and topology
+descriptor derivation, before alphabet/user-space symbols become meaningful.
+
+#+BEGIN_EXAMPLE
+0x00..0x1F = canonical control seed
+0x20..0x2F = pre-Lisp structural alignment band
+0x30..0x3F = topology descriptor / relation band
+#+END_EXAMPLE
+
+Core law:
+
+#+BEGIN_EXAMPLE
+CONS declares lines.
+Sparse radix trie declares metric division.
+Digit descriptors derive from CONS-closure metrics.
+Alphabet/user-space comes later.
+Nothing here executes.
+#+END_EXAMPLE
+
+* ASCII Initiation Roles
+
+| Range / byte | Role                                      |
+|--------------+-------------------------------------------|
+| 0x00 NUL     | projective origin/null                    |
+| 0x01..0x1F   | canonical control seed                    |
+| 0x20..0x27   | index pointers / structural anchors       |
+| 0x28..0x2F   | operational references / pre-Lisp ops     |
+| 0x30..0x39   | derived topology / recursion descriptors  |
+| 0x3A..0x3F   | relation / comparison / probe closure     |
+| 0x7F DEL     | projective closure / witness              |
+
+Row law:
+
+#+BEGIN_EXAMPLE
+SP ! " # $ % & '       = index pointers / structural anchors
+( ) * + , - . /        = operational references / pre-Lisp operators
+0 1 2 3 4 5 6 7 8 9   = derived topology / recursion descriptors
+: ; < = > ?            = relation / comparison / probe closure
+#+END_EXAMPLE
+
+* Digit Descriptorhood
+
+OMI-LISP does not assume numbers.
+OMI-LISP derives digit descriptors from structural alignment.
+Numeric interpretation is a later userspace projection.
+
+#+BEGIN_EXAMPLE
+S-P-O triples
+  -> CONS closure
+  -> sparse radix trie
+  -> metric division
+  -> topology / recursion descriptor row
+#+END_EXAMPLE
+
+* Geometry Declarations
+
+These forms describe observer geometry. They are not evaluator input.
+
+#+BEGIN_SRC lisp
+(vertex v0 :source braille:0x2847 :mask 0x47 :occupied true)
+(vertex v1 :source aegean:0x1012B :row 5 :triad 0 :selector 0)
+
+(line l0 :from v0 :to v1)
+(cons-line c0 :car v0 :cdr v1)
+
+(metric-line m0 :points (v0 v1 v2 v3))
+(polygon p0 :lines (l0 l1 l2) :closed true)
+(surface s0 :polygons (p0 p1))
+#+END_SRC
+
+* Projection Mapping
+
+| Source projection       | Geometry declaration                         |
+|-------------------------+----------------------------------------------|
+| Braille dot mask        | occupied vertex set                          |
+| Aegean projection       | scale/coordinate frame vertex                |
+| Projection address      | stable address-anchor vertex                 |
+| CONS pair               | directed line from CAR vertex to CDR vertex  |
+| Ordered vertices        | unary metric line                            |
+| Closed CONS-line cycle  | polygon                                      |
+| Ordered polygons        | surface                                      |
+
+* Boundary Rules
+
+- Geometry derives from projection metadata and CONS configurations.
+- Geometry MAY describe combinatorics such as 8-simplex/9-vertex framing.
+- Geometry MUST NOT execute.
+- Geometry MUST NOT feed ESC, Γ, =gauge_step=, =gauge_lookup=, or =gauge_apply=.
+- No graphics library is authoritative.
+- Future renderers MUST consume these declarations as views.

@@ -31,6 +31,7 @@ as described in RFC 2119.
 
 ** OMI Mapping
 - META = π(trace, omicron_mode) — MUST be a pure function
+- Header observer = H(trace) — MUST be a pure projection: [[file:PHASE-20-HEADER-ALGEBRA.org][Phase 20 Header Algebra]]
 - π_composition laws: π_a ∘ π_b = π_{a⊗b} — MUST hold for all projections
 - π_replay is idempotent for canonical replay — MUST satisfy idempotence
 

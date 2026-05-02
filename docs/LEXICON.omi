@@ -5,6 +5,18 @@ OMI:
   Experimental bootable graph-machine substrate. OMI begins as a flat memory
   image interpreted through graph rules and grows toward an OMI-LISP runtime.
 
+Pre-OS measurement machine:
+  The Phase 27 framing of OMI. Non-printing ASCII 0x00-0x1F is interpreted as
+  hidden CONS-level structure; 0x20-0x2F measures that structure; 0x30-0x3F is
+  the first visible measurement codomain; 0x40-0x7F is optional alphabet or
+  user-space projection. See docs/PRE-OS-MEASUREMENT-MACHINE.md.
+
+Pre-OS canonical measurement law:
+  The normalized root law: bytes are canonical, replay is deterministic, and
+  everything visible is derived by projection. Digits are the first visible
+  measurement outputs; numbers, glyphs, files, geometry, and operating systems
+  are later interpretations. See docs/PRE-OS-CANONICAL-MEASUREMENT-LAW.md.
+
 BOM:
   Byte Order Mark used as a clock principle: each tick is an endian
   reinterpretation boundary.
@@ -15,6 +27,11 @@ BOM tick:
 
 CONS:
   A stable adjacency binding between graph nodes.
+
+CONS algebra:
+  The free ordered construction algebra over ASCII atoms. CONS structures are
+  primary; topology, positional encoding, geometry, and address metadata are
+  projection lenses over those structures.
 
 CONS closure:
   Transitive closure of CONS bindings. Future region formation is expected to
@@ -67,6 +84,24 @@ OID:
 Projection:
   External view of graph state. A projection may encode or display OMI-GRAPH
   but must not become the source of graph truth.
+
+Projection lens:
+  A canonical observer function over CONS algebra. In Phase 26 form,
+  pi_lens : CONS algebra -> {0x30-0x3F}. Digits are projection outputs, not
+  primitive meanings. ESC may select or gate the active projection regime.
+
+Canonical encoding law:
+  The normalized law for OMI projections. It defines C as CONS cells, Sigma as
+  ASCII bytes, D as 0x30-0x3F, deterministic non-causal projection pi : C ->
+  Sigma, unary rotation clocks, and the separation between bitwise kernel
+  projection and optional positional, sexagesimal, and alphabet projections.
+  See docs/CANONICAL-ENCODING-LAW.md.
+
+OSI projection integration:
+  The Phase 30 bridge that treats OSI layers as projection regimes over Phase
+  28 deterministic replay. Layer projections read kernel_state_t and tick, emit
+  observer metadata, and must not call kernel_tick, gauge_lookup, or
+  gauge_apply. See docs/PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md.
 
 Replay:
   Host-side recomputation of graph evolution from an image and rule version.
@@ -122,6 +157,20 @@ FRAME address:
   A composition of frame fields: BOM ⊗ AEGEAN ⊗ BRAILLE, interpreted
   as transform operator composition, NOT arithmetic product.
 
+Topological digit derivation:
+  The Phase 25 law that ASCII digits 0x30-0x39 are not primitive
+  numerals. They are topology/recursion descriptors over CONS-set geometry:
+  0 is null closure, 1 is primitive CONS edge, 2 is a two-CONS line, 3 is
+  a triangle/3-cycle, and 9 reaches the 8-simplex/9-vertex enneazetton.
+  Numeric interpretation is optional userspace projection.
+
+Userspace numeric encoding:
+  A declared interpretation of projection fields as numeric roles over
+  topological digit descriptors. In such a declaration, control/polarity may
+  serve as sign, AEGEAN may serve as exponent, and BRAILLE may serve as
+  significand. This is a userspace convention over descriptor topology, not
+  its source, not a kernel primitive, and not execution authority.
+
 GAUGE:
   Transformation operator over codepoint lattice. The function that maps
   each ASCII codepoint (0x00-0x7F) to a state transformation.
@@ -155,7 +204,7 @@ GAUGE strata:
   The four-layer structure of codepoint space:
   - 0x00-0x1F: Control kernel (system control automata)
   - 0x20-0x2F: Operator algebra (transformation symbols)
-  - 0x30-0x3F: Evaluation/query space (numeric basis + relational)
+  - 0x30-0x3F: Topology descriptor / relation space
   - 0x40-0x7F: Symbolic manifold (extended grammar)
 
 BOM carrier:

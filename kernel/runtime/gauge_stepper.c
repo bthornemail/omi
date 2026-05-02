@@ -1,5 +1,6 @@
 #include "../include/gauge.h"
 #include "../include/escape.h"
+#include "../../polyform/encoding/aegean.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -26,6 +27,37 @@ uint8_t gauge_header_decode(uint8_t current_header, uint8_t byte)
         default:
             return GAUGE_HEADER_PLAIN;
     }
+}
+
+omi_header_v2_t decode_header_v2(const uint8_t *resolved_trace, size_t len)
+{
+    static const uint8_t radix[OMI_HEADER_V2_MIXED_RADIX_COORDS] = {2, 3, 5, 7};
+    omi_header_v2_t header = {
+        .depth = (len > UINT8_MAX) ? UINT8_MAX : (uint8_t)len,
+        .mixed_radix_coords = {0, 0, 0, 0},
+        .aegean_projection = 0,
+        .witness = 2166136261u
+    };
+
+    for (size_t i = 0; i < OMI_HEADER_V2_MIXED_RADIX_COORDS; i++) {
+        header.mixed_radix_coords[i] = (uint8_t)(len % radix[i]);
+    }
+
+    for (size_t i = 0; i < len; i++) {
+        uint8_t byte = resolved_trace[i];
+        uint8_t aegean = omi_encode_aegean(byte);
+
+        header.aegean_projection = (uint8_t)((header.aegean_projection << 1) |
+                                             (header.aegean_projection >> 7));
+        header.aegean_projection ^= aegean;
+
+        header.witness ^= byte;
+        header.witness *= 16777619u;
+        header.witness ^= (uint32_t)(i & 0xFFu);
+    }
+
+    header.witness ^= (uint32_t)len;
+    return header;
 }
 
 #ifndef KERNEL_MODE

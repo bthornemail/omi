@@ -1,0 +1,37 @@
+;; Phase 30 - OSI Projection Integration Law
+;; Canonical .omi surface.
+;;
+;; Phase 28 is the pre-coded bitwise kernel law.
+;; Phase 29 is the pre-OS measurement law.
+;; Phase 30 projects that replay state into OSI layers without making
+;; projection outputs causal.
+
+(define-osi-projection-integration
+  (source
+    (phase28 kernel_state)
+    (tick u64))
+  (law
+    (state_t (phase28_tick seed tick))
+    (osi_layer_n (projection n state_t))
+    (non-causal
+      (must-not (call kernel_tick))
+      (must-not (call gauge_lookup))
+      (must-not (call gauge_apply))
+      (must-not (mutate state_t)))))
+
+(define-osi-layers
+  (layer 1 physical     (reads bit-motion delta-state))
+  (layer 2 data-link    (reads structural-planes FS GS RS US))
+  (layer 3 network      (reads address-projection phase-coordinate))
+  (layer 4 transport    (reads replay-window synchronization))
+  (layer 5 session      (reads ESC projection-regime))
+  (layer 6 presentation (reads digit-codomain simplex-geometry))
+  (layer 7 application  (reads optional-user-space-tag)))
+
+(define
+  (project-osi-layer source tick layer)
+  (let
+    ((digit (visible-measurement source tick layer))
+     (address (observer-address source tick layer))
+     (simplex (simplex-class source tick layer)))
+    (projection layer digit address simplex)))

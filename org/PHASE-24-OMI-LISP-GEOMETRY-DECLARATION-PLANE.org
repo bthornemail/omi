@@ -1,0 +1,80 @@
+#+TITLE: Phase 24 - OMI-LISP Geometry Declaration Plane
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 24 - OMI-LISP Geometry Declaration Plane
+:PROPERTIES:
+:ID:       omi-phase-24-omi-lisp-geometry-declaration-plane
+:END:
+
+Phase 24 defines native OMI-LISP geometry declarations over projection
+metadata. It replaces DOT as the next projection surface without adding a
+graphics renderer, parser authority, or execution path.
+
+#+BEGIN_EXAMPLE
+trace -> projection metadata -> OMI-LISP geometry declarations -> optional renderer
+#+END_EXAMPLE
+
+Hard invariant:
+
+#+BEGIN_EXAMPLE
+geometry declarations interpret projection metadata
+geometry declarations do not feed ESC, Γ, or GAUGE_APPLY
+#+END_EXAMPLE
+
+* Declaration Forms
+
+These forms describe the observer vocabulary. They are not evaluator input.
+
+#+BEGIN_SRC lisp
+(vertex v0 :source braille:0x2847 :mask 0x47 :occupied true)
+(vertex v1 :source aegean:0x1012B :row 5 :triad 0 :selector 0)
+
+(line l0 :from v0 :to v1)
+(cons-line c0 :car v0 :cdr v1)
+
+(metric-line m0 :points (v0 v1 v2 v3))
+(surface s0 :lines (l0 l1 l2))
+#+END_SRC
+
+* Projection Mapping
+
+| Source projection  | Geometry declaration                         |
+|--------------------+----------------------------------------------|
+| Braille dot mask   | occupied vertex set                          |
+| Aegean projection  | scale/coordinate frame vertex                |
+| Projection address | stable address-anchor vertex                 |
+| CONS pair          | directed line from CAR vertex to CDR vertex  |
+| Ordered vertices   | unary metric line                            |
+| Ordered lines      | surface declaration                          |
+
+* Boundary Rules
+
+- CONS MAY project as a directed line.
+- A list MAY project as a unary metric line over ordered vertices.
+- Braille MAY project as an occupied vertex set.
+- Aegean MAY project as a coordinate frame vertex.
+- No graphics library is authoritative.
+- Future renderers MUST consume these declarations as views.
+
+* Phase 23 Canonical Field Order
+
+Projection address composition remains the Phase 23 address source. Its
+canonical field order is frozen as:
+
+#+BEGIN_EXAMPLE
+aegean.codepoint
+aegean.category
+aegean.projection_row
+aegean.triad_index
+aegean.selector_index
+braille.codepoint
+braille.dot_mask
+braille.dot_count
+braille.resolution_row
+braille.cell_class
+#+END_EXAMPLE
+
+Phase 24 consumes the resulting projection address as metadata. It does not
+redesign hashing or address composition.

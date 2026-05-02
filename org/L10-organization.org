@@ -51,6 +51,30 @@ The S-P-O system creates a navigable radix trie:
   │   └── [[file:L3-gauge.org::state-transitions]]
   ├── trace/produces/Γ
   │   └── [[file:L4-trace.org::operator-sequence]]
+  ├── header/address/trie
+  │   └── [[file:PHASE-20-HEADER-ALGEBRA.org][Phase 20 Header Algebra]]
+  ├── aegean/header/plane
+  │   └── [[file:PHASE-21-AEGEAN-HEADER-PLANE.org][Phase 21 Aegean Header Plane]]
+  ├── braille/resolution/plane
+  │   └── [[file:PHASE-22-BRAILLE-RESOLUTION-PLANE.org][Phase 22 Braille Resolution Plane]]
+  ├── projection/composition/address
+  │   └── [[file:PHASE-23-PROJECTION-COMPOSITION-ADDRESS.org][Phase 23 Projection Composition Address]]
+  ├── omi-lisp/pre-list/geometry
+  │   └── [[file:PHASE-24-OMI-LISP-PRE-LIST-GEOMETRY.org][Phase 24 OMI-LISP Pre-List Geometry]]
+  ├── topological/digit/derivation-law
+  │   └── [[file:PHASE-25-TOPOLOGICAL-DIGIT-DERIVATION-LAW.org][Phase 25 Topological Digit Derivation Law]]
+  ├── projection/lens/space
+  │   └── [[file:PHASE-26-PROJECTION-LENS-SPACE.org][Phase 26 Projection Lens Space]]
+  ├── pre-os/measurement/machine
+  │   └── [[file:PHASE-27-PRE-OS-MEASUREMENT-MACHINE.org][Phase 27 Pre-OS Measurement Machine]]
+  ├── canonical/encoding/law
+  │   └── [[file:PHASE-28-CANONICAL-ENCODING-LAW.org][Phase 28 Canonical Encoding Law]]
+  ├── pre-os/canonical/measurement-law
+  │   └── [[file:PHASE-29-PRE-OS-CANONICAL-MEASUREMENT-LAW.org][Phase 29 Pre-OS Canonical Measurement Law]]
+  ├── implementation/audit/phases-20-29
+  │   └── [[file:../docs/IMPLEMENTATION-AUDIT-PHASES-20-29.md][Implementation Audit Phases 20-29]]
+  ├── osi/projection/integration-law
+  │   └── [[file:PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.org][Phase 30 OSI Projection Integration Law]]
   ├── macros/rewrites_to/pre-lisp
   │   └── [[file:L8-macros.org::dot-expansion]]
   ├── adapters/adapts_to/AST

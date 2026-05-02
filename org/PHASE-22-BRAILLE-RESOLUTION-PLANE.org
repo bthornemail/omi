@@ -1,0 +1,56 @@
+#+TITLE: Phase 22 - Braille Resolution Plane
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 22 - Braille Resolution Plane
+:PROPERTIES:
+:ID:       omi-phase-22-braille-resolution-plane
+:END:
+
+Phase 22 defines Braille as the dense resolution/body projection plane.
+Braille projection is observer metadata over body density and MUST NOT become
+an execution surface.
+
+#+BEGIN_EXAMPLE
+Aegean = header/exponent coordinate
+Braille = dense dot-mask resolution body
+ASCII/GAUGE = execution surface
+#+END_EXAMPLE
+
+Hard invariant:
+
+#+BEGIN_EXAMPLE
+Braille in resolution/body projection
+Braille not in ESC, Γ, GAUGE_APPLY
+#+END_EXAMPLE
+
+* Projection Contract
+
+| Subject        | Predicate | Object                    | MODALITY |
+|----------------+-----------+---------------------------+----------|
+| Braille cell   | derives   | dot-mask projection       | MUST     |
+| dot mask       | derives   | resolution metadata       | MUST     |
+| Braille        | mutates   | CORE                      | MUST_NOT |
+| Braille        | feeds     | ESC, Γ, or GAUGE_APPLY    | MUST_NOT |
+
+* Metadata
+
+Each Braille code point in U+2800..U+28FF is classified as:
+
+| Field          | Meaning                                  |
+|----------------+------------------------------------------|
+| codepoint      | Unicode scalar value                     |
+| dot_mask       | low 8-bit mask from U+2800 offset        |
+| dot_count      | number of active dots                    |
+| resolution_row | observer row derived from dot_count      |
+| cell_class     | empty, sparse, dense, or full cell       |
+| unicode_name   | normative name prefix for Braille cells  |
+
+* Boundary Rules
+
+- Braille MAY enrich body display and resolution metadata.
+- Braille MAY be reused by tools and documentation.
+- Braille MUST remain non-causal.
+- Braille classification MUST NOT alter CORE state.
+- Braille classification MUST NOT alter Γ or replay determinism.

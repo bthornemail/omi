@@ -1,0 +1,141 @@
+#+TITLE: Phase 25 - Topological Digit Derivation Law
+#+AUTHOR: OMI Project
+#+PROPERTY: header-args :exports both
+#+OPTIONS: toc:2
+
+* Phase 25 - Topological Digit Derivation Law
+:PROPERTIES:
+:ID:       omi-phase-25-topological-digit-derivation-law
+:END:
+
+Phase 25 documents the ASCII digit-row boundary. In OMI-LISP, the byte range
+=0x30..0x39= is not primitive numeric value. It is a row of derived topology and
+recursion descriptors over the pre-Lisp geometry formed by C0 control closure
+and =0x20..0x2F= CONS alignment.
+
+#+BEGIN_EXAMPLE
+digit != primitive number
+digit = topology / recursion descriptor
+#+END_EXAMPLE
+
+* Core Law
+
+#+BEGIN_EXAMPLE
+ASCII digits 0x30..0x39 are not primitive numerals.
+They are derived topology descriptors over pre-Lisp geometry.
+Each digit is an OMI-triplet projection of a CONS-set configuration.
+Numeric interpretation is an optional userspace projection.
+Topology comes first.
+#+END_EXAMPLE
+
+* Boot Stack
+
+#+BEGIN_EXAMPLE
+0x00..0x1F = control / access / closure law
+0x20..0x2F = structural alignment / CONS operators
+0x30..0x39 = derived topology descriptors
+0x3A..0x3F = relation / comparison / probe closure
+#+END_EXAMPLE
+
+* Descriptor Interpretation
+
+The glyphs =0= through =9= label derived topology classes. They MAY later be
+interpreted as decimal numerals by userspace, but that is not their first OMI
+role.
+
+| ASCII row       | OMI role                                      |
+|-----------------+-----------------------------------------------|
+| 0x30..0x39      | topology / recursion descriptors              |
+| digit glyph     | projection label                              |
+| underlying form | OMI-triplet over CONS-set configuration        |
+| analogy         | Betti-like count, Schläfli-like recursion tag  |
+
+Fixed descriptor ladder:
+
+| Glyph | Topological descriptor                         |
+|-------+------------------------------------------------|
+| =0=   | null CONS-set / empty closure                  |
+| =1=   | single CONS / primitive edge                   |
+| =2=   | two-CONS chain / 2-vertex line                 |
+| =3=   | triangle / 3-cycle / first closed surface      |
+| =4=   | tetrahedron / 4-vertex 3-simplex               |
+| =5=   | 5-cell / 4-simplex                             |
+| =6=   | 5-simplex                                      |
+| =7=   | 6-simplex                                      |
+| =8=   | 7-simplex                                      |
+| =9=   | 8-simplex / 9-vertex enneazetton               |
+
+Example:
+
+#+BEGIN_EXAMPLE
+"3" does not mean quantity three first.
+"3" labels a derived recursion/topology class from CONS-closure geometry.
+#+END_EXAMPLE
+
+* OMI-Triplet Basis
+
+Each digit descriptor is projected from the same structural grammar as
+S-P-O/OMI triples:
+
+#+BEGIN_EXAMPLE
+subject / predicate / object
+  -> CONS-set configuration
+  -> sparse radix trie alignment
+  -> topology / recursion descriptor
+  -> optional numeric interpretation
+#+END_EXAMPLE
+
+The digit row is therefore a descriptor row, not a value row.
+
+#+BEGIN_EXAMPLE
+digit d_i = invariant(CONS-set configuration with i + 1 vertices)
+#+END_EXAMPLE
+
+The invariant MAY be read as Euler characteristic, homology rank, simplex count,
+or a Schläfli-like recursion signature, depending on the later projection.
+
+* Userspace Numeric Projection
+
+Userspace MAY declare conventional numeric encodings over these descriptors.
+For example, an IEEE-like projection MAY map:
+
+| Declared numeric role | Projection source over topology descriptor |
+|-----------------------+---------------------------------------------|
+| sign                  | control / polarity regime                   |
+| exponent              | Aegean scale coordinate                     |
+| significand           | Braille dense resolution body               |
+| identity              | projection address + witness                |
+
+This declaration is optional and later. It does not create the digit row.
+
+* Boundary Rule
+
+#+BEGIN_EXAMPLE
+topological digit descriptors may support numeric declarations
+numeric declarations do not feed ESC
+numeric declarations do not feed Γ
+numeric declarations do not feed GAUGE_APPLY
+#+END_EXAMPLE
+
+* Hard Invariants
+
+1. Digits are derived, not primitive.
+2. Digit semantics come from pre-Lisp geometry, not arithmetic.
+3. Numeric interpretation is a userspace declaration above Phase 25.
+4. Same digit means same CONS-set topology invariant.
+
+* Relationship To Phase 24
+
+Phase 24 establishes pre-list geometry:
+
+#+BEGIN_EXAMPLE
+CONS declares lines.
+Sparse radix trie declares metric division.
+Digit descriptors derive from CONS-closure metrics.
+Alphabet/user-space comes later.
+Nothing here executes.
+#+END_EXAMPLE
+
+Phase 25 sharpens that statement: the digit glyphs themselves are not numbers
+first. They are topology/recursion descriptors that can later be projected as
+numbers by userspace.

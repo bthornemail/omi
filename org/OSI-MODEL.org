@@ -15,6 +15,16 @@ grouping and reference links.
 The base layers (1-7) follow standard OSI semantics adapted for OMI.
 Layers 8-10 extend the model for macros, adapters, and organization.
 
+Phase 30 tightens the base OSI interpretation: layers 1-7 are projection
+regimes over deterministic Phase 28 replay, not independent execution
+machines.
+
+#+BEGIN_EXAMPLE
+Phase 28 bitwise kernel
+  -> Phase 29 pre-OS measurement machine
+  -> OSI projection stack
+#+END_EXAMPLE
+
 * Layer Architecture Overview
 
 | Layer | Name          | S-P-O Role             | Scope            |
@@ -237,29 +247,37 @@ All transitions must be deterministic:
 :ID:       omi-osi-l9
 :END:
 
-** S-P-O Definition
+** S-P-O Definition (with RFC 2119 Modalities)
 
-| Subject          | Predicate  | Object           |
-|------------------+------------+------------------|
-| representation_A | adapts_to  | representation_B |
-| text             | parses_to  | AST              |
-| AST              | compiles_to| omi_ir           |
-| trace            | renders_to | org_document     |
-| org              | extracts_to| build_artifacts  |
+| Subject          | Predicate   | Object             | MODALITY |
+|------------------+-------------+--------------------+----------|
+| representation_A | adapts_to   | representation_B   | MUST     |
+| adapter          | declares    | invariants         | MUST     |
+| adapter          | declares    | losses             | MUST     |
+| adapter          | mutates     | lower_layer_state  | MUST_NOT |
+| text             | parses_to   | AST                | MUST     |
+| AST              | organizes   | document_graph     | MUST     |
+| omi_triple       | compiles_to | datalog_fact       | MUST     |
+| datalog_rules    | evaluate_to | minimal_model      | MUST     |
+| Y_combinator     | enables     | recursive_closure  | MUST     |
+| Z_combinator     | enables     | guarded_recursion  | MAY      |
 
 ** Contract
-- Input: representation in domain A
-- Output: representation in domain B
-- Responsibility: cross-domain translation
+- Input: representation in domain A — MUST be valid for that domain
+- Output: representation in domain B — MUST be valid for that domain
+- Responsibility: cross-domain translation — MUST preserve declared invariants
 - Must declare: INVARIANTS (preserved) and LOSSES (dropped)
+- Must not: mutate lower-layer state, Γ, CORE, or META
 
 ** Adapter Declarations
-| Adapter    | Invariants              | Losses               |
-|------------+-------------------------+----------------------|
-| dot→ast    | structure, ordering     | comments, whitespace |
-| ast→omi    | operator identity       | syntactic sugar      |
-| trace→org  | execution order, state  | raw binary           |
-| org→build  | file dependencies       | formatting           |
+| Adapter     | Direction      | Invariants              | Losses               | Feeds Layer |
+|-------------+----------------+-------------------------+----------------------+-------------|
+| tree-sitter | text → AST     | structure, byte ranges  | comments, whitespace | L10         |
+| OMI-DL      | graph → logic  | facts, fixed point      | proof trees, order   | L7          |
+| dot→ast     | dot → cons     | structure, ordering     | comments, whitespace | L8          |
+| ast→omi     | AST → IR       | operator identity       | syntactic sugar      | L3          |
+| trace→org   | trace → org    | execution order, state  | raw binary           | L10         |
+| org→build   | org → make     | file dependencies       | formatting           | L1          |
 
 ** Tree-Sitter Integration
 #+BEGIN_SRC
@@ -268,6 +286,16 @@ All transitions must be deterministic:
     :tool tree-sitter
     :preserves (structure ordering)
     :loses (comments whitespace formatting))
+#+END_SRC
+
+** OMI-DL Integration
+OMI-DL is the Datalog/Y-Z fixed-point adapter for declarative logic over the
+S-P-O graph. It replaces the earlier Prolog direction with finite,
+order-independent evaluation:
+
+#+BEGIN_SRC datalog
+  path(X, Y) :- edge(X, Y).
+  path(X, Z) :- edge(X, Y), path(Y, Z).
 #+END_SRC
 
 * Layer 10 — Organization (Structure Surface)
