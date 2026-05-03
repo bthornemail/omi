@@ -1,0 +1,152 @@
+;; ============================================================
+;; OMI MODEL DECLARATION
+;; Object: WIKE-style ebike cargo trailer
+;; File: models/trailer/wike-ebike-cargo-trailer.alist
+;; Mode: observer projection / non-causal render model
+;; Authority: declaration trace, not image, mesh, SVG, or AI output
+;; ============================================================
+
+((FS . model.trailer.wike-ebike-cargo)
+
+  ((GS . identity)
+    ((RS . object)
+      ((US . class)      . trailer)
+      ((US . subtype)    . ebike-cargo)
+      ((US . synset)     . trailer.n.01)
+      ((US . authority)  . canonical-model-declaration)
+      ((US . mutable)    . false)))
+
+  ((GS . form)
+    ((RS . body)
+      ((US . primitive)  . rectangular-container)
+      ((US . topology)   . open-cargo-volume)
+      ((US . symmetry)   . bilateral)
+      ((US . simplex)    . quad-panel-shell))
+
+    ((RS . cargo-volume)
+      ((US . bounded-by) . panel.floor panel.left panel.right panel.front panel.rear-gate)
+      ((US . function)   . carry-load)
+      ((US . access)     . rear-gate)))
+
+  ((GS . frame)
+    ((RS . rail.top.left)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . upper-side-boundary))
+
+    ((RS . rail.top.right)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . upper-side-boundary))
+
+    ((RS . rail.bottom.left)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . load-transfer))
+
+    ((RS . rail.bottom.right)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . load-transfer))
+
+    ((RS . corner-blocks)
+      ((US . primitive)  . point-joint)
+      ((US . count)      . 8)
+      ((US . function)   . impact-protection frame-joint)))
+
+  ((GS . panels)
+    ((RS . panel.floor)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . load-bed))
+
+    ((RS . panel.left)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . side-wall))
+
+    ((RS . panel.right)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . side-wall))
+
+    ((RS . panel.front)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . forward-wall))
+
+    ((RS . panel.rear-gate)
+      ((US . primitive)  . rectangle)
+      ((US . state)      . hinged)
+      ((US . function)   . loading-ramp access-door)))
+
+  ((GS . motion)
+    ((RS . wheel.left)
+      ((US . primitive)  . circle)
+      ((US . topology)   . radial-spoked)
+      ((US . function)   . rolling-support)
+      ((US . side)       . left))
+
+    ((RS . wheel.right)
+      ((US . primitive)  . circle)
+      ((US . topology)   . radial-spoked)
+      ((US . function)   . rolling-support)
+      ((US . side)       . right))
+
+    ((RS . axle)
+      ((US . primitive)  . line)
+      ((US . connects)   . wheel.left wheel.right)
+      ((US . function)   . load-bearing-rotation))
+
+    ((RS . tow-arm)
+      ((US . primitive)  . bent-line)
+      ((US . connects)   . frame.lower-front bicycle-hitch)
+      ((US . function)   . traction-link))
+
+    ((RS . hitch)
+      ((US . primitive)  . joint)
+      ((US . function)   . bicycle-coupling)
+      ((US . degrees)    . yaw pitch limited-roll)))
+
+  ((GS . markings)
+    ((RS . logo)
+      ((US . text)       . "WIKE")
+      ((US . position)   . side-panel)
+      ((US . role)       . brand-mark))
+
+    ((RS . triangle-emblem)
+      ((US . primitive)  . triangle)
+      ((US . simplex)    . 2-simplex)
+      ((US . role)       . high-visibility-symbol)))
+
+  ((GS . render)
+    ((RS . far)
+      ((US . depth)      . FS.GS)
+      ((US . output)     . box.two-wheels.tow-arm))
+
+    ((RS . middle)
+      ((US . depth)      . FS.GS.RS)
+      ((US . output)     . panels.frame.wheels.tow-arm))
+
+    ((RS . near)
+      ((US . depth)      . FS.GS.RS.US)
+      ((US . output)     . rails.latches.reflectors.hinges.spokes))
+
+    ((RS . inspect)
+      ((US . depth)      . full-trace)
+      ((US . output)     . form.function.repair.barcode.receipt)))
+
+  ((GS . carrier)
+    ((RS . aztec)
+      ((US . role)       . object-root-vertex-carrier))
+
+    ((RS . maxicode)
+      ((US . role)       . material-logistics-carrier))
+
+    ((RS . beecode)
+      ((US . role)       . rule-query-carrier))
+
+    ((RS . code16k)
+      ((US . role)       . trace-continuation-carrier)))
+
+  ((GS . closure)
+    ((RS . summary)
+      ((US . groups)     . identity form frame panels motion markings render carrier)
+      ((US . authority)  . declaration-trace)
+      ((US . projection) . non-causal))))

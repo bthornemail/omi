@@ -1,8 +1,12 @@
 #include "../include/bom.h"
+#include "../include/bitwise_kernel.h"
 #include "../include/graph.h"
+#include "../include/model_registry.h"
 #include "../include/multiboot2.h"
+#include "../include/osi_projection.h"
 #include "../include/rules.h"
 #include "../include/serial.h"
+#include "../../polyform/include/polyform_block.h"
 
 #define OMI_ORBIT_SEED 0x00000001u
 #define OMI_ORBIT_WINDOW 64u
@@ -185,11 +189,94 @@ static void qemu_debug_exit(void)
     __asm__ volatile("outb %0, %1" : : "a"((uint8_t)0x10), "Nd"((uint16_t)0x00f4));
 }
 
+static void print_phase28_qemu(uint32_t tick, const kernel_state_t *state)
+{
+    omi_serial_write_string("PHASE28_QEMU tick=");
+    omi_serial_write_u32(tick);
+    omi_serial_write_string(" K=");
+    omi_serial_write_hex8(state->K);
+    omi_serial_write_string(" fano=");
+    omi_serial_write_hex8(state->fano);
+    omi_serial_write_string(" sonar_hi=");
+    omi_serial_write_hex32(state->sonar.hi);
+    omi_serial_write_string(" sonar_lo=");
+    omi_serial_write_hex32(state->sonar.lo);
+    omi_serial_write_string("\n");
+}
+
+static void print_phase30_qemu(uint32_t layer, const omi_osi_projection_t *projection)
+{
+    omi_serial_write_string("PHASE30_QEMU layer=");
+    omi_serial_write_u32(layer);
+    omi_serial_write_string(" digit=");
+    omi_serial_write_hex8(projection->visible_digit);
+    omi_serial_write_string(" address=");
+    omi_serial_write_hex32(projection->address);
+    omi_serial_write_string(" simplex=");
+    omi_serial_write_u32(projection->simplex_class);
+    omi_serial_write_string("\n");
+}
+
+static void print_polyform_block_qemu(const polyform_block_t *block)
+{
+    const polyform_block_fields_t *fields = &block->fields;
+
+    omi_serial_write_string("POLYFORM_BLOCK tick=");
+    omi_serial_write_u32((uint32_t)fields->tick);
+    omi_serial_write_string(" K=");
+    omi_serial_write_hex8(fields->K);
+    omi_serial_write_string(" fano=");
+    omi_serial_write_hex8(fields->fano);
+    omi_serial_write_string(" sonar_hi=");
+    omi_serial_write_hex32(fields->sonar.hi);
+    omi_serial_write_string(" sonar_lo=");
+    omi_serial_write_hex32(fields->sonar.lo);
+    omi_serial_write_string(" digit=");
+    omi_serial_write_hex8(fields->digit);
+    omi_serial_write_string(" witness=");
+    omi_serial_write_hex32(block->witness);
+    omi_serial_write_string("\n");
+}
+
+static void print_foundation_qemu_proof(void)
+{
+    kernel_state_t state = {
+        .K = 0x00u,
+        .fano = 0x01u,
+        .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
+        .GS = OMI_BITWISE_KERNEL_GS
+    };
+
+    omi_serial_write_string("FOUNDATION_QEMU_BEGIN\n");
+    for (uint32_t tick = 0; tick <= 5u; tick++) {
+        print_phase28_qemu(tick, &state);
+        if (tick < 5u) {
+            kernel_tick(&state);
+        }
+    }
+
+    for (uint32_t tick = 5u; tick < 11u; tick++) {
+        kernel_tick(&state);
+    }
+
+    omi_osi_projection_t osi_stack[OMI_POLYFORM_OSI_LAYER_COUNT] = {{0}};
+    for (uint32_t layer = OMI_OSI_PHYSICAL; layer <= OMI_OSI_APPLICATION; layer++) {
+        osi_stack[layer - 1u] = omi_project_osi_layer(&state, 11u, (omi_osi_layer_t)layer);
+        print_phase30_qemu(layer, &osi_stack[layer - 1u]);
+    }
+
+    polyform_block_t block = polyform_block_from_state(&state, 11u, osi_stack);
+    print_polyform_block_qemu(&block);
+    omi_serial_write_string("FOUNDATION_QEMU_END\n");
+}
+
 void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
 {
     omi_serial_init();
 
     omi_serial_write_string("OMI BOOT\n");
+    print_foundation_qemu_proof();
+    omi_emit_model_registry_witness();
     omi_serial_write_string("OMI PHASE 6 CONTENT-ADDRESSABLE SYMBOL FIELD\n");
     omi_serial_write_string("multiboot magic=");
     omi_serial_write_hex32(magic);

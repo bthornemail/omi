@@ -1,0 +1,47 @@
+;; ============================================================
+;; OMI WORLD DECLARATION
+;; World: cargo-yard-demo
+;; Mode: observer projection / non-causal interaction trace
+;; Authority: declaration trace, not simulation output
+;; ============================================================
+
+((FS . world.cargo-yard-demo)
+
+  ((GS . objects)
+    ((RS . trailer.001)
+      ((US . model) . model.trailer.wike-ebike-cargo)
+      ((US . pose)  . x0.y0.r0)
+      ((US . state) . empty))
+
+    ((RS . bicycle.001)
+      ((US . model) . model.bicycle.generic-ebike)
+      ((US . pose)  . x-2.y0.r0)
+      ((US . state) . coupled))
+
+    ((RS . cargo.001)
+      ((US . model) . model.box.generic-cargo)
+      ((US . pose)  . trailer.001.cargo-volume)
+      ((US . state) . loaded)))
+
+  ((GS . interactions)
+    ((RS . hitch-link.001)
+      ((US . source)   . bicycle.001.hitch)
+      ((US . target)   . trailer.001.tow-arm)
+      ((US . relation) . coupled-traction))
+
+    ((RS . load-support.001)
+      ((US . source)   . cargo.001.mass)
+      ((US . target)   . trailer.001.panel.floor)
+      ((US . relation) . supported-by))
+
+    ((RS . rolling.001)
+      ((US . source)   . bicycle.001.forward-motion)
+      ((US . target)   . trailer.001.motion)
+      ((US . relation) . transmitted-motion)))
+
+  ((GS . render)
+    ((RS . resolution)
+      ((US . far)     . FS.GS)
+      ((US . middle)  . FS.GS.RS)
+      ((US . near)    . FS.GS.RS.US)
+      ((US . inspect) . full-trace))))

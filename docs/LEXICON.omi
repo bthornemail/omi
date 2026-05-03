@@ -93,9 +93,23 @@ Projection lens:
 Canonical encoding law:
   The normalized law for OMI projections. It defines C as CONS cells, Sigma as
   ASCII bytes, D as 0x30-0x3F, deterministic non-causal projection pi : C ->
-  Sigma, unary rotation clocks, and the separation between bitwise kernel
-  projection and optional positional, sexagesimal, and alphabet projections.
-  See docs/CANONICAL-ENCODING-LAW.md.
+  Sigma, timing periods as field-resolution partitions implemented by unary
+  rotation rings, and the separation between bitwise kernel projection and
+  optional positional, sexagesimal, and alphabet projections. See
+  docs/CANONICAL-ENCODING-LAW.md.
+
+Fundamental geometry runtime:
+  The OMI doctrine that deterministic byte replay is authority, FS/GS/RS/US
+  structure is the addressable trace surface, timing periods are resolution
+  layers, and meshes, SVG, barcodes, Braille, Aegean, Unicode, WordNet, Prolog,
+  and AI output are projections. See
+  docs/OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md.
+
+Resolution layer:
+  A timing period interpreted as a field-resolution partition over one master
+  replay surface, not as an independent clock authority. The normalized stack
+  is 5040 master blackboard, 360 global state, 240 public canvas, 60 private
+  point sweep, 8 source/target byte cadence, and 7 Fano incidence selector.
 
 OSI projection integration:
   The Phase 30 bridge that treats OSI layers as projection regimes over Phase

@@ -1,0 +1,43 @@
+;; OMI Model Registry Doctrine
+;;
+;; Phase 33 hardens the boot-visible model surface into a registry.
+;; The OS initializes a model registry before applications, files, UI panels,
+;; renderers, devices, or agents become active surfaces.
+;;
+;; canonical model registry
+;;   -> lazy projection handles
+;;   -> renderer / process / UI / device behavior
+
+(define-registry kernel.model-registry
+  (authority declaration-receipt)
+  (mode observer-only)
+  (projection lazy)
+  (mutation none))
+
+(define-law model-registry-boundary
+  (models declarative)
+  (registration causal-only-as-registration)
+  (projection non-causal)
+  (rendering observer-only)
+  (hot-plug append-declaration))
+
+(define-receipt model.trailer.wike-ebike-cargo
+  (fs 1)
+  (gs 9)
+  (rs 29)
+  (us 76)
+  (authority declaration-trace))
+
+(define-world world.cargo-yard-demo
+  (fs 1)
+  (gs 3)
+  (rs 7)
+  (us 22)
+  (objects 3)
+  (interactions 3)
+  (render-depths 4))
+
+(define-userspace-init userspace.init
+  (mount kernel.model-registry)
+  (mode lazy)
+  (trust qemu-pinned-receipt))

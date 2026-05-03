@@ -4,6 +4,8 @@ See also:
 [OMI: A Pre-OS Measurement Machine](PRE-OS-MEASUREMENT-MACHINE.md) and
 [OMI Canonical Encoding Law](CANONICAL-ENCODING-LAW.md). The normalized pre-OS
 root is [OMI Pre-OS Canonical Measurement Law](PRE-OS-CANONICAL-MEASUREMENT-LAW.md).
+The world/projection runtime doctrine is
+[OMI Fundamental Geometry Runtime](OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md).
 
 OMI is a free, ordered CONS algebra over ASCII atoms. The band `0x20..0x3F`
 defines its construction and observation space. Digits `0x30..0x3F` are the
@@ -65,3 +67,17 @@ No printable symbol exists before measurement.
 Digits are the first visible facts.
 Numbers, letters, words, files, and operating systems are later projections.
 ```
+
+Resolution law:
+
+```text
+5040 = master blackboard resolution
+360  = global state resolution
+240  = public canvas-frame resolution
+60   = private/local point-sweep resolution
+8    = source/target byte cadence
+7    = Fano incidence selector
+```
+
+These periods are field-resolution partitions over one master replay surface,
+not separate clock authorities.

@@ -1,0 +1,34 @@
+;; ============================================================
+;; OMI USER-SPACE INIT DECLARATION
+;; Phase 34: Lazy User-Space Init Mount
+;; Authority: kernel model registry receipt
+;; Mode: lazy mount handles only
+;; ============================================================
+
+((FS . userspace.init)
+
+  ((GS . mount)
+    ((RS . boot-registry)
+      ((US . source) . kernel.model-registry)
+      ((US . mode)   . lazy)
+      ((US . trust)  . qemu-pinned-receipt)))
+
+  ((GS . evaluation)
+    ((RS . policy)
+      ((US . default) . lazy)
+      ((US . far)     . FS.GS)
+      ((US . middle)  . FS.GS.RS)
+      ((US . near)    . FS.GS.RS.US)
+      ((US . inspect) . full-trace)))
+
+  ((GS . surfaces)
+    ((RS . filesystem)
+      ((US . projection) . model-vfs))
+    ((RS . renderer)
+      ((US . projection) . polyform-svg))
+    ((RS . barcode)
+      ((US . projection) . carrier-decode))
+    ((RS . application)
+      ((US . projection) . app-model))
+    ((RS . device)
+      ((US . projection) . device-model))))

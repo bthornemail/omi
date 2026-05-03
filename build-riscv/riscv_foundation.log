@@ -1,0 +1,17 @@
+OMI RISC-V BOOT
+FOUNDATION_QEMU_BEGIN
+PHASE28_QEMU tick=0 K=0x00 fano=0x01 sonar_hi=0x00000000 sonar_lo=0x00000001
+PHASE28_QEMU tick=1 K=0x1d fano=0x02 sonar_hi=0x00000000 sonar_lo=0x00000002
+PHASE28_QEMU tick=2 K=0x88 fano=0x04 sonar_hi=0x00000000 sonar_lo=0x00000004
+PHASE28_QEMU tick=3 K=0x6a fano=0x08 sonar_hi=0x00000000 sonar_lo=0x00000008
+PHASE28_QEMU tick=4 K=0x00 fano=0x10 sonar_hi=0x00000000 sonar_lo=0x00000010
+PHASE28_QEMU tick=5 K=0x1d fano=0x20 sonar_hi=0x00000000 sonar_lo=0x00000020
+PHASE30_QEMU layer=1 digit=0x31 address=0x000aaa81 simplex=1
+PHASE30_QEMU layer=2 digit=0x3d address=0x0e04f67d simplex=2
+PHASE30_QEMU layer=3 digit=0x3c address=0x391b204c simplex=3
+PHASE30_QEMU layer=4 digit=0x33 address=0x36932ba3 simplex=4
+PHASE30_QEMU layer=5 digit=0x30 address=0xaf66ca00 simplex=5
+PHASE30_QEMU layer=6 digit=0x3c address=0x7ceb7cac simplex=6
+PHASE30_QEMU layer=7 digit=0x3f address=0xa944551f simplex=7
+POLYFORM_BLOCK tick=11 K=0x6a fano=0x10 sonar_hi=0x00000000 sonar_lo=0x00000800 digit=0x3c witness=0x77e53ee5
+FOUNDATION_QEMU_END

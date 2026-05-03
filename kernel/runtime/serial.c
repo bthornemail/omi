@@ -68,6 +68,15 @@ void omi_serial_write_size(size_t value)
     omi_serial_write_u32((uint32_t)value);
 }
 
+void omi_serial_write_hex8(uint8_t value)
+{
+    static const char hex[] = "0123456789abcdef";
+
+    omi_serial_write_string("0x");
+    omi_serial_write_char(hex[(value >> 4u) & 0x0fu]);
+    omi_serial_write_char(hex[value & 0x0fu]);
+}
+
 void omi_serial_write_hex32(uint32_t value)
 {
     static const char hex[] = "0123456789abcdef";

@@ -8,8 +8,8 @@
 :ID:       omi-phase-28-canonical-encoding-law
 :END:
 
-Phase 28 normalizes the encoding law into primitive sets, projections, clocks,
-and invariants.
+Phase 28 normalizes the encoding law into primitive sets, projections, timing
+resolution layers, and invariants.
 
 Canonical reference:
 
@@ -64,19 +64,33 @@ Unicode fraction
   -> π_A optional alphabet projection
 #+END_EXAMPLE
 
-* Clock Law
+* Timing Resolution Law
 
-Clocks are unary rotation rings:
+Timing periods are field-resolution partitions over one master replay surface,
+not separate clock authorities.
 
 #+BEGIN_EXAMPLE
-tick(b_i) = b_((i + 1) mod n)
+5040 = master blackboard resolution
+360  = global state resolution
+240  = public canvas-frame resolution
+60   = private/local point-sweep resolution
+8    = source/target byte-pair cadence
+7    = incidence selector / consolidation law
 #+END_EXAMPLE
 
-The Fano clock has period 7. The sonar clock has period 60. The master period
-is:
+The master period is:
 
 #+BEGIN_EXAMPLE
 LCM(7, 60, 8, 240, 360) = 5040 = 7!
+#+END_EXAMPLE
+
+The =7 x 8= interaction resolves source-target relations into stable state.
+One =5040= blackboard contains 90 complete =7 x 8= consolidation cycles.
+
+Implementation still uses unary rotation rings:
+
+#+BEGIN_EXAMPLE
+tick(b_i) = b_((i + 1) mod n)
 #+END_EXAMPLE
 
 * Invariants
@@ -84,7 +98,7 @@ LCM(7, 60, 8, 240, 360) = 5040 = 7!
 1. Determinism.
 2. Non-causality.
 3. Bitwise closure.
-4. Clock purity.
+4. Timing purity.
 5. Projection separation.
 6. Runtime boundary preservation.
 

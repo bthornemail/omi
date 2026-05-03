@@ -3,6 +3,10 @@
 Foundation proof:
 [Foundation Audit: Pre-OS OSI Chain](FOUNDATION-AUDIT-PRE-OS-OSI.md).
 
+Runtime proof:
+`make qemu-foundation-test` boots the kernel in QEMU and validates exact
+Phase 28/30 serial vectors emitted by the booted runtime.
+
 Phase 30 integrates the verified Phase 28 bitwise kernel with the pre-OS
 measurement stack by making the OSI model a projection stack over deterministic
 replay.
@@ -102,8 +106,25 @@ making graphics or vision foundational.
 Existing checks must continue to pass:
 
 ```bash
+make qemu-foundation-test
 make bitwise-test
 make pre-os-test
 make test
 make replay
 ```
+
+The QEMU runtime proof pins these Phase 30 layer vectors at tick 11:
+
+```text
+PHASE30_QEMU layer=1 digit=0x31 address=0x000aaa81 simplex=1
+PHASE30_QEMU layer=2 digit=0x3d address=0x0e04f67d simplex=2
+PHASE30_QEMU layer=3 digit=0x3c address=0x391b204c simplex=3
+PHASE30_QEMU layer=4 digit=0x33 address=0x36932ba3 simplex=4
+PHASE30_QEMU layer=5 digit=0x30 address=0xaf66ca00 simplex=5
+PHASE30_QEMU layer=6 digit=0x3c address=0x7ceb7cac simplex=6
+PHASE30_QEMU layer=7 digit=0x3f address=0xa944551f simplex=7
+```
+
+These lines are produced by `kernel/boot/entry.c` from the actual
+`kernel_tick` and `omi_project_osi_layer` implementations, then checked exactly
+by `tools/qemu_foundation_test.sh`.

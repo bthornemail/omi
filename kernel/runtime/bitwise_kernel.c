@@ -33,14 +33,13 @@ uint8_t fano_tick(uint8_t fano)
 
 sonar60_t sonar_tick(sonar60_t s)
 {
-    const uint64_t mask60 = 0x0FFFFFFFFFFFFFFFULL;
-    uint64_t full = (((uint64_t)(s.hi & 0x3FFFFFFFu)) << 30u) |
-                    ((uint64_t)(s.lo & 0x3FFFFFFFu));
-    uint64_t rotated = ((full << 1u) | (full >> 59u)) & mask60;
+    uint32_t lo = s.lo & 0x3FFFFFFFu;
+    uint32_t hi = s.hi & 0x3FFFFFFFu;
+    uint32_t wrap = (hi >> 29u) & 1u;
 
     sonar60_t out = {
-        .lo = (uint32_t)(rotated & 0x3FFFFFFFu),
-        .hi = (uint32_t)((rotated >> 30u) & 0x3FFFFFFFu)
+        .lo = ((lo << 1u) & 0x3FFFFFFFu) | wrap,
+        .hi = ((hi << 1u) & 0x3FFFFFFFu) | ((lo >> 29u) & 1u)
     };
     return out;
 }

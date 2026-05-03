@@ -4,6 +4,8 @@ Implementation evidence:
 [Implementation Audit: Phases 20-29](IMPLEMENTATION-AUDIT-PHASES-20-29.md).
 Foundation proof:
 [Foundation Audit: Pre-OS OSI Chain](FOUNDATION-AUDIT-PRE-OS-OSI.md).
+The foundation proof is the QEMU runtime target `make qemu-foundation-test`,
+which validates exact serial vectors from the booted kernel.
 
 ## Root Statement
 

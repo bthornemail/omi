@@ -9,8 +9,10 @@ static uint32_t osi_mix_u32(uint32_t hash, uint32_t value)
 
 static uint32_t osi_mix_u64(uint32_t hash, uint64_t value)
 {
-    hash = osi_mix_u32(hash, (uint32_t)(value & 0xFFFFFFFFu));
-    hash = osi_mix_u32(hash, (uint32_t)(value >> 32u));
+    uint32_t lo = (uint32_t)value;
+    uint32_t hi = (uint32_t)(value >> 32u);
+    hash = osi_mix_u32(hash, lo);
+    hash = osi_mix_u32(hash, hi);
     return hash;
 }
 
@@ -98,7 +100,7 @@ omi_osi_projection_t omi_project_osi_layer(const kernel_state_t *state,
             hash = osi_mix_u32(hash, 0x1C1D1E1Fu);
             break;
         case OMI_OSI_NETWORK:
-            hash = osi_mix_u32(hash, (uint32_t)((source.tick % 5040u) & 0xFFFFFFFFu));
+            hash = osi_mix_u32(hash, (uint32_t)source.tick ^ (uint32_t)(source.tick >> 32u));
             break;
         case OMI_OSI_TRANSPORT:
             hash = osi_mix_u32(hash, (uint32_t)((source.tick >> 3u) & 0xFFFFFFFFu));

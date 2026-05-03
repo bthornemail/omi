@@ -160,7 +160,31 @@ not make higher projections causal. The canonical `.omi` surface is
 `kernel/bitwise_kernel.omi`; the C implementation is
 `kernel/runtime/bitwise_kernel.c`.
 
-## 3. Clocks as Unary Rotation Rings
+## 3. Timing Resolution Layers
+
+The named timing periods are field-resolution partitions over one master replay
+surface. They are not separate clock authorities.
+
+```text
+5040 = master blackboard resolution
+360  = global state resolution
+240  = public canvas-frame resolution
+60   = private/local point-sweep resolution
+8    = source/target byte-pair cadence
+7    = incidence selector / consolidation law
+```
+
+The master period is:
+
+```text
+LCM(7, 8, 60, 240, 360) = 5040 = 7!
+```
+
+The `7 x 8` interaction resolves source-target relations into stable state. A
+5040 master blackboard contains 90 full `7 x 8` source-target consolidation
+cycles.
+
+## 3.1 Unary Rotation Mechanics
 
 A clock is a finite set of bits:
 
@@ -178,33 +202,38 @@ tick(b_i) = b_((i + 1) mod n)
 
 Runtime representation is unary rotation. No counter state is required.
 
-### 3.1 Fano Clock
+Each rotation ring implements one resolution layer; it does not create an
+independent authority over replay.
+
+### 3.2 Fano Incidence Selector
 
 ```text
 F = {f_0, f_1, f_2, f_3, f_4, f_5, f_6}
 tick(F) = ROTL7(F, 1)
 ```
 
-The active bit selects the current Fano triplet.
+The active bit selects the current Fano triplet. This is the incidence selector
+and consolidation law.
 
-### 3.2 Sonar Clock
+### 3.3 Sonar Point Sweep
 
 ```text
 S = {s_0, s_1, ..., s_59}
 tick(S) = ROTL60(S, 1)
 ```
 
-The active bit determines the sonar channel and lane.
+The active bit determines the private/local point-sweep channel and lane.
 
-### 3.3 Master Period
+### 3.4 Master Blackboard
 
-The system resets when all clocks complete a full rotation:
+The system reaches master closure when all timing partitions return to shared
+phase:
 
 ```text
 LCM(7, 60, 8, 240, 360) = 5040 = 7!
 ```
 
-At tick `0`, all clocks are at bit `0`.
+At tick `0`, all timing rings are at bit `0`.
 
 ## 4. Kernel Execution
 
@@ -252,14 +281,16 @@ non-causal.
 1. Determinism: if `c1 = c2`, then `pi(c1) = pi(c2)` for every projection `pi`.
 2. Non-causality: projection does not modify the CONS structure it observes.
 3. Bitwise closure: kernel execution uses bitwise operations only.
-4. Clock purity: clocks are unary rotation rings, not counters.
+4. Timing purity: timing periods are resolution layers implemented by unary
+   rotation rings, not counters or independent clock authorities.
 5. Projection separation: higher projections cannot affect lower projections.
 6. Runtime boundary: projection output never feeds `Gamma` or `GAUGE_APPLY`.
 
 ## One-Line Summary
 
 OMI is a CONS algebra with deterministic, non-causal projections. Digits
-`0x30..0x3F` are canonical invariants of CONS structure. Clocks are unary
-rotation rings. Phase 28 bitwise kernel execution is implemented as
+`0x30..0x3F` are canonical invariants of CONS structure. Timing periods are
+field-resolution partitions over one master replay surface and are implemented
+as unary rotation rings. Phase 28 bitwise kernel execution is implemented as
 rotation/XOR/AND/NOT. Positional encoding, sexagesimal fractions, and alphabet
 rendering are optional user projections.

@@ -69,7 +69,61 @@ channel because it works in terminals, CI, and Termux-like workflows.
 - `make kernel` builds the freestanding Multiboot2 kernel.
 - `make iso` packages the kernel and graph image with GRUB.
 - `make run` boots the ISO in QEMU and prints serial output.
+- `make qemu-foundation-test` boots the ISO in QEMU and validates the pinned
+  Phase 28/Phase 30 foundation serial vectors.
+- `make qemu-platform-test` validates the same pinned vectors on the supported
+  x86 QEMU matrix: `x86_64-pc`, `x86_64-q35`, `i386-pc`, and `i386-q35`.
+- `make riscv-qemu-foundation-test` boots the minimal RISC-V `virt` image and
+  validates the same pinned Phase 28/Phase 30 foundation serial vectors.
+- `make platform-endian-test` validates endian reinterpretation profiles for
+  RISC-V, ARM, AArch64, ESP32-S3, and ESP32-C3.
+- `make qemu-cross-arch-readiness` checks that the corresponding QEMU binaries
+  and machine models are available, while marking OMI non-x86 boot entries as
+  pending.
+- `make unit-test` runs focused host tests for the graph/runtime laws and
+  Phase 28/29/30 witnesses.
+- `make e2e-test` runs the QEMU foundation witness, GAUGE replay witness, and
+  host replay validator, including the multi-platform QEMU matrix.
+- `make stress-test` repeats QEMU foundation and replay validation. Set
+  `STRESS_RUNS=N` to change the loop count.
+- `make full-test` runs unit, end-to-end, and stress tiers.
+- `make foundation-proof` aliases `make full-test`.
 - `make replay` validates the host-side BOM/CONS model against the same image.
+
+## Foundation Runtime Witness
+
+`make qemu-foundation-test` is the primary foundation witness. It runs the real
+booted kernel through QEMU, captures serial output, and requires exact lines for
+the Phase 28 bitwise runtime vector, the Phase 30 seven-layer OSI projection
+vector, `VALID STATE`, and `OMI HALT`.
+
+The pinned runtime vector is maintained in `tools/qemu_foundation_test.sh`.
+Changes to Phase 28, Phase 30, the serial format, or the sealed GAUGE boot path
+must either preserve that witness or intentionally update the audit record in
+`docs/FOUNDATION-AUDIT-PRE-OS-OSI.md`.
+
+The full gate is `make full-test`. It contains:
+
+- unit tier: host law tests
+- end-to-end tier: QEMU boot, multi-platform QEMU matrix, RISC-V vector boot,
+  and replay witnesses
+- stress tier: repeated QEMU foundation and replay validation
+
+The x86 matrix boots the full 32-bit Multiboot2 kernel and verifies `VALID
+STATE` plus `OMI HALT`. The RISC-V lane is a minimal flat image that proves the
+same Phase 28/30 vectors with shared C runtime code; it does not yet run the
+GAUGE validity path.
+
+Requested non-x86 targets are tracked as follows:
+
+| Target | QEMU surface | Endian profile | OMI boot status |
+|--------|--------------|----------------|-----------------|
+| RISC-V 32 | `qemu-system-riscv32 virt` | little-endian | needs arch entry |
+| RISC-V 64 | `qemu-system-riscv64 virt` | little-endian | Phase 28/30 vector boot |
+| ARMv7 | `qemu-system-arm virt` | little/big profile check | needs arch entry |
+| AArch64 | `qemu-system-aarch64 virt` | little/big profile check | needs arch entry |
+| ESP32-S3 | `qemu-system-xtensa esp32s3` | little-endian | needs Xtensa entry |
+| ESP32-C3 | `qemu-system-riscv32 virt` readiness | little-endian | needs ESP32-C3 board or RISC-V entry |
 
 ## Expected Serial Trace
 
