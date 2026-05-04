@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-polyform-coordinate-test workbench-scope-multigraph-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -85,6 +85,18 @@ $(BUILD_DIR)/omi_polyform_renderer.o: userspace/runtime/omi_polyform_renderer.c 
 
 $(BUILD_DIR)/polyform_renderer_test: tests/polyform_renderer_test.c $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Iuserspace/include tests/polyform_renderer_test.c $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_polyform_coordinate.o: userspace/runtime/omi_polyform_coordinate.c userspace/include/omi_polyform_coordinate.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_polyform_coordinate.c -o $@
+
+$(BUILD_DIR)/polyform_coordinate_test: tests/polyform_coordinate_test.c $(BUILD_DIR)/omi_polyform_coordinate.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/polyform_coordinate_test.c $(BUILD_DIR)/omi_polyform_coordinate.o -lm -o $@
+
+$(BUILD_DIR)/omi_scope_multigraph.o: userspace/runtime/omi_scope_multigraph.c userspace/include/omi_scope_multigraph.h userspace/include/omi_polyform_coordinate.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_scope_multigraph.c -o $@
+
+$(BUILD_DIR)/scope_multigraph_test: tests/scope_multigraph_test.c $(BUILD_DIR)/omi_scope_multigraph.o $(BUILD_DIR)/omi_polyform_coordinate.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/scope_multigraph_test.c $(BUILD_DIR)/omi_scope_multigraph.o $(BUILD_DIR)/omi_polyform_coordinate.o -lm -o $@
 
 $(BUILD_DIR)/omi_event_model.o: userspace/runtime/omi_event_model.c userspace/include/omi_event_model.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_event_model.c -o $@
@@ -379,6 +391,12 @@ carrier-decode-test: $(BUILD_DIR)/carrier_decode_test
 polyform-render-test: $(BUILD_DIR)/polyform_renderer_test
 	./$(BUILD_DIR)/polyform_renderer_test
 
+polyform-coordinate-test: $(BUILD_DIR)/polyform_coordinate_test
+	./$(BUILD_DIR)/polyform_coordinate_test
+
+scope-multigraph-test: $(BUILD_DIR)/scope_multigraph_test
+	./$(BUILD_DIR)/scope_multigraph_test
+
 event-model-test: $(BUILD_DIR)/event_model_test
 	./$(BUILD_DIR)/event_model_test
 
@@ -437,6 +455,12 @@ workbench-org-test:
 
 workbench-diagram-tangle-test:
 	node tests/workbench_diagram_tangle_test.js
+
+workbench-polyform-coordinate-test:
+	node tests/workbench_polyform_coordinate_test.js
+
+workbench-scope-multigraph-test:
+	node tests/workbench_scope_multigraph_test.js
 
 kernel: $(KERNEL_ELF)
 
@@ -518,6 +542,8 @@ unit-test:
 	$(MAKE) hotplug-model-test
 	$(MAKE) carrier-decode-test
 	$(MAKE) polyform-render-test
+	$(MAKE) polyform-coordinate-test
+	$(MAKE) scope-multigraph-test
 	$(MAKE) event-model-test
 	$(MAKE) intent-model-test
 	$(MAKE) texture-model-test
@@ -536,6 +562,8 @@ unit-test:
 	$(MAKE) workbench-esp32-sync-test
 	$(MAKE) workbench-org-test
 	$(MAKE) workbench-diagram-tangle-test
+	$(MAKE) workbench-polyform-coordinate-test
+	$(MAKE) workbench-scope-multigraph-test
 	$(MAKE) qemu-page-court-test
 	$(MAKE) qemu-mmio-device-court-test
 

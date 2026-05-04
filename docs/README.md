@@ -97,9 +97,16 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 46. `PHASE-53-DIAGRAM-GRAPH-TEMPLATE-TANGLE-COURT.md` defines deterministic
     DOT/SVG/relations/index artifact generation from canonical world relations
     and diagram templates.
-47. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+47. `PHASE-54-OMI-POLYFORM-COORDINATE-LAW.md` defines FS/GS/RS/US as the
+    canonical x/y/z/w coordinate depth of polyform expression blocks.
+48. `PHASE-54C-CANONICAL-BARCODE-MULTIGRAPH-SCOPE-LAW.md` defines the
+    canonical/barcode scope multi-graph over shared coordinate and closure
+    receipts.
+49. `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md` records the normalized 240/60/16/7/8
+    timing law as the public projective frame for polyform coordinates.
+50. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-48. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+51. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -238,6 +245,22 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 `PHASE-44-OMI-PAGE-COURT.md`
 : Host-side page court witness that classifies ROM/law, foundation, registry,
   user-space init, overlay, event log, render trace, and reserved MMIO regions.
+
+`PHASE-54-OMI-POLYFORM-COORDINATE-LAW.md`
+: Host-side polyform coordinate witness that maps canonical FS/GS/RS/US paths
+  to deterministic x/y/z/w structural coordinates, validates the pinned
+  Light Garden timing receipts, and treats overlays as non-authoritative
+  projections.
+
+`PHASE-54C-CANONICAL-BARCODE-MULTIGRAPH-SCOPE-LAW.md`
+: Host-side multi-graph witness that keeps the canonical OMI-LISP graph as
+  structural authority while allowing barcode carrier edges to share closure
+  receipts, orientation, and scope labels as scannable projections.
+
+`LIGHT-GARDEN-240-PROJECTIVE-FRAME.md`
+: Timing-law note that normalizes the 240 public frame, 60 local sweep, 16
+  operator bank, 7 Fano selector, 8 byte cadence, and 5040 reconciliation
+  period as the polyform projective frame doctrine.
 
 `PHASE-45-MMIO-DEVICE-PROJECTION-COURT.md`
 : Host-side MMIO device court that classifies display, keyboard, camera,
