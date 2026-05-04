@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI World Workbench</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f4f6;
+      --panel: #ffffff;
+      --border: #d4d4d8;
+      --text: #18181b;
+      --muted: #52525b;
+      --accent: #0f766e;
+      --accent-bg: #ecfeff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar, .main {
+      padding: 16px;
+    }
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .main {
+      display: grid;
+      gap: 16px;
+      grid-template-rows: auto auto 1fr;
+    }
+    .toolbar, .grid {
+      display: grid;
+      gap: 16px;
+    }
+    .toolbar {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel h2 {
+      margin: 0;
+      padding: 12px 14px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      background: #fcfcfd;
+    }
+    .panel-body {
+      padding: 14px;
+    }
+    .picker {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    button.active {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    textarea {
+      width: 100%;
+      min-height: 560px;
+      border: 0;
+      resize: vertical;
+      padding: 14px;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, monospace;
+      color: var(--text);
+      background: #fff;
+    }
+    .meta, .ascii-grid, .preview-grid, .graph-list, .tree-list {
+      display: grid;
+      gap: 10px;
+    }
+    .meta {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .metric {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fafafa;
+    }
+    .metric strong {
+      display: block;
+      font-size: 18px;
+    }
+    .tree-list ul {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+    .tree-list li {
+      margin: 4px 0;
+      color: var(--muted);
+    }
+    .ascii-grid, .preview-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .chip {
+      display: inline-block;
+      margin: 4px 6px 0 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f4f4f5;
+      border: 1px solid var(--border);
+      font: 12px ui-monospace, monospace;
+    }
+    .preview-card, .edge-card, .proposal, .backend-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fafafa;
+    }
+    .preview-card pre, .proposal pre, .backend-card pre {
+      margin: 8px 0 0;
+      white-space: pre-wrap;
+      font: 12px/1.5 ui-monospace, monospace;
+    }
+    canvas {
+      width: 100%;
+      max-width: 260px;
+      aspect-ratio: 260 / 170;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+    }
+    .muted { color: var(--muted); }
+    @media (max-width: 1100px) {
+      .shell, .grid, .toolbar, .ascii-grid, .preview-grid, .meta {
+        grid-template-columns: 1fr;
+      }
+      textarea { min-height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="panel">
+        <h2>Workbench</h2>
+        <div class="panel-body">
+          <p class="muted">OMI-LISP is canonical. Tree, graph, ASCII, and preview surfaces are projections.</p>
+          <div class="picker">
+            <button id="load-trailer" class="active" type="button">Trailer Model</button>
+            <button id="load-world" type="button">Cargo World</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Proposed Source Edit</h2>
+        <div class="panel-body proposal" id="proposal"></div>
+      </div>
+    </aside>
+    <main class="main">
+      <section class="panel">
+        <h2>Source Buffer</h2>
+        <textarea id="source"></textarea>
+      </section>
+      <section class="toolbar">
+        <div class="panel">
+          <h2>Document Counts</h2>
+          <div class="panel-body meta" id="counts"></div>
+        </div>
+        <div class="panel">
+          <h2>ASCII Plane Summary</h2>
+          <div class="panel-body ascii-grid" id="ascii-summary"></div>
+        </div>
+      </section>
+      <section class="grid">
+        <div class="panel">
+          <h2>FS / GS / RS / US Tree</h2>
+          <div class="panel-body tree-list" id="tree"></div>
+        </div>
+        <div class="panel">
+          <h2>Relation Graph</h2>
+          <div class="panel-body graph-list" id="graph"></div>
+        </div>
+        <div class="panel">
+          <h2>Polyform Preview</h2>
+          <div class="panel-body preview-grid" id="preview"></div>
+        </div>
+        <div class="panel">
+          <h2>Interactive Backends</h2>
+          <div class="panel-body preview-grid" id="backends"></div>
+        </div>
+        <div class="panel">
+          <h2>ASCII Plane Inspector</h2>
+          <div class="panel-body" id="ascii-detail"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    window.OMI_WORKBENCH_TRAILER = String.raw`;; ============================================================
+;; OMI MODEL DECLARATION
+;; Object: WIKE-style ebike cargo trailer
+;; File: models/trailer/wike-ebike-cargo-trailer.alist
+;; Mode: observer projection / non-causal render model
+;; Authority: declaration trace, not image, mesh, SVG, or AI output
+;; ============================================================
+
+((FS . model.trailer.wike-ebike-cargo)
+
+  ((GS . identity)
+    ((RS . object)
+      ((US . class)      . trailer)
+      ((US . subtype)    . ebike-cargo)
+      ((US . synset)     . trailer.n.01)
+      ((US . authority)  . canonical-model-declaration)
+      ((US . mutable)    . false)))
+
+  ((GS . form)
+    ((RS . body)
+      ((US . primitive)  . rectangular-container)
+      ((US . topology)   . open-cargo-volume)
+      ((US . symmetry)   . bilateral)
+      ((US . simplex)    . quad-panel-shell))
+
+    ((RS . cargo-volume)
+      ((US . bounded-by) . panel.floor panel.left panel.right panel.front panel.rear-gate)
+      ((US . function)   . carry-load)
+      ((US . access)     . rear-gate)))
+
+  ((GS . frame)
+    ((RS . rail.top.left)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . upper-side-boundary))
+
+    ((RS . rail.top.right)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . upper-side-boundary))
+
+    ((RS . rail.bottom.left)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . load-transfer))
+
+    ((RS . rail.bottom.right)
+      ((US . primitive)  . line)
+      ((US . material)   . aluminum)
+      ((US . function)   . load-transfer))
+
+    ((RS . corner-blocks)
+      ((US . primitive)  . point-joint)
+      ((US . count)      . 8)
+      ((US . function)   . impact-protection frame-joint)))
+
+  ((GS . panels)
+    ((RS . panel.floor)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . load-bed))
+
+    ((RS . panel.left)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . side-wall))
+
+    ((RS . panel.right)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . side-wall))
+
+    ((RS . panel.front)
+      ((US . primitive)  . rectangle)
+      ((US . function)   . forward-wall))
+
+    ((RS . panel.rear-gate)
+      ((US . primitive)  . rectangle)
+      ((US . state)      . hinged)
+      ((US . function)   . loading-ramp access-door)))
+
+  ((GS . motion)
+    ((RS . wheel.left)
+      ((US . primitive)  . circle)
+      ((US . topology)   . radial-spoked)
+      ((US . function)   . rolling-support)
+      ((US . side)       . left))
+
+    ((RS . wheel.right)
+      ((US . primitive)  . circle)
+      ((US . topology)   . radial-spoked)
+      ((US . function)   . rolling-support)
+      ((US . side)       . right))
+
+    ((RS . axle)
+      ((US . primitive)  . line)
+      ((US . connects)   . wheel.left wheel.right)
+      ((US . function)   . load-bearing-rotation))
+
+    ((RS . tow-arm)
+      ((US . primitive)  . bent-line)
+      ((US . connects)   . frame.lower-front bicycle-hitch)
+      ((US . function)   . traction-link))
+
+    ((RS . hitch)
+      ((US . primitive)  . joint)
+      ((US . function)   . bicycle-coupling)
+      ((US . degrees)    . yaw pitch limited-roll)))
+
+  ((GS . markings)
+    ((RS . logo)
+      ((US . text)       . "WIKE")
+      ((US . position)   . side-panel)
+      ((US . role)       . brand-mark))
+
+    ((RS . triangle-emblem)
+      ((US . primitive)  . triangle)
+      ((US . simplex)    . 2-simplex)
+      ((US . role)       . high-visibility-symbol)))
+
+  ((GS . render)
+    ((RS . far)
+      ((US . depth)      . FS.GS)
+      ((US . output)     . box.two-wheels.tow-arm))
+
+    ((RS . middle)
+      ((US . depth)      . FS.GS.RS)
+      ((US . output)     . panels.frame.wheels.tow-arm))
+
+    ((RS . near)
+      ((US . depth)      . FS.GS.RS.US)
+      ((US . output)     . rails.latches.reflectors.hinges.spokes))
+
+    ((RS . inspect)
+      ((US . depth)      . full-trace)
+      ((US . output)     . form.function.repair.barcode.receipt)))
+
+  ((GS . carrier)
+    ((RS . aztec)
+      ((US . role)       . object-root-vertex-carrier))
+
+    ((RS . maxicode)
+      ((US . role)       . material-logistics-carrier))
+
+    ((RS . beecode)
+      ((US . role)       . rule-query-carrier))
+
+    ((RS . code16k)
+      ((US . role)       . trace-continuation-carrier)))
+
+  ((GS . closure)
+    ((RS . summary)
+      ((US . groups)     . identity form frame panels motion markings render carrier)
+      ((US . authority)  . declaration-trace)
+      ((US . projection) . non-causal))))`;
+
+    window.OMI_WORKBENCH_WORLD = String.raw`;; ============================================================
+;; OMI WORLD DECLARATION
+;; World: cargo-yard-demo
+;; Mode: observer projection / non-causal interaction trace
+;; Authority: declaration trace, not simulation output
+;; ============================================================
+
+((FS . world.cargo-yard-demo)
+
+  ((GS . objects)
+    ((RS . trailer.001)
+      ((US . model) . model.trailer.wike-ebike-cargo)
+      ((US . pose)  . x0.y0.r0)
+      ((US . state) . empty))
+
+    ((RS . bicycle.001)
+      ((US . model) . model.bicycle.generic-ebike)
+      ((US . pose)  . x-2.y0.r0)
+      ((US . state) . coupled))
+
+    ((RS . cargo.001)
+      ((US . model) . model.box.generic-cargo)
+      ((US . pose)  . trailer.001.cargo-volume)
+      ((US . state) . loaded)))
+
+  ((GS . interactions)
+    ((RS . hitch-link.001)
+      ((US . source)   . bicycle.001.hitch)
+      ((US . target)   . trailer.001.tow-arm)
+      ((US . relation) . coupled-traction))
+
+    ((RS . load-support.001)
+      ((US . source)   . cargo.001.mass)
+      ((US . target)   . trailer.001.panel.floor)
+      ((US . relation) . supported-by))
+
+    ((RS . rolling.001)
+      ((US . source)   . bicycle.001.forward-motion)
+      ((US . target)   . trailer.001.motion)
+      ((US . relation) . transmitted-motion)))
+
+  ((GS . render)
+    ((RS . resolution)
+      ((US . far)     . FS.GS)
+      ((US . middle)  . FS.GS.RS)
+      ((US . near)    . FS.GS.RS.US)
+      ((US . inspect) . full-trace))))`;
+  </script>
+  <script src="./src/model_parser.js"></script>
+  <script src="./src/ascii_plane.js"></script>
+  <script src="./src/tree_view.js"></script>
+  <script src="./src/graph_view.js"></script>
+  <script src="./src/pointer_router.js"></script>
+  <script src="./src/polyform_basis.js"></script>
+  <script src="./src/polyform_2d.js"></script>
+  <script src="./src/polyform_25d.js"></script>
+  <script src="./src/polyform_3d.js"></script>
+  <script src="./src/canvas2d_backend.js"></script>
+  <script src="./src/svg_backend.js"></script>
+  <script src="./src/aframe_backend.js"></script>
+  <script src="./src/gltf_exporter.js"></script>
+  <script src="./src/obj_mtl_exporter.js"></script>
+  <script src="./src/polyform_preview.js"></script>
+  <script src="./src/source_buffer.js"></script>
+  <script>
+    (function () {
+      const parser = window.OMIModelParser;
+      const ascii = window.OMIAsciiPlane;
+      const tree = window.OMITreeView;
+      const graph = window.OMIGraphView;
+      const pointerRouter = window.OMIPointerRouter;
+      const polyform2d = window.OMIPolyform2D;
+      const polyform25d = window.OMIPolyform25D;
+      const polyform3d = window.OMIPolyform3D;
+      const canvasBackend = window.OMICanvas2DBackend;
+      const svgBackend = window.OMISvgBackend;
+      const aframeBackend = window.OMIAFrameBackend;
+      const gltfExporter = window.OMIGltfExporter;
+      const objExporter = window.OMIObjMtlExporter;
+      const preview = window.OMIPolyformPreview;
+      const sourceBuffer = window.OMISourceBuffer;
+
+      const state = {
+        source: document.getElementById("source"),
+        trailer: window.OMI_WORKBENCH_TRAILER,
+        world: window.OMI_WORKBENCH_WORLD,
+      };
+
+      function metric(label, value) {
+        return `<div class="metric"><span class="muted">${label}</span><strong>${value}</strong></div>`;
+      }
+
+      function render() {
+        const doc = parser.parseDocument(state.source.value);
+        const asciiView = ascii.inspectAsciiPlanes(doc.source, doc);
+        const shapes2d = polyform2d.build(doc, doc.kind === "world" ? "middle" : "near");
+        const solids25d = polyform25d.build(doc);
+        const solids3d = polyform3d.build(doc);
+        const canvasProjection = canvasBackend.buildProjection(doc, shapes2d, doc.kind === "world" ? "middle" : "near");
+        const svg = svgBackend.buildSvg(doc, shapes2d, doc.kind === "world" ? "middle" : "near");
+        const aframe = aframeBackend.buildScene(doc, solids3d, "3d");
+        const gltf = JSON.stringify(gltfExporter.build(doc, solids3d, "3d"), null, 2);
+        const obj = objExporter.build(doc, solids3d, "3d");
+        document.getElementById("counts").innerHTML = [
+          metric("FS", doc.counts.fs),
+          metric("GS", doc.counts.gs),
+          metric("RS", doc.counts.rs),
+          metric("US", doc.counts.us)
+        ].join("");
+        document.getElementById("tree").innerHTML = tree.renderTree(doc);
+        document.getElementById("graph").innerHTML = graph.renderGraph(doc);
+        document.getElementById("preview").innerHTML = preview.renderPreview(doc);
+        document.getElementById("backends").innerHTML = [
+          "<div class=\"backend-card\"><strong>Canvas 2D</strong><canvas id=\"workbench-canvas\"></canvas></div>",
+          "<div class=\"backend-card\"><strong>SVG</strong><pre>" + svg.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</pre></div>",
+          "<div class=\"backend-card\"><strong>A-Frame</strong><pre>" + aframe.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</pre></div>",
+          "<div class=\"backend-card\"><strong>Exports</strong><pre>" +
+            ["glTF extras root: " + JSON.parse(gltf).extras.omi_root,
+             "OBJ receipt root: " + JSON.parse(obj.receipt).omi_root,
+             "2D shapes: " + shapes2d.length,
+             "2.5D solids: " + solids25d.length,
+             "3D solids: " + solids3d.length].join("\n") + "</pre></div>"
+        ].join("");
+        document.getElementById("ascii-summary").innerHTML = [
+          metric("Control", asciiView.summary.control),
+          metric("Operator", asciiView.summary.operator),
+          metric("Metric", asciiView.summary.metric),
+          metric("Symbol", asciiView.summary.symbol)
+        ].join("");
+        document.getElementById("ascii-detail").innerHTML = ascii.renderInspector(asciiView);
+        document.getElementById("proposal").innerHTML = `<pre>${sourceBuffer.proposePropertyEdit(doc, "RS.preview-note", "US.status", "draft")}</pre>`;
+        canvasBackend.renderToCanvas(document.getElementById("workbench-canvas"), canvasProjection);
+
+        const firstPointer = doc.records[0] ? pointerRouter.selectPointer({
+          path: doc.records[0].path,
+          rs: doc.records[0].rs,
+          depth: doc.kind === "world" ? "middle" : "near"
+        }) : null;
+        if (firstPointer) {
+          document.getElementById("proposal").innerHTML =
+            `<pre>${sourceBuffer.proposeMoveEdit(firstPointer.target, "x1.y0.r0")}</pre>`;
+        }
+      }
+
+      function loadExample(kind) {
+        state.source.value = kind === "world" ? state.world : state.trailer;
+        document.getElementById("load-trailer").classList.toggle("active", kind !== "world");
+        document.getElementById("load-world").classList.toggle("active", kind === "world");
+        render();
+      }
+
+      state.source.addEventListener("input", render);
+      document.getElementById("load-trailer").addEventListener("click", () => loadExample("trailer"));
+      document.getElementById("load-world").addEventListener("click", () => loadExample("world"));
+      loadExample("trailer");
+    }());
+  </script>
+</body>
+</html>

@@ -182,8 +182,7 @@ int omi_event_packet_encode(const omi_event_packet_t *packet,
                             unsigned out_size,
                             unsigned *encoded_size)
 {
-    const unsigned needed = 4u + 5u * OMI_EVENT_PACKET_FIELD_MAX + 5u * 4u +
-                            4u + OMI_EVENT_PACKET_PAYLOAD_MAX + 4u;
+    const unsigned needed = OMI_EVENT_PACKET_ENCODED_SIZE;
     omi_event_packet_t normalized;
 
     if (encoded_size) {
@@ -230,8 +229,7 @@ int omi_event_packet_decode(const unsigned char *bytes,
                             unsigned size,
                             omi_event_packet_t *packet)
 {
-    const unsigned needed = 4u + 5u * OMI_EVENT_PACKET_FIELD_MAX + 5u * 4u +
-                            4u + OMI_EVENT_PACKET_PAYLOAD_MAX + 4u;
+    const unsigned needed = OMI_EVENT_PACKET_ENCODED_SIZE;
     unsigned timing_offset = 4u + 5u * OMI_EVENT_PACKET_FIELD_MAX;
     unsigned expected_hash;
 

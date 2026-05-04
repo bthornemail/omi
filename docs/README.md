@@ -70,9 +70,17 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
     projection court.
 35. `PHASE-46A-HARDWARE-EVENT-PACKET-LAW.md` defines the compact typed packet
     carried across device and MMIO boundaries.
-36. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+36. `PHASE-46B-ESP32-EVENT-WITNESS-PROFILE.md` defines the ESP32-class
+    low-power witness profile over the hardware event packet law.
+37. `PHASE-46C-OMI-WORLD-WORKBENCH.md` defines the first source-first visual
+    organizer for OMI world models.
+38. `PHASE-47-INTERACTIVE-OMI-WORLD-WORKBENCH.md` defines the interactive
+    workbench projection backends, pointer routing, and export law.
+39. `PHASE-48-WORKBENCH-EDIT-LOG.md` defines append-only workbench edit
+    events, replay reconstruction, and undo/redo law.
+40. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-37. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+41. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -220,6 +228,26 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : Host-side hardware event packet witness that encodes compact device packets,
   validates pinned timing receipts, computes deterministic receipt hashes, and
   projects packets into declarative event models.
+
+`PHASE-46B-ESP32-EVENT-WITNESS-PROFILE.md`
+: Host-side ESP32 witness profile that simulates low-power GPIO, carrier-scan,
+  model-sync, timing-observe, and receipt-append packets over the Phase 46A
+  packet law.
+
+`PHASE-46C-OMI-WORLD-WORKBENCH.md`
+: Static source-first workbench that projects canonical OMI-LISP declarations
+  into an FS/GS/RS/US tree, ASCII plane inspector, relation graph, and
+  polyform preview while preserving roundtrip structural counts.
+
+`PHASE-47-INTERACTIVE-OMI-WORLD-WORKBENCH.md`
+: Interactive workbench layer that adds pointer routing, Canvas/SVG/A-Frame
+  projections, glTF and OBJ/MTL export metadata, and deterministic 2D/2.5D/3D
+  polyform basis families.
+
+`PHASE-48-WORKBENCH-EDIT-LOG.md`
+: Append-only workbench edit-log layer that records proposals, commits,
+  undo/redo events, deterministic replay reconstruction, and edit-log export
+  receipts.
 
 `QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
 : Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,

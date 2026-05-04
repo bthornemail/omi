@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -97,6 +97,12 @@ $(BUILD_DIR)/omi_event_packet.o: userspace/runtime/omi_event_packet.c userspace/
 
 $(BUILD_DIR)/event_packet_test: tests/event_packet_test.c $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Iuserspace/include tests/event_packet_test.c $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o -o $@
+
+$(BUILD_DIR)/omi_esp32_witness.o: userspace/runtime/omi_esp32_witness.c userspace/include/omi_esp32_witness.h userspace/include/omi_event_packet.h userspace/include/omi_event_model.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_esp32_witness.c -o $@
+
+$(BUILD_DIR)/esp32_witness_test: tests/esp32_witness_test.c $(BUILD_DIR)/omi_esp32_witness.o $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/esp32_witness_test.c $(BUILD_DIR)/omi_esp32_witness.o $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o -o $@
 
 $(BUILD_DIR)/omi_intent_model.o: userspace/runtime/omi_intent_model.c userspace/include/omi_intent_model.h userspace/include/omi_event_model.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_intent_model.c -o $@
@@ -397,6 +403,17 @@ device-model-test: $(BUILD_DIR)/device_model_test
 event-packet-test: $(BUILD_DIR)/event_packet_test
 	./$(BUILD_DIR)/event_packet_test
 
+esp32-witness-test: $(BUILD_DIR)/esp32_witness_test
+	./$(BUILD_DIR)/esp32_witness_test
+
+workbench-test:
+	node tests/workbench_model_roundtrip_test.js
+	node tests/workbench_pointer_reference_test.js
+	node tests/workbench_export_test.js
+
+workbench-edit-test:
+	node tests/workbench_edit_log_test.js
+
 kernel: $(KERNEL_ELF)
 
 iso: image kernel
@@ -485,6 +502,9 @@ unit-test:
 	$(MAKE) app-model-test
 	$(MAKE) device-model-test
 	$(MAKE) event-packet-test
+	$(MAKE) esp32-witness-test
+	$(MAKE) workbench-test
+	$(MAKE) workbench-edit-test
 	$(MAKE) qemu-page-court-test
 	$(MAKE) qemu-mmio-device-court-test
 
