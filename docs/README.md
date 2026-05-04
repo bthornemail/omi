@@ -86,9 +86,11 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
     records.
 42. `PHASE-51A-FILE-BASED-WORKBENCH-SYNC.md` defines the first durable
     transport adapter for validated sync packets and ordered sync bundles.
-43. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+43. `PHASE-51C-BARCODE-WORKBENCH-SYNC.md` defines the scannable barcode
+    carrier adapter for validated sync packets using Phase 38 carrier roles.
+44. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-44. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+45. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -270,6 +272,11 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : File-based transport adapter for deterministic `.omi-sync.json` packet files
   and `.omi-synclog.json` ordered packet bundles applied through the Phase 50
   packet court.
+
+`PHASE-51C-BARCODE-WORKBENCH-SYNC.md`
+: Barcode carrier adapter that wraps validated Phase 50 sync packets in
+  deterministic Code16K/Aztec/MaxiCode/BeeCode declarations and decodes them
+  back through the packet court.
 
 `QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
 : Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,
