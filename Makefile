@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -435,6 +435,9 @@ workbench-org-test:
 	node tests/workbench_noweb_tangle_test.js
 	node tests/workbench_tramp_path_test.js
 
+workbench-diagram-tangle-test:
+	node tests/workbench_diagram_tangle_test.js
+
 kernel: $(KERNEL_ELF)
 
 iso: image kernel
@@ -532,6 +535,7 @@ unit-test:
 	$(MAKE) workbench-barcode-sync-test
 	$(MAKE) workbench-esp32-sync-test
 	$(MAKE) workbench-org-test
+	$(MAKE) workbench-diagram-tangle-test
 	$(MAKE) qemu-page-court-test
 	$(MAKE) qemu-mmio-device-court-test
 

@@ -94,9 +94,12 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 45. `PHASE-52-LITERATE-ORG-TREESITTER-COURT.md` defines deterministic Org
     bundle export, property drawers, Babel blocks, noweb/tangle, TRAMP carrier
     locators, and a tree-sitter interoperability bridge.
-46. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+46. `PHASE-53-DIAGRAM-GRAPH-TEMPLATE-TANGLE-COURT.md` defines deterministic
+    DOT/SVG/relations/index artifact generation from canonical world relations
+    and diagram templates.
+47. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-47. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+48. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -293,6 +296,11 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : Literate collaboration/export court that emits deterministic Org bundles and
   supports property drawers, Babel block parsing, noweb/tangle composition,
   TRAMP carrier locators, and tree-sitter-style extraction bridges.
+
+`PHASE-53-DIAGRAM-GRAPH-TEMPLATE-TANGLE-COURT.md`
+: Deterministic diagram/graph artifact court that tangles canonical world
+  relations and diagram template metadata into DOT, SVG placeholder, relations
+  JSON, and Org index outputs.
 
 `QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
 : Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,
