@@ -91,9 +91,12 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 44. `PHASE-51D-ESP32-WORKBENCH-SYNC.md` defines the ESP32-class simulator
     carrier adapter for transporting validated sync packets through the Phase
     46 witness profile.
-45. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+45. `PHASE-52-LITERATE-ORG-TREESITTER-COURT.md` defines deterministic Org
+    bundle export, property drawers, Babel blocks, noweb/tangle, TRAMP carrier
+    locators, and a tree-sitter interoperability bridge.
+46. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-46. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+47. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -285,6 +288,11 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : ESP32 simulator-side carrier adapter that wraps validated Phase 50 sync
   packets in a Phase 46-style event witness envelope and decodes them back
   through the packet court.
+
+`PHASE-52-LITERATE-ORG-TREESITTER-COURT.md`
+: Literate collaboration/export court that emits deterministic Org bundles and
+  supports property drawers, Babel block parsing, noweb/tangle composition,
+  TRAMP carrier locators, and tree-sitter-style extraction bridges.
 
 `QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
 : Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,
