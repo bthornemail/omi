@@ -78,9 +78,17 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
     workbench projection backends, pointer routing, and export law.
 39. `PHASE-48-WORKBENCH-EDIT-LOG.md` defines append-only workbench edit
     events, replay reconstruction, and undo/redo law.
-40. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+40. `PHASE-49-WORKBENCH-COLLABORATION-MERGE-COURT.md` defines deterministic
+    local merge for append-only workbench edit logs and explicit conflict
+    records.
+41. `PHASE-50-WORKBENCH-SYNC-PACKET-COURT.md` defines transport-neutral sync
+    packets for append-only edit logs, merge logs, and explicit conflict
+    records.
+42. `PHASE-51A-FILE-BASED-WORKBENCH-SYNC.md` defines the first durable
+    transport adapter for validated sync packets and ordered sync bundles.
+43. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-41. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+44. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -248,6 +256,20 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : Append-only workbench edit-log layer that records proposals, commits,
   undo/redo events, deterministic replay reconstruction, and edit-log export
   receipts.
+
+`PHASE-49-WORKBENCH-COLLABORATION-MERGE-COURT.md`
+: Deterministic local merge layer for multiple append-only workbench edit logs,
+  including explicit conflict records and replay-safe merged history.
+
+`PHASE-50-WORKBENCH-SYNC-PACKET-COURT.md`
+: Transport-neutral sync packet court for append-only edit-log segments,
+  merged-log segments, conflict records, duplicate suppression, and explicit
+  missing-segment requests.
+
+`PHASE-51A-FILE-BASED-WORKBENCH-SYNC.md`
+: File-based transport adapter for deterministic `.omi-sync.json` packet files
+  and `.omi-synclog.json` ordered packet bundles applied through the Phase 50
+  packet court.
 
 `QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
 : Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,

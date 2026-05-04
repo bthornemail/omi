@@ -90,6 +90,29 @@
     });
   }
 
+  function appendImportedCommit(log, commit) {
+    return appendEvent(log, {
+      type: "commit",
+      action: commit.action,
+      path: commit.path,
+      proposalText: commit.proposalText,
+      proposalSeq: commit.proposalSeq || 0,
+      importedFrom: commit.importedFrom || "",
+      originalSeq: commit.originalSeq || commit.seq || 0
+    });
+  }
+
+  function appendConflict(log, conflict) {
+    return appendEvent(log, {
+      type: "conflict",
+      action: conflict.action,
+      path: conflict.path,
+      left: conflict.left,
+      right: conflict.right,
+      reason: conflict.reason || "merge-conflict"
+    });
+  }
+
   function activeCommitEvents(log) {
     const commits = new Map();
     const active = new Map();
@@ -124,6 +147,8 @@
     commitProposal: commitProposal,
     appendUndo: appendUndo,
     appendRedo: appendRedo,
+    appendImportedCommit: appendImportedCommit,
+    appendConflict: appendConflict,
     activeCommitEvents: activeCommitEvents,
     receipt: receipt
   };
