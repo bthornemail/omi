@@ -1,0 +1,5 @@
+((FS . intent.scan-carrier)
+  ((GS . accepts)((RS . carrier)((US . value) . decoded-payload)))
+  ((GS . request)((RS . decode)((US . route) . phase38.carrier-decode)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . validate-first)((US . mutation) . forbidden)))
+  ((GS . output)((RS . event)((US . kind) . event.carrier-scan)((US . authority) . projection-only))))

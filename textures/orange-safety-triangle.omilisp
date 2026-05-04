@@ -1,0 +1,5 @@
+((FS . texture.orange-safety-triangle)
+  ((GS . target)((RS . surface)((US . applies-to) . triangle-emblem)))
+  ((GS . material)((RS . class)((US . value) . safety-decal)((US . reflectance) . high)((US . finish) . gloss)))
+  ((GS . pattern)((RS . basis)((US . primitive) . triangle-fill)((US . detail) . orange-inner-red-outer)))
+  ((GS . resolution)((RS . render-depth)((US . far) . warning-mark)((US . middle) . triangle-tone)((US . near) . two-color-triangle)((US . inspect) . decal-record))))

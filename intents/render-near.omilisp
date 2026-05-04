@@ -1,0 +1,5 @@
+((FS . intent.render-near)
+  ((GS . accepts)((RS . model-class)((US . value) . any)))
+  ((GS . request)((RS . projection)((US . depth) . near)((US . surfaces) . render texture)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . lazy)((US . mutation) . forbidden)))
+  ((GS . output)((RS . event)((US . kind) . event.render-request)((US . authority) . projection-only))))

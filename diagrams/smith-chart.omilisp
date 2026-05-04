@@ -1,0 +1,6 @@
+((FS . diagram.smith-chart)
+  ((GS . identity)((RS . template)((US . class) . diagram)((US . authority) . projection-template)))
+  ((GS . accepts)((RS . input)((US . model-class) . network-transform)((US . projection-depth) . middle)))
+  ((GS . layout)((RS . grammar)((US . basis) . svg-polyform)((US . coordinate-system) . normalized-impedance)((US . primitives) . arc circle coordinate point)))
+  ((GS . timing)((RS . global-public)((US . global) . 360)((US . public-frame) . 240)))
+  ((GS . output)((RS . projection)((US . kind) . diagram-trace)((US . causal) . false))))

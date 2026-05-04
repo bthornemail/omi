@@ -1,0 +1,5 @@
+((FS . texture.black-corner-block)
+  ((GS . target)((RS . surface)((US . applies-to) . corner-blocks)))
+  ((GS . material)((RS . class)((US . value) . black-plastic)((US . reflectance) . low)((US . finish) . matte)))
+  ((GS . pattern)((RS . basis)((US . primitive) . point-fill)((US . detail) . rounded-corner-block)))
+  ((GS . resolution)((RS . render-depth)((US . far) . dark-point)((US . middle) . corner-tone)((US . near) . block-detail)((US . inspect) . material-record))))

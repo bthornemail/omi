@@ -1,0 +1,6 @@
+((FS . event.model-hotplug)
+  ((GS . identity)((RS . event)((US . class) . model-hotplug)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . carrier)((US . id) . carrier.payload.text)))
+  ((GS . target)((RS . overlay)((US . id) . phase37.overlay-registry)))
+  ((GS . relation)((RS . append-request)((US . output) . declaration-handle)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

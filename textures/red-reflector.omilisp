@@ -1,0 +1,5 @@
+((FS . texture.red-reflector)
+  ((GS . target)((RS . surface)((US . applies-to) . reflector.left-rear reflector.right-rear)))
+  ((GS . material)((RS . class)((US . value) . red-reflective-plastic)((US . reflectance) . high)((US . finish) . faceted)))
+  ((GS . pattern)((RS . basis)((US . primitive) . red-fill)((US . detail) . reflector-grid)))
+  ((GS . resolution)((RS . render-depth)((US . far) . red-dot)((US . middle) . red-panel)((US . near) . reflector-grid)((US . inspect) . material-record))))

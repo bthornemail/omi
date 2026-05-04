@@ -1,0 +1,6 @@
+((FS . event.carrier-scan)
+  ((GS . identity)((RS . event)((US . class) . carrier-scan)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . scanner)((US . id) . carrier.reader)))
+  ((GS . target)((RS . decoder)((US . id) . phase38.carrier-decode)))
+  ((GS . relation)((RS . decode-request)((US . output) . carrier-receipt)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

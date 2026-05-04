@@ -1,0 +1,5 @@
+((FS . intent.hotplug-declaration)
+  ((GS . accepts)((RS . declaration)((US . value) . omi-lisp-text)))
+  ((GS . request)((RS . loader)((US . route) . phase37.hotplug-loader)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . validate-first)((US . mutation) . append-only-overlay)))
+  ((GS . output)((RS . event)((US . kind) . event.model-hotplug)((US . authority) . projection-only))))

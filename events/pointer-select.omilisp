@@ -1,0 +1,6 @@
+((FS . event.pointer-select)
+  ((GS . identity)((RS . event)((US . class) . pointer-select)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . pointer)((US . id) . pointer.primary)))
+  ((GS . target)((RS . handle)((US . id) . model.trailer.wike-ebike-cargo)))
+  ((GS . relation)((RS . select)((US . output) . selected-handle)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

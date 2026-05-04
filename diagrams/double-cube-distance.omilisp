@@ -1,0 +1,6 @@
+((FS . diagram.double-cube-distance)
+  ((GS . identity)((RS . template)((US . class) . diagram)((US . authority) . projection-template)))
+  ((GS . accepts)((RS . input)((US . model-class) . metric-geometry)((US . projection-depth) . middle)))
+  ((GS . layout)((RS . grammar)((US . basis) . svg-polyform)((US . coordinate-system) . normalized-canvas)((US . primitives) . cube-corner edge diagonal distance)))
+  ((GS . timing)((RS . public-private)((US . public-frame) . 240)((US . private-sweep) . 60)))
+  ((GS . output)((RS . projection)((US . kind) . diagram-trace)((US . causal) . false))))

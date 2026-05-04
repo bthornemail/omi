@@ -2,6 +2,8 @@
 #include "../include/bitwise_kernel.h"
 #include "../include/graph.h"
 #include "../include/model_registry.h"
+#include "../include/mmio_device_court.h"
+#include "../include/page_court.h"
 #include "../include/multiboot2.h"
 #include "../include/osi_projection.h"
 #include "../include/rules.h"
@@ -277,6 +279,8 @@ void omi_kernel_entry(uint32_t magic, uint32_t info_addr)
     omi_serial_write_string("OMI BOOT\n");
     print_foundation_qemu_proof();
     omi_emit_model_registry_witness();
+    omi_emit_page_court_witness();
+    omi_emit_mmio_device_court_witness();
     omi_serial_write_string("OMI PHASE 6 CONTENT-ADDRESSABLE SYMBOL FIELD\n");
     omi_serial_write_string("multiboot magic=");
     omi_serial_write_hex32(magic);

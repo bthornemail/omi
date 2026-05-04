@@ -24,6 +24,7 @@ static int resolve_directory(const char *path, omi_vfs_result_t *result)
 }
 
 static int resolve_handle(const omi_user_mount_table_t *table,
+                          const omi_model_overlay_t *overlay,
                           const char *path,
                           omi_vfs_result_t *result)
 {
@@ -42,6 +43,9 @@ static int resolve_handle(const omi_user_mount_table_t *table,
     }
 
     const omi_user_model_handle_t *handle = omi_user_init_find_handle(table, id);
+    if (!handle) {
+        handle = omi_model_overlay_find_handle(overlay, id);
+    }
     if (!handle) {
         return 0;
     }
@@ -83,6 +87,7 @@ static int projection_prefix_depth(const char *path,
 }
 
 static int resolve_projection(const omi_user_mount_table_t *table,
+                              const omi_model_overlay_t *overlay,
                               const char *path,
                               omi_vfs_result_t *result)
 {
@@ -94,6 +99,9 @@ static int resolve_projection(const omi_user_mount_table_t *table,
     }
 
     const omi_user_model_handle_t *handle = omi_user_init_find_handle(table, id);
+    if (!handle) {
+        handle = omi_model_overlay_find_handle(overlay, id);
+    }
     if (!handle) {
         return 0;
     }
@@ -116,6 +124,14 @@ int omi_model_vfs_resolve(const omi_user_mount_table_t *table,
                           const char *path,
                           omi_vfs_result_t *result)
 {
+    return omi_model_vfs_resolve_with_overlay(table, 0, path, result);
+}
+
+int omi_model_vfs_resolve_with_overlay(const omi_user_mount_table_t *table,
+                                       const omi_model_overlay_t *overlay,
+                                       const char *path,
+                                       omi_vfs_result_t *result)
+{
     clear_result(result);
 
     if (!table || !path || !result) {
@@ -126,11 +142,11 @@ int omi_model_vfs_resolve(const omi_user_mount_table_t *table,
         return 1;
     }
 
-    if (resolve_handle(table, path, result)) {
+    if (resolve_handle(table, overlay, path, result)) {
         return 1;
     }
 
-    if (resolve_projection(table, path, result)) {
+    if (resolve_projection(table, overlay, path, result)) {
         return 1;
     }
 

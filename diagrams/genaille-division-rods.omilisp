@@ -1,0 +1,6 @@
+((FS . diagram.genaille-division-rods)
+  ((GS . identity)((RS . template)((US . class) . diagram)((US . authority) . projection-template)))
+  ((GS . accepts)((RS . input)((US . model-class) . arithmetic-instrument)((US . projection-depth) . middle)))
+  ((GS . layout)((RS . grammar)((US . basis) . svg-polyform)((US . coordinate-system) . digit-rods)((US . primitives) . rod diagonal digit-cell read-path)))
+  ((GS . timing)((RS . sweep)((US . private-sweep) . 60)))
+  ((GS . output)((RS . projection)((US . kind) . diagram-trace)((US . causal) . false))))

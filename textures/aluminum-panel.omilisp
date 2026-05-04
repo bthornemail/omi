@@ -1,0 +1,5 @@
+((FS . texture.aluminum-panel)
+  ((GS . target)((RS . surface)((US . applies-to) . panel.left panel.right panel.front panel.floor)))
+  ((GS . material)((RS . class)((US . value) . aluminum-composite)((US . reflectance) . medium)((US . finish) . matte)))
+  ((GS . pattern)((RS . basis)((US . primitive) . flat-fill)((US . detail) . subtle-brushed-lines)))
+  ((GS . resolution)((RS . render-depth)((US . far) . flat)((US . middle) . panel-tone)((US . near) . brushed-pattern)((US . inspect) . material-record))))

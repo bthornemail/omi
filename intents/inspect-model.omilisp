@@ -1,0 +1,5 @@
+((FS . intent.inspect-model)
+  ((GS . accepts)((RS . model-class)((US . value) . any)))
+  ((GS . request)((RS . projection)((US . depth) . inspect)((US . surfaces) . form function render carrier relations)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . lazy)((US . mutation) . forbidden)))
+  ((GS . output)((RS . view)((US . kind) . structured-report)((US . authority) . projection-only))))

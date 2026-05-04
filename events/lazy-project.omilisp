@@ -1,0 +1,6 @@
+((FS . event.lazy-project)
+  ((GS . identity)((RS . event)((US . class) . lazy-project)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . handle)((US . id) . model.trailer.wike-ebike-cargo)))
+  ((GS . target)((RS . evaluator)((US . id) . phase35.lazy-eval)))
+  ((GS . relation)((RS . project)((US . projection-depth) . middle)((US . output) . projection-view)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

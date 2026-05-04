@@ -1,0 +1,5 @@
+((FS . texture.stainless-tow-arm)
+  ((GS . target)((RS . surface)((US . applies-to) . tow-arm hitch axle)))
+  ((GS . material)((RS . class)((US . value) . stainless-steel)((US . reflectance) . medium-high)((US . finish) . brushed)))
+  ((GS . pattern)((RS . basis)((US . primitive) . line-stroke)((US . detail) . metallic-highlight)))
+  ((GS . resolution)((RS . render-depth)((US . far) . line)((US . middle) . metal-stroke)((US . near) . brushed-stroke)((US . inspect) . material-record))))

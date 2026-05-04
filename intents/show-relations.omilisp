@@ -1,0 +1,5 @@
+((FS . intent.show-relations)
+  ((GS . accepts)((RS . model-class)((US . value) . any)))
+  ((GS . request)((RS . query)((US . relation-surface) . true)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . lazy)((US . mutation) . forbidden)))
+  ((GS . output)((RS . event)((US . kind) . event.query-request)((US . authority) . projection-only))))

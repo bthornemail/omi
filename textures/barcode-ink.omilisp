@@ -1,0 +1,5 @@
+((FS . texture.barcode-ink)
+  ((GS . target)((RS . surface)((US . applies-to) . carrier.aztec carrier.code16k carrier.maxicode carrier.beecode)))
+  ((GS . material)((RS . class)((US . value) . black-ink)((US . reflectance) . low)((US . finish) . flat)))
+  ((GS . pattern)((RS . basis)((US . primitive) . carrier-modules)((US . detail) . scannable-contrast)))
+  ((GS . resolution)((RS . render-depth)((US . far) . mark)((US . middle) . module-field)((US . near) . carrier-cells)((US . inspect) . receipt-record))))

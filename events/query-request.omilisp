@@ -1,0 +1,6 @@
+((FS . event.query-request)
+  ((GS . identity)((RS . event)((US . class) . query-request)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . intent)((US . id) . intent.show-relations)))
+  ((GS . target)((RS . query)((US . id) . phase42.query-surface)))
+  ((GS . relation)((RS . request)((US . output) . relation-report)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

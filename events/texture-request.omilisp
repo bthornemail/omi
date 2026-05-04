@@ -1,0 +1,6 @@
+((FS . event.texture-request)
+  ((GS . identity)((RS . event)((US . class) . texture-request)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . renderer)((US . id) . phase39.polyform-renderer)))
+  ((GS . target)((RS . texture)((US . id) . texture.aluminum-panel)))
+  ((GS . relation)((RS . request)((US . projection-depth) . near)((US . output) . texture-trace)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

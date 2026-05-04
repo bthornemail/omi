@@ -46,7 +46,33 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
     projection over mounted model handles.
 21. `PHASE-36-MODEL-VFS-PROJECTION.md` defines the filesystem-like path
     projection over model handles and lazy views.
-22. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+22. `PHASE-37-HOTPLUG-MODEL-LOADER.md` defines the user-space overlay loader
+    for validated hot-plug model declarations.
+23. `PHASE-38-TIMED-SCANNABLE-MODEL-CARRIERS.md` defines timed carrier
+    receipts and declaration payload registration through the loader.
+24. `PHASE-39-POLYFORM-SVG-RENDERER.md` defines deterministic render traces
+    and non-authoritative SVG witnesses over lazy model projections.
+25. `PHASE-40A-EVENT-MODELS.md` defines declarative event records.
+26. `PHASE-40B-INTENT-MODELS.md` defines declarative projection intents.
+27. `PHASE-40C-TEXTURE-MODELS.md` defines surface texture projections.
+28. `PHASE-40D-DIAGRAM-TEMPLATES.md` defines reusable diagram proof templates.
+29. `PHASE-40E-DECLARATIVE-SURFACE-INTEGRATION.md` proves the pre-app
+    declarative surface.
+30. `PHASE-41-DECLARATIVE-APPLICATIONS.md` defines applications as model
+    declarations over existing declarative surfaces.
+31. `PHASE-42-DECLARATIVE-DEVICE-MODELS.md` defines devices as model
+    declarations over event, render, carrier, network, and storage surfaces.
+32. `PHASE-43-QEMU-TCG-PORTABILITY-COURT.md` defines QEMU TCG as the canonical
+    portable execution witness.
+33. `PHASE-44-OMI-PAGE-COURT.md` defines the typed memory region witness and
+    page-court law.
+34. `PHASE-45-MMIO-DEVICE-PROJECTION-COURT.md` defines the typed MMIO device
+    projection court.
+35. `PHASE-46A-HARDWARE-EVENT-PACKET-LAW.md` defines the compact typed packet
+    carried across device and MMIO boundaries.
+36. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+    MMIO doctrine for future page/device courts.
+37. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
 
 ## File Roles
@@ -134,6 +160,70 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 `PHASE-36-MODEL-VFS-PROJECTION.md`
 : Host-side VFS projection witness that resolves deterministic `/omi/...` paths
   to lazy model/world handles or demand-driven projection views.
+
+`PHASE-37-HOTPLUG-MODEL-LOADER.md`
+: Host-side hot-plug witness that validates OMI declaration text, computes a
+  deterministic receipt, appends a user-space overlay handle, and exposes it
+  through VFS/lazy projection without mutating the boot registry.
+
+`PHASE-38-TIMED-SCANNABLE-MODEL-CARRIERS.md`
+: Host-side carrier witness that validates Code16K, Aztec, MaxiCode, and
+  BeeCode receipts, then routes declaration payloads through the Phase 37
+  overlay loader.
+
+`PHASE-39-POLYFORM-SVG-RENDERER.md`
+: Host-side renderer witness that projects lazy model views into deterministic
+  polyform traces and non-authoritative SVG strings without mutating handles,
+  overlays, registries, or expansion counters.
+
+`PHASE-40A-EVENT-MODELS.md`
+: Host-side event model witness for source/target/relation/timing declarations
+  and append-only event logs.
+
+`PHASE-40B-INTENT-MODELS.md`
+: Host-side intent model witness for legal projection request selection and
+  event declaration production.
+
+`PHASE-40C-TEXTURE-MODELS.md`
+: Host-side texture model witness for deterministic material/pattern projection
+  traces over model parts.
+
+`PHASE-40D-DIAGRAM-TEMPLATES.md`
+: Host-side diagram template witness for reusable visual proof grammars and
+  deterministic diagram traces.
+
+`PHASE-40E-DECLARATIVE-SURFACE-INTEGRATION.md`
+: Host-side pre-application integration witness composing intent, event, VFS,
+  lazy projection, texture, diagram, and render traces without an app model.
+
+`PHASE-41-DECLARATIVE-APPLICATIONS.md`
+: Host-side application model witness that composes existing declarative
+  surfaces without introducing a new authority or eager evaluation path.
+
+`PHASE-42-DECLARATIVE-DEVICE-MODELS.md`
+: Host-side device model witness that represents display, keyboard, camera,
+  network, and storage devices as declarations rather than imperative drivers.
+
+`PHASE-43-QEMU-TCG-PORTABILITY-COURT.md`
+: QEMU TCG proof court that forces `-accel tcg` and validates pinned
+  foundation/model-registry serial vectors plus `VALID STATE` and `OMI HALT`.
+
+`PHASE-44-OMI-PAGE-COURT.md`
+: Host-side page court witness that classifies ROM/law, foundation, registry,
+  user-space init, overlay, event log, render trace, and reserved MMIO regions.
+
+`PHASE-45-MMIO-DEVICE-PROJECTION-COURT.md`
+: Host-side MMIO device court that classifies display, keyboard, camera,
+  network, storage, and timer roles as typed event/projection boundaries.
+
+`PHASE-46A-HARDWARE-EVENT-PACKET-LAW.md`
+: Host-side hardware event packet witness that encodes compact device packets,
+  validates pinned timing receipts, computes deterministic receipt hashes, and
+  projects packets into declarative event models.
+
+`QEMU-TCG-MMU-OMI-MEMORY-LAW.md`
+: Doctrine mapping QEMU software-MMU behavior to OMI address, memory, cache,
+  dirty-page, and MMIO projection boundaries.
 
 `PRECURSOR-REFERENCE-AUDIT.md`
 : Reference boundary for `/root/omnicron` and `/root/omi-lisp`. These trees are

@@ -1,0 +1,5 @@
+((FS . texture.black-rubber-wheel)
+  ((GS . target)((RS . surface)((US . applies-to) . wheel.left wheel.right)))
+  ((GS . material)((RS . class)((US . value) . rubber)((US . reflectance) . low)((US . finish) . matte)))
+  ((GS . pattern)((RS . basis)((US . primitive) . ring-fill)((US . detail) . tread-lines)))
+  ((GS . resolution)((RS . render-depth)((US . far) . dark-circle)((US . middle) . tire-ring)((US . near) . tread-pattern)((US . inspect) . material-record))))

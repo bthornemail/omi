@@ -1,0 +1,6 @@
+((FS . event.vfs-resolve)
+  ((GS . identity)((RS . event)((US . class) . vfs-resolve)((US . authority) . declaration-event)((US . causal) . false)))
+  ((GS . source)((RS . handle)((US . id) . intent.inspect-model)))
+  ((GS . target)((RS . vfs)((US . id) . phase36.model-vfs)))
+  ((GS . relation)((RS . request)((US . path) . /omi/models/model.trailer.wike-ebike-cargo)))
+  ((GS . timing)((RS . receipt)((US . master) . 5040)((US . public-frame) . 240)((US . private-sweep) . 60))))

@@ -1,0 +1,5 @@
+((FS . intent.render-far)
+  ((GS . accepts)((RS . model-class)((US . value) . any)))
+  ((GS . request)((RS . projection)((US . depth) . far)((US . surfaces) . render)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . lazy)((US . mutation) . forbidden)))
+  ((GS . output)((RS . event)((US . kind) . event.render-request)((US . authority) . projection-only))))

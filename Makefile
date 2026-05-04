@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test qemu-model-test qemu-model-registry-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -65,8 +65,71 @@ $(BUILD_DIR)/lazy_eval_test: tests/lazy_eval_test.c $(BUILD_DIR)/omi_lazy_eval.o
 $(BUILD_DIR)/omi_model_vfs.o: userspace/runtime/omi_model_vfs.c userspace/include/omi_model_vfs.h userspace/include/omi_lazy_eval.h userspace/include/omi_user_init.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_model_vfs.c -o $@
 
-$(BUILD_DIR)/model_vfs_test: tests/model_vfs_test.c $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -Iuserspace/include tests/model_vfs_test.c $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+$(BUILD_DIR)/omi_model_loader.o: userspace/runtime/omi_model_loader.c userspace/include/omi_model_loader.h userspace/include/omi_user_init.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_model_loader.c -o $@
+
+$(BUILD_DIR)/model_vfs_test: tests/model_vfs_test.c $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/model_vfs_test.c $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/hotplug_model_loader_test: tests/hotplug_model_loader_test.c $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/hotplug_model_loader_test.c $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_carrier_decode.o: userspace/runtime/omi_carrier_decode.c userspace/include/omi_carrier_decode.h userspace/include/omi_model_loader.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_carrier_decode.c -o $@
+
+$(BUILD_DIR)/carrier_decode_test: tests/carrier_decode_test.c $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/carrier_decode_test.c $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_polyform_renderer.o: userspace/runtime/omi_polyform_renderer.c userspace/include/omi_polyform_renderer.h userspace/include/omi_carrier_decode.h userspace/include/omi_model_vfs.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_polyform_renderer.c -o $@
+
+$(BUILD_DIR)/polyform_renderer_test: tests/polyform_renderer_test.c $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/polyform_renderer_test.c $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_event_model.o: userspace/runtime/omi_event_model.c userspace/include/omi_event_model.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_event_model.c -o $@
+
+$(BUILD_DIR)/event_model_test: tests/event_model_test.c $(BUILD_DIR)/omi_event_model.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/event_model_test.c $(BUILD_DIR)/omi_event_model.o -o $@
+
+$(BUILD_DIR)/omi_event_packet.o: userspace/runtime/omi_event_packet.c userspace/include/omi_event_packet.h userspace/include/omi_carrier_decode.h userspace/include/omi_event_model.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_event_packet.c -o $@
+
+$(BUILD_DIR)/event_packet_test: tests/event_packet_test.c $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/event_packet_test.c $(BUILD_DIR)/omi_event_packet.o $(BUILD_DIR)/omi_event_model.o -o $@
+
+$(BUILD_DIR)/omi_intent_model.o: userspace/runtime/omi_intent_model.c userspace/include/omi_intent_model.h userspace/include/omi_event_model.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_intent_model.c -o $@
+
+$(BUILD_DIR)/intent_model_test: tests/intent_model_test.c $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/intent_model_test.c $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o -o $@
+
+$(BUILD_DIR)/omi_texture_model.o: userspace/runtime/omi_texture_model.c userspace/include/omi_texture_model.h userspace/include/omi_lazy_eval.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_texture_model.c -o $@
+
+$(BUILD_DIR)/texture_model_test: tests/texture_model_test.c $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/texture_model_test.c $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_diagram_template.o: userspace/runtime/omi_diagram_template.c userspace/include/omi_diagram_template.h userspace/include/omi_lazy_eval.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_diagram_template.c -o $@
+
+$(BUILD_DIR)/diagram_template_test: tests/diagram_template_test.c $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/diagram_template_test.c $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/declarative_surface_test: tests/declarative_surface_test.c $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/declarative_surface_test.c $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_app_model.o: userspace/runtime/omi_app_model.c userspace/include/omi_app_model.h userspace/include/omi_diagram_template.h userspace/include/omi_intent_model.h userspace/include/omi_model_vfs.h userspace/include/omi_polyform_renderer.h userspace/include/omi_texture_model.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_app_model.c -o $@
+
+$(BUILD_DIR)/app_model_test: tests/app_model_test.c $(BUILD_DIR)/omi_app_model.o $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/app_model_test.c $(BUILD_DIR)/omi_app_model.o $(BUILD_DIR)/omi_intent_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_texture_model.o $(BUILD_DIR)/omi_diagram_template.o $(BUILD_DIR)/omi_polyform_renderer.o $(BUILD_DIR)/omi_carrier_decode.o $(BUILD_DIR)/omi_model_vfs.o $(BUILD_DIR)/omi_model_loader.o $(BUILD_DIR)/omi_lazy_eval.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
+
+$(BUILD_DIR)/omi_device_model.o: userspace/runtime/omi_device_model.c userspace/include/omi_device_model.h userspace/include/omi_event_model.h userspace/include/omi_user_init.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include -c userspace/runtime/omi_device_model.c -o $@
+
+$(BUILD_DIR)/device_model_test: tests/device_model_test.c $(BUILD_DIR)/omi_device_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Iuserspace/include tests/device_model_test.c $(BUILD_DIR)/omi_device_model.o $(BUILD_DIR)/omi_event_model.o $(BUILD_DIR)/omi_user_init.o $(BUILD_DIR)/model_registry.o -o $@
 
 $(BUILD_DIR)/rules_tests: tests/rules_tests.c kernel/runtime/rules_engine.c kernel/runtime/bom.c kernel/vm/cons_engine.c $(BUILD_DIR)/rewrite_table.o | $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/rules_tests.c kernel/runtime/rules_engine.c kernel/runtime/bom.c kernel/vm/cons_engine.c $(BUILD_DIR)/rewrite_table.o -o $@
@@ -189,7 +252,7 @@ $(BUILD_DIR)/replay_validator: tools/replay_validator.c kernel/boot/bom_clock.c 
 $(BUILD_DIR)/boot.o: kernel/boot/boot.S | $(BUILD_DIR)
 	$(CC) $(KERNEL_ASFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/entry.o: kernel/boot/entry.c kernel/include/model_registry.h | $(BUILD_DIR)
+$(BUILD_DIR)/entry.o: kernel/boot/entry.c kernel/include/model_registry.h kernel/include/page_court.h kernel/include/mmio_device_court.h | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/bom_clock.kernel.o: kernel/boot/bom_clock.c | $(BUILD_DIR)
@@ -203,6 +266,15 @@ $(BUILD_DIR)/cons_engine.kernel.o: kernel/vm/cons_engine.c | $(BUILD_DIR)
 
 $(BUILD_DIR)/serial.kernel.o: kernel/runtime/serial.c | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/page_court.kernel.o: kernel/runtime/page_court.c kernel/include/page_court.h kernel/include/serial.h | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/page_court.c -o $@
+
+$(BUILD_DIR)/mmio_device_court.kernel.o: kernel/runtime/mmio_device_court.c kernel/include/mmio_device_court.h kernel/include/serial.h | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/mmio_device_court.c -o $@
+
+$(BUILD_DIR)/event_packet.kernel.o: kernel/runtime/event_packet.c kernel/include/event_packet.h | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/event_packet.c -o $@
 
 $(BUILD_DIR)/bom.kernel.o: kernel/runtime/bom.c | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c $< -o $@
@@ -243,8 +315,8 @@ $(BUILD_DIR)/projection_address.kernel.o: polyform/encoding/projection_address.c
 $(BUILD_DIR)/omi_geometry.kernel.o: polyform/geometry/omi_geometry.c polyform/geometry/omi_geometry.h | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c polyform/geometry/omi_geometry.c -o $@
 
-$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o kernel/linker.ld
-	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o -o $@
+$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o kernel/linker.ld
+	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o -o $@
 
 test: $(BUILD_DIR)/boot_tests $(BUILD_DIR)/graph_tests $(BUILD_DIR)/cons_tests $(BUILD_DIR)/bom_tests $(BUILD_DIR)/rules_tests
 	./$(BUILD_DIR)/boot_tests
@@ -292,6 +364,39 @@ lazy-eval-test: $(BUILD_DIR)/lazy_eval_test
 model-vfs-test: $(BUILD_DIR)/model_vfs_test
 	./$(BUILD_DIR)/model_vfs_test
 
+hotplug-model-test: $(BUILD_DIR)/hotplug_model_loader_test
+	./$(BUILD_DIR)/hotplug_model_loader_test
+
+carrier-decode-test: $(BUILD_DIR)/carrier_decode_test
+	./$(BUILD_DIR)/carrier_decode_test
+
+polyform-render-test: $(BUILD_DIR)/polyform_renderer_test
+	./$(BUILD_DIR)/polyform_renderer_test
+
+event-model-test: $(BUILD_DIR)/event_model_test
+	./$(BUILD_DIR)/event_model_test
+
+intent-model-test: $(BUILD_DIR)/intent_model_test
+	./$(BUILD_DIR)/intent_model_test
+
+texture-model-test: $(BUILD_DIR)/texture_model_test
+	./$(BUILD_DIR)/texture_model_test
+
+diagram-template-test: $(BUILD_DIR)/diagram_template_test
+	./$(BUILD_DIR)/diagram_template_test
+
+declarative-surface-test: $(BUILD_DIR)/declarative_surface_test
+	./$(BUILD_DIR)/declarative_surface_test
+
+app-model-test: $(BUILD_DIR)/app_model_test
+	./$(BUILD_DIR)/app_model_test
+
+device-model-test: $(BUILD_DIR)/device_model_test
+	./$(BUILD_DIR)/device_model_test
+
+event-packet-test: $(BUILD_DIR)/event_packet_test
+	./$(BUILD_DIR)/event_packet_test
+
 kernel: $(KERNEL_ELF)
 
 iso: image kernel
@@ -321,6 +426,28 @@ qemu-model-test: iso
 qemu-model-registry-test: iso
 	sh ./tools/validate_qemu_model_registry.sh $(OMI_ISO) $(BUILD_DIR)/qemu_model_registry.log
 
+qemu-tcg-foundation-test: iso $(BUILD_DIR)/polyform_witness_recompute
+	sh ./tools/validate_qemu_tcg_foundation.sh $(OMI_ISO) $(BUILD_DIR)/qemu_tcg_foundation.log $(BUILD_DIR)/polyform_witness_recompute
+
+qemu-tcg-model-registry-test: iso
+	sh ./tools/validate_qemu_tcg_model_registry.sh $(OMI_ISO) $(BUILD_DIR)/qemu_tcg_model_registry.log
+
+qemu-tcg-court: iso $(BUILD_DIR)/polyform_witness_recompute
+	sh ./tools/validate_qemu_tcg_court.sh $(OMI_ISO) $(BUILD_DIR)/qemu_tcg_court.log $(BUILD_DIR)/polyform_witness_recompute
+
+qemu-page-court-test: iso
+	sh ./tools/validate_qemu_page_court.sh $(OMI_ISO) $(BUILD_DIR)/qemu_page_court.log
+
+qemu-mmio-device-court-test: iso
+	sh ./tools/validate_qemu_mmio_device_court.sh $(OMI_ISO) $(BUILD_DIR)/qemu_mmio_device_court.log
+
+qemu-portable-test:
+	$(MAKE) qemu-tcg-foundation-test
+	$(MAKE) qemu-tcg-model-registry-test
+	$(MAKE) qemu-tcg-court
+	$(MAKE) qemu-page-court-test
+	$(MAKE) qemu-mmio-device-court-test
+
 qemu-platform-test: iso
 	sh ./tools/qemu_multi_platform_test.sh $(OMI_ISO)
 
@@ -347,6 +474,19 @@ unit-test:
 	$(MAKE) user-init-test
 	$(MAKE) lazy-eval-test
 	$(MAKE) model-vfs-test
+	$(MAKE) hotplug-model-test
+	$(MAKE) carrier-decode-test
+	$(MAKE) polyform-render-test
+	$(MAKE) event-model-test
+	$(MAKE) intent-model-test
+	$(MAKE) texture-model-test
+	$(MAKE) diagram-template-test
+	$(MAKE) declarative-surface-test
+	$(MAKE) app-model-test
+	$(MAKE) device-model-test
+	$(MAKE) event-packet-test
+	$(MAKE) qemu-page-court-test
+	$(MAKE) qemu-mmio-device-court-test
 
 e2e-test:
 	$(MAKE) qemu-foundation-test

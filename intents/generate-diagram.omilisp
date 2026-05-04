@@ -1,0 +1,5 @@
+((FS . intent.generate-diagram)
+  ((GS . accepts)((RS . diagram)((US . value) . diagram-template)))
+  ((GS . request)((RS . projection)((US . depth) . middle)((US . surfaces) . diagram)))
+  ((GS . constraints)((RS . evaluation)((US . mode) . lazy)((US . mutation) . forbidden)))
+  ((GS . output)((RS . event)((US . kind) . event.diagram-request)((US . authority) . projection-only))))
