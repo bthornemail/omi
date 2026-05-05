@@ -145,7 +145,7 @@
     if (!(edge.public_frame240 >= 0 && edge.public_frame240 < polyformCoordinate.TIMING.public_240)) {
       return false;
     }
-    if (edge.sexagesimal_slot !== edge.orientation4 * 0 + edge.sexagesimal_slot) {
+    if (!(edge.sexagesimal_slot >= 0 && edge.sexagesimal_slot < polyformCoordinate.TIMING.local_60)) {
       return false;
     }
     if (edge.public_frame240 !== (edge.orientation4 * polyformCoordinate.TIMING.local_60) + edge.sexagesimal_slot) {

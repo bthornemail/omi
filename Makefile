@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-polyform-coordinate-test workbench-scope-multigraph-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -456,11 +456,41 @@ workbench-org-test:
 workbench-diagram-tangle-test:
 	node tests/workbench_diagram_tangle_test.js
 
+workbench-diagram-renderer-test:
+	node tests/workbench_diagram_renderer_test.js
+
 workbench-polyform-coordinate-test:
 	node tests/workbench_polyform_coordinate_test.js
 
 workbench-scope-multigraph-test:
 	node tests/workbench_scope_multigraph_test.js
+
+workbench-composer-test:
+	node tests/workbench_composer_interface_test.js
+
+workbench-composer-package-test:
+	node tests/workbench_composer_package_test.js
+
+workbench-gpu-projection-test:
+	node tests/workbench_gpu_projection_test.js
+
+workbench-webgl-runtime-test:
+	node tests/workbench_webgl_runtime_adapter_test.js
+
+workbench-webgl-preview-test:
+	node tests/workbench_webgl_canvas_preview_test.js
+
+workbench-gles-runtime-test:
+	node tests/workbench_gles_runtime_adapter_test.js
+
+workbench-opengl-runtime-test:
+	node tests/workbench_opengl_runtime_adapter_test.js
+
+workbench-graphics-equivalence-test:
+	node tests/workbench_graphics_backend_equivalence_test.js
+
+workbench-visual-equivalence-test:
+	node tests/workbench_visual_artifact_equivalence_test.js
 
 kernel: $(KERNEL_ELF)
 
@@ -562,8 +592,18 @@ unit-test:
 	$(MAKE) workbench-esp32-sync-test
 	$(MAKE) workbench-org-test
 	$(MAKE) workbench-diagram-tangle-test
+	$(MAKE) workbench-diagram-renderer-test
 	$(MAKE) workbench-polyform-coordinate-test
 	$(MAKE) workbench-scope-multigraph-test
+	$(MAKE) workbench-composer-test
+	$(MAKE) workbench-composer-package-test
+	$(MAKE) workbench-gpu-projection-test
+	$(MAKE) workbench-webgl-runtime-test
+	$(MAKE) workbench-webgl-preview-test
+	$(MAKE) workbench-gles-runtime-test
+	$(MAKE) workbench-opengl-runtime-test
+	$(MAKE) workbench-graphics-equivalence-test
+	$(MAKE) workbench-visual-equivalence-test
 	$(MAKE) qemu-page-court-test
 	$(MAKE) qemu-mmio-device-court-test
 

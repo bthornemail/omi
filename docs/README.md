@@ -102,12 +102,40 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 48. `PHASE-54C-CANONICAL-BARCODE-MULTIGRAPH-SCOPE-LAW.md` defines the
     canonical/barcode scope multi-graph over shared coordinate and closure
     receipts.
-49. `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md` records the normalized 240/60/16/7/8
+49. `PHASE-55-DIAGRAM-RENDERER-ADAPTER-COURT.md` defines deterministic diagram
+    renderer adapters over tangle artifacts, coordinates, and scope graph
+    metadata.
+50. `PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md` defines the OS-level workbench
+    composer shell for importing, composing, inspecting, and exporting OMI
+    world-model projections.
+51. `PHASE-57-POLYFORM-GPU-PROJECTION-COURT.md` defines deterministic
+    renderer-neutral GPU command streams over coordinates, closures, scope
+    edges, and composer scenes.
+52. `PHASE-58-WEBGL-RUNTIME-ADAPTER-COURT.md` defines deterministic WebGL
+    runtime plans over GPU command streams without requiring a browser
+    context.
+53. `PHASE-59A-WEBGL-CANVAS-PREVIEW-COURT.md` defines deterministic browser
+    preview surfaces over WebGL runtime plans without requiring a real GPU
+    context.
+54. `PHASE-59B-OPENGL-ES-ADAPTER-COURT.md` defines deterministic OpenGL ES
+    plans over GPU command streams without requiring a GLES context.
+55. `PHASE-59C-OPENGL-DESKTOP-ADAPTER-COURT.md` defines deterministic desktop
+    OpenGL plans over GPU command streams without requiring an OpenGL
+    context.
+56. `PHASE-59D-GRAPHICS-BACKEND-EQUIVALENCE-COURT.md` defines deterministic
+    comparison witnesses over the WebGL, GLES, and OpenGL backend summaries.
+57. `PHASE-60-VISUAL-ARTIFACT-EXPORT-EQUIVALENCE-COURT.md` defines
+    deterministic visual artifact identity equivalence across SVG, glTF,
+    OBJ/MTL, WebGL, GLES, and OpenGL projections.
+58. `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md` records the normalized 240/60/16/7/8
     timing law as the public projective frame for polyform coordinates.
-50. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+59. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-51. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+60. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
+61. `PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md` records the deterministic
+    composer package bundle that carries source, logs, receipts, artifacts,
+    plans, and equivalence summaries.
 
 ## File Roles
 
@@ -256,6 +284,52 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : Host-side multi-graph witness that keeps the canonical OMI-LISP graph as
   structural authority while allowing barcode carrier edges to share closure
   receipts, orientation, and scope labels as scannable projections.
+
+`PHASE-55-DIAGRAM-RENDERER-ADAPTER-COURT.md`
+: Host-side renderer adapter witness that projects Phase 53 diagram artifacts,
+  Phase 54 coordinate metadata, and Phase 54C scope graph edges into
+  deterministic SVG/DOT/HTML views without introducing renderer authority.
+
+`PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md`
+: Host-side composer witness that combines source, graph, spatial polyform,
+  barcode/template, inspector, import, export, and append-only proposal paths
+  without making the UI authority.
+
+`PHASE-57-POLYFORM-GPU-PROJECTION-COURT.md`
+: Host-side GPU projection witness that converts coordinates, closures, scope
+  edges, and composer scenes into deterministic command streams without
+  requiring a GPU runtime.
+
+`PHASE-58-WEBGL-RUNTIME-ADAPTER-COURT.md`
+: Host-side WebGL runtime witness that converts GPU command streams into
+  deterministic browser draw plans without requiring a WebGL context.
+
+`PHASE-59A-WEBGL-CANVAS-PREVIEW-COURT.md`
+: Host-side browser preview witness that accepts WebGL plans and produces
+  deterministic canvas fallback records without requiring a real GPU
+  context.
+
+`PHASE-59B-OPENGL-ES-ADAPTER-COURT.md`
+: Host-side OpenGL ES witness that converts GPU command streams into
+  deterministic embedded/mobile draw plans without requiring a GLES context.
+
+`PHASE-59C-OPENGL-DESKTOP-ADAPTER-COURT.md`
+: Host-side OpenGL witness that converts GPU command streams into
+  deterministic desktop draw plans without requiring an OpenGL context.
+
+`PHASE-59D-GRAPHICS-BACKEND-EQUIVALENCE-COURT.md`
+: Host-side equivalence witness that compares normalized WebGL, GLES, and
+  OpenGL backend summaries for the same GPU command stream.
+
+`PHASE-60-VISUAL-ARTIFACT-EXPORT-EQUIVALENCE-COURT.md`
+: Host-side visual artifact equivalence witness that compares normalized OMI
+  identity metadata across SVG, glTF, OBJ/MTL, WebGL, GLES, and OpenGL
+  projections of the same composer scene.
+
+`PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md`
+: Host-side package witness that bundles canonical source, logs, receipts,
+  artifacts, plans, and equivalence summaries into a deterministic composer
+  carrier.
 
 `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md`
 : Timing-law note that normalizes the 240 public frame, 60 local sweep, 16
