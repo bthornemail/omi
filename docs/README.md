@@ -186,6 +186,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 80. `PHASE-79-NARRATIVE-TIMELINE-AS-DECLARED-WORLD.md` records the declared
     narrative timeline and movie surface derived from the canonical world
     series.
+81. `PHASE-80-MESSAGING-CONFLICT-AUDIT.md` records the wave-model audit for
+    message-like surfaces, authority collisions, and receipt-consistent
+    reconciliation.
 
 ## File Roles
 
