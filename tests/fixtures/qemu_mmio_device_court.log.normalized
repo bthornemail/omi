@@ -1,0 +1,10 @@
+MMIO_DEVICE_COURT_QEMU_BEGIN
+MMIO_DEVICE name=DISPLAY_MMIO role=render-trace-target event=event.render-output authority=projection-boundary
+MMIO_DEVICE name=KEYBOARD_MMIO role=input-event-source event=event.pointer-select authority=event-source
+MMIO_DEVICE name=CAMERA_MMIO role=carrier-scan-source event=event.carrier-scan authority=event-source
+MMIO_DEVICE name=NETWORK_MMIO role=model-sync-surface event=event.model-sync authority=event-source
+MMIO_DEVICE name=STORAGE_MMIO role=append-only-log event=event.receipt-append authority=append-only
+MMIO_DEVICE name=TIMER_MMIO role=timing-observer event=event.timing-receipt authority=observer-only
+MMIO_DEVICE_COURT_QEMU_END
+VALID STATE
+OMI HALT

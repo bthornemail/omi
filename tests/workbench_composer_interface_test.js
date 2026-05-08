@@ -26,7 +26,7 @@ function testComposerLoadAndTemplateImport() {
 
   assert.strictEqual(trailer.document.id, "model.trailer.wike-ebike-cargo");
   assert.strictEqual(world.document.id, "world.cargo-yard-demo");
-  assert.deepStrictEqual(world.panes, ["source", "graph", "spatial-polyform", "barcode-template", "inspector"]);
+  assert.deepStrictEqual(world.panes, ["source", "graph", "stream-declaration", "stream-projection", "semantic-triangulation", "spatial-polyform", "barcode-template", "inspector"]);
   assert.strictEqual(imported.ok, true);
   assert.strictEqual(imported.template.omi_path, "world.cargo-yard-demo/objects/trailer.001");
   assert.strictEqual(imported.template.carrier, "Aztec");
@@ -68,6 +68,7 @@ function testInspectorAndExports(context) {
 
   const state = context.world;
   const inspected = composerShell.inspect(state, "world.cargo-yard-demo/objects/trailer.001");
+  const triangulation = composerShell.currentTriangulation(state);
   const exportsA = composerShell.exportAll(state);
   const exportsB = composerShell.exportAll(state);
 
@@ -77,6 +78,9 @@ function testInspectorAndExports(context) {
   assert.strictEqual(inspected.scope, "public.global");
   assert.notStrictEqual(inspected.carrier, 255);
   assert.ok(inspected.edit_receipt);
+  assert.ok(triangulation);
+  assert.strictEqual(triangulation.root, "world.cargo-yard-demo");
+  assert.ok((triangulation.triplet_count || (triangulation.chart && triangulation.chart.triplet_count)) > 0);
 
   assert.strictEqual(exportsA["scene.svg"], exportsB["scene.svg"]);
   assert.strictEqual(exportsA["barcode.carrier.json"], exportsB["barcode.carrier.json"]);

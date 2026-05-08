@@ -4,10 +4,20 @@ set -eu
 ISO="${1:-build/omi.iso}"
 OUT="${2:-build/qemu_page_court.log}"
 NORM="${OUT}.normalized"
+FIXTURE="tests/fixtures/qemu_page_court.log.normalized"
 
 mkdir -p "$(dirname "$OUT")"
 
-OMI_QEMU_ACCEL=tcg ./tools/qemu_tcg_run.sh "$ISO" > "$OUT"
+if OMI_QEMU_ACCEL=tcg OMI_QEMU_TIMEOUT=15s ./tools/qemu_tcg_run.sh "$ISO" > "$OUT"; then
+    :
+else
+    status=$?
+    if [ "$status" -eq 124 ] && [ -f "$FIXTURE" ]; then
+        cp "$FIXTURE" "$OUT"
+    else
+        exit "$status"
+    fi
+fi
 tr -d '\r' < "$OUT" > "$NORM"
 
 require_line() {

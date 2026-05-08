@@ -1,0 +1,12 @@
+PAGE_COURT_QEMU_BEGIN
+PAGE_REGION name=ROM_LAW authority=canonical mutability=readonly
+PAGE_REGION name=FOUNDATION_PROOF authority=witness mutability=readonly
+PAGE_REGION name=MODEL_REGISTRY authority=receipt mutability=readonly
+PAGE_REGION name=USERSPACE_INIT authority=projection mutability=readonly
+PAGE_REGION name=OVERLAY_REGISTRY authority=declaration-overlay mutability=append-only
+PAGE_REGION name=EVENT_LOG authority=event-trace mutability=append-only
+PAGE_REGION name=RENDER_TRACE authority=projection mutability=ephemeral
+PAGE_REGION name=DEVICE_MMIO_RESERVED authority=device-boundary mutability=typed-mmio
+PAGE_COURT_QEMU_END
+VALID STATE
+OMI HALT

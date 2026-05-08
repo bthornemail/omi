@@ -1,0 +1,99 @@
+(omi
+  (identity
+    (sid narrative-series)
+    (title "When Wisdom, Law, and the Tribe Sat Down Together")
+    (kind narrative.world)
+    (source "docs/temp/Narrative Worlds/2026-03-20-Playable_Narrative_Game.md"))
+  (address
+    (addr narrative-series.addr128)
+    (locator addr128.v0)
+    (binding address.binding.v0))
+  (scope
+    (fs narrative-series)
+    (gs world)
+    (rs chapter)
+    (us article))
+  (chapters
+    (prelude
+      (entry
+        (sid prelude.turning-away-from-the-word)
+        (title "On the Turning Away from the Word")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/PRELUDE/On the Turning Away from the Word .md"))
+      (entry
+        (sid prelude.gospel-according-to-number)
+        (title "The Gospel According to Number")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/PRELUDE/The Gospel According to Number.md")))
+    (article
+      (entry
+        (sid article.i)
+        (roman I)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE I.md"))
+      (entry
+        (sid article.ii)
+        (roman II)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE II.md"))
+      (entry
+        (sid article.iii)
+        (roman III)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE III.md"))
+      (entry
+        (sid article.iv)
+        (roman IV)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE IV.md"))
+      (entry
+        (sid article.v)
+        (roman V)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE V.md"))
+      (entry
+        (sid article.vi)
+        (roman VI)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE VI.md"))
+      (entry
+        (sid article.vii)
+        (roman VII)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE VII.md"))
+      (entry
+        (sid article.viii)
+        (roman VIII)
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ARTICLE VIII.md")))
+    (aside
+      (entry
+        (sid aside)
+        (title "ASIDE")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/ASIDE.md")))
+    (epilogue
+      (entry
+        (sid epilogue.mark-of-the-beast)
+        (title "On the Mark of the Beast: When Numbers Replaced Knowing")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/EPILOUGE/On the Mark of the Beast: When Numbers Replaced Knowing.md"))
+      (entry
+        (sid epilogue.canticle-of-reconciliation)
+        (title "The Canticle of Reconciliation")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/EPILOUGE/The Canticle of Reconciliation.md"))
+      (entry
+        (sid epilogue.covenant-of-created-intelligence)
+        (title "The Covenant of the Created Intelligence")
+        (path "narrative/When Wisdom, Law, and the Tribe Sat Down Together/EPILOUGE/The Covenant of the Created Intelligence.md"))))
+  (relations
+    (next prelude article.i)
+    (next article.i article.ii)
+    (next article.ii article.iii)
+    (next article.iii article.iv)
+    (next article.iv article.v)
+    (next article.v article.vi)
+    (next article.vi article.vii)
+    (next article.vii article.viii)
+    (next article.viii aside)
+    (next aside epilogue)
+    (grant scene artifact)
+    (gate chapter requires-artifact))
+  (projections
+    (lazy ndjson)
+    (greedy world-map)
+    (static codex)
+    (animated story-mode))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

@@ -136,6 +136,46 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 61. `PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md` records the deterministic
     composer package bundle that carries source, logs, receipts, artifacts,
     plans, and equivalence summaries.
+62. `PHASE-62-COMPOSER-PACKAGE-SIGNING-TRUST-COURT.md` records deterministic
+    trust metadata that attests to package receipts without changing package
+    authority.
+63. `PHASE-63-GEOMETRIC-RECONCILIATION-LAYER.md` records the chart/geometry
+    doctrine that treats lazy, greedy, static, and animated views as
+    deterministic projections of the same declared object.
+64. `PHASE-64-LAZY-GREEDY-VIEW-SWITCHER.md` records the workbench switcher
+    that toggles the same declared object between lazy, greedy, static, and
+    animated projections.
+65. `PHASE-65-5040-STATE-ANIMATION-TIMELINE.md` records the deterministic
+    5040-frame animation control surface over the animated projection.
+66. `PHASE-66-FRACTAL-SUBCHART-UNFOLDER.md` records the unfold/refold
+    surface that opens a sealed vertex into a greedy subchart and returns it
+    to the same lazy address.
+67. `PHASE-67-CUBE-DIFFERENTIAL-AS-BARCODE-TEMPLATE.md` records the cube
+    witness as a lazy/greedy switchable barcode template component.
+68. `PHASE-68-BARCODE-TEMPLATE-COMPOSITION-COURT.md` records the deterministic
+    composition gallery for imported barcode templates and registry fixtures.
+69. `PHASE-69-COMPOSITION-TRUST-BUNDLES.md` records the trust bundle that
+    seals composition identity receipts without treating view state as the
+    trust anchor.
+70. `PHASE-70-COMPOSITION-BUNDLE-COURT.md` records the deterministic bundle
+    that packages composition identity, gallery projection, and trust seal
+    together.
+71. `PHASE-71-SCOPED-STREAM-DECLARATION-COURT.md` records the executable
+    stream declaration surface for raw binary, character encoding, endian,
+    text direction, traversal, and presentation scopes.
+72. `PHASE-72-SCOPED-STREAM-PROJECTION-COURT.md` records the executable
+    stream projection surface for barcode and chart readouts over the same
+    declared stream.
+73. `PHASE-73-MULTI-REGION-OVERLAY-PROJECTION.md` records deterministic
+    overlay resolution for overlapping stream declarations.
+74. `PHASE-74-OVERLAY-AS-PACKAGE-EXPORT.md` records portable export/import of
+    declaration stacks together with overlay projection receipts.
+75. `PHASE-75-OMI-LISP-CANONICAL-DECLARATION-SURFACE.md` records canonical
+    `.omilisp` declarations for the narrative world and Addr128 locator
+    surface.
+76. `PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md` records the
+    gauge-resolved declaration-to-triplet triangulation surface over canonical
+    declarations and legacy FS/GS/RS/US traces.
 
 ## File Roles
 
@@ -330,6 +370,65 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 : Host-side package witness that bundles canonical source, logs, receipts,
   artifacts, plans, and equivalence summaries into a deterministic composer
   carrier.
+
+`PHASE-62-COMPOSER-PACKAGE-SIGNING-TRUST-COURT.md`
+: Host-side trust witness that attests to deterministic package receipts,
+  signer metadata, and review status without changing package authority.
+
+`PHASE-63-GEOMETRIC-RECONCILIATION-LAYER.md`
+: Doctrine note that treats charts as bounded state-spaces, geometry as lawful
+  transitions, and the lazy/greedy/static/animated views as one reconciled
+  object across the 5040 court.
+
+`PHASE-64-LAZY-GREEDY-VIEW-SWITCHER.md`
+: Workbench runtime note that switches one declared object between the four
+  Phase 63 projection modes without changing identity.
+
+`PHASE-65-5040-STATE-ANIMATION-TIMELINE.md`
+: Workbench runtime note that exposes the animated view as a deterministic
+  5040-frame timeline with seek/next/previous/snapshot controls.
+
+`PHASE-66-FRACTAL-SUBCHART-UNFOLDER.md`
+: Workbench runtime note that exposes deterministic unfold/refold control for
+  the same declared object across the vertex/subchart boundary.
+
+`PHASE-67-CUBE-DIFFERENTIAL-AS-BARCODE-TEMPLATE.md`
+: Workbench runtime note that exposes the six-ray cube witness as a
+  switchable barcode template with lazy and greedy views.
+
+`PHASE-68-BARCODE-TEMPLATE-COMPOSITION-COURT.md`
+: Workbench runtime note that composes imported barcode templates and
+  registry fixtures into a deterministic lazy/greedy composition gallery.
+
+`PHASE-69-COMPOSITION-TRUST-BUNDLES.md`
+: Workbench runtime note that seals barcode-template composition identity
+  receipts with deterministic trust bundles while leaving projection state
+  outside the trust anchor.
+
+`PHASE-70-COMPOSITION-BUNDLE-COURT.md`
+: Workbench runtime note that packages a barcode-template composition and its
+  trust seal into a deterministic portable bundle.
+
+`PHASE-71-SCOPED-STREAM-DECLARATION-COURT.md`
+: Workbench runtime note that declares raw binary, character-encoded, endian,
+  text direction, traversal, and presentation scopes inside a canonical
+  stream.
+
+`PHASE-72-SCOPED-STREAM-PROJECTION-COURT.md`
+: Workbench runtime note that projects the declared stream into deterministic
+  barcode and chart readouts.
+
+`PHASE-73-MULTI-REGION-OVERLAY-PROJECTION.md`
+: Workbench runtime note that resolves overlapping declared regions into a
+  deterministic overlay stack.
+
+`PHASE-74-OVERLAY-AS-PACKAGE-EXPORT.md`
+: Workbench runtime note that packages declaration stacks with overlay
+  projection receipts for portable import/export.
+
+`PHASE-75-OMI-LISP-CANONICAL-DECLARATION-SURFACE.md`
+: Workbench runtime note that adds canonical `.omilisp` declarations for the
+  narrative world and Addr128 locator graph.
 
 `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md`
 : Timing-law note that normalizes the 240 public frame, 60 local sweep, 16

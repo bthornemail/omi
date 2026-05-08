@@ -7,7 +7,8 @@
     typeof require === "function" ? require("./sync_packet.js") : root.OMISyncPacket,
     typeof require === "function" ? require("./export_pipeline.js") : root.OMIExportPipeline,
     typeof require === "function" ? require("./graphics_backend_equivalence.js") : root.OMIGraphicsBackendEquivalence,
-    typeof require === "function" ? require("./visual_artifact_equivalence.js") : root.OMIVisualArtifactEquivalence
+    typeof require === "function" ? require("./visual_artifact_equivalence.js") : root.OMIVisualArtifactEquivalence,
+    typeof require === "function" ? require("./package_trust.js") : root.OMIPackageTrust
   );
   root.OMIComposerPackage = api;
   if (typeof module !== "undefined" && module.exports) {
@@ -21,7 +22,8 @@
   syncPacket,
   exportPipeline,
   graphicsBackendEquivalence,
-  visualArtifactEquivalence
+  visualArtifactEquivalence,
+  packageTrust
 ) {
   "use strict";
 
@@ -299,7 +301,7 @@
     };
   }
 
-  function importPackage(input) {
+  function importPackage(input, options) {
     const normalized = normalizePackageInput(input);
     if (!normalized) {
       throw new Error("invalid-package");
@@ -308,7 +310,15 @@
       throw new Error("missing-manifest");
     }
     const manifest = normalized.manifest || JSON.parse(String(normalized.files["manifest.json"] || ""));
-    return validateManifest(manifest, normalized.files);
+    const validated = validateManifest(manifest, normalized.files);
+    const trustBundle = options && options.trustBundle ? options.trustBundle : null;
+    const trust = packageTrust.reportTrust(manifest.manifest_receipt, trustBundle);
+    if (trustBundle && !trust.ok) {
+      throw new Error(trust.error);
+    }
+    return Object.assign({}, validated, {
+      trust: trust
+    });
   }
 
   function writePackage(dirPath, bundle) {

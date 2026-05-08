@@ -1,0 +1,49 @@
+(omi
+  (identity
+    (sid addr128)
+    (title "Addr128 Implementation Overview")
+    (kind locator.graph)
+    (source "docs/temp/IMMERSIVE_UNIVERSE/2026-03-21-Addr128_Implementation_Overview.md"))
+  (address
+    (addr addr128.v0)
+    (width 128)
+    (layout
+      (prefix 16)
+      (realm 16)
+      (node 32)
+      (lane
+        (width 16)
+        (lane-class 8)
+        (lane-id 8))
+      (object 48)))
+  (scope
+    (fs addr128)
+    (gs locator)
+    (rs lane)
+    (us binding))
+  (law
+    (sid identity)
+    (addr128 locator)
+    (binding address.binding.v0))
+  (lanes
+    (kernel 1)
+    (semantic 2)
+    (projection 3)
+    (carrier 4)
+    (hardware 5)
+    (transport 6)
+    (federation 7)
+    (audit 8)
+    (replay 9)
+    (capability 10)
+    (narrative 11))
+  (projections
+    (lazy carrier)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))
