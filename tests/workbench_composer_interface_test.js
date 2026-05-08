@@ -26,7 +26,7 @@ function testComposerLoadAndTemplateImport() {
 
   assert.strictEqual(trailer.document.id, "model.trailer.wike-ebike-cargo");
   assert.strictEqual(world.document.id, "world.cargo-yard-demo");
-  assert.deepStrictEqual(world.panes, ["source", "graph", "stream-declaration", "stream-projection", "semantic-triangulation", "spatial-polyform", "barcode-template", "inspector"]);
+  assert.deepStrictEqual(world.panes, ["source", "graph", "stream-declaration", "stream-projection", "semantic-triangulation", "narrative-timeline", "spatial-polyform", "barcode-template", "inspector"]);
   assert.strictEqual(imported.ok, true);
   assert.strictEqual(imported.template.omi_path, "world.cargo-yard-demo/objects/trailer.001");
   assert.strictEqual(imported.template.carrier, "Aztec");

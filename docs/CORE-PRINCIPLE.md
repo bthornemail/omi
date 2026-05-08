@@ -1,9 +1,12 @@
 # OMI Core Principle
 
 See also:
-[OMI: A Pre-OS Measurement Machine](PRE-OS-MEASUREMENT-MACHINE.md) and
-[OMI Canonical Encoding Law](CANONICAL-ENCODING-LAW.md). The normalized pre-OS
-root is [OMI Pre-OS Canonical Measurement Law](PRE-OS-CANONICAL-MEASUREMENT-LAW.md).
+[OMI: A Pre-OS Measurement Machine](PRE-OS-MEASUREMENT-MACHINE.md),
+[OMI Canonical Encoding Law](CANONICAL-ENCODING-LAW.md), and the boundary-first
+language doctrine at
+[OMI Boundary-First Language Doctrine](OMI-BOUNDARY-FIRST-LANGUAGE-DOCTRINE.md).
+The normalized pre-OS root is
+[OMI Pre-OS Canonical Measurement Law](PRE-OS-CANONICAL-MEASUREMENT-LAW.md).
 The world/projection runtime doctrine is
 [OMI Fundamental Geometry Runtime](OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md).
 

@@ -19,7 +19,9 @@
     typeof require === "function" ? require("./cube_differential_template.js") : root.OMICubeDifferentialTemplate,
     typeof require === "function" ? require("./barcode_template_composition.js") : root.OMIBarcodeTemplateComposition,
     typeof require === "function" ? require("./composition_bundle.js") : root.OMICompositionBundle,
-    typeof require === "function" ? require("./stream_overlay_package.js") : root.OMIStreamOverlayPackage
+    typeof require === "function" ? require("./stream_overlay_package.js") : root.OMIStreamOverlayPackage,
+    typeof require === "function" ? require("./block_image_projection.js") : root.OMIBlockImageProjection,
+    typeof require === "function" ? require("./narrative_timeline.js") : root.OMINarrativeTimeline
   );
   root.OMIComposerShell = api;
   if (typeof module !== "undefined" && module.exports) {
@@ -45,7 +47,9 @@
     cubeDifferentialTemplate,
     barcodeTemplateComposition,
     compositionBundle,
-    streamOverlayPackage
+    streamOverlayPackage,
+    blockImageProjection,
+    narrativeTimeline
 ) {
   "use strict";
 
@@ -58,6 +62,14 @@
       stream_id: streamIdRoot + "/stream-declaration",
       stream_scope: "pre-os.declaration",
       active_presentation: "barcode"
+    });
+    const narrativeSource = options && options.narrativeTimelineSource
+      ? options.narrativeTimelineSource
+      : "declarations/narrative-series.omilisp";
+    const narrative = narrativeTimeline.createNarrativeTimeline(narrativeSource, {
+      base_dir: options && options.baseDir ? options.baseDir : process.cwd(),
+      mode: "lazy",
+      view_mode: "story"
     });
     const triangulation = spomAdapter.triangulateSource(initialSource, {
       mode: "lazy"
@@ -90,11 +102,12 @@
     });
 
     return {
-      panes: ["source", "graph", "stream-declaration", "stream-projection", "semantic-triangulation", "spatial-polyform", "barcode-template", "inspector"],
+      panes: ["source", "graph", "stream-declaration", "stream-projection", "semantic-triangulation", "narrative-timeline", "spatial-polyform", "barcode-template", "inspector"],
       source: initialSource,
       document: document,
       sourceBuffer: sourceBuffer.createSourceBuffer(initialSource),
       streamDeclaration: stream,
+      narrativeTimeline: narrative,
       triangulation: triangulation,
       editLog: log,
       editLogApi: editLog,
@@ -219,6 +232,17 @@
     return streamProjection.projectStreamDeclaration(state.streamDeclaration.snapshot(), {
       mode: state.streamDeclaration.snapshot().active.presentation
     });
+  }
+
+  function projectNarrativeTimeline(state, options) {
+    if (!state.narrativeTimeline) {
+      return null;
+    }
+    return narrativeTimeline.projectNarrativeTimeline(state.narrativeTimeline.snapshot(), options || {});
+  }
+
+  function currentNarrativeTimeline(state) {
+    return state.narrativeTimeline ? state.narrativeTimeline.snapshot() : null;
   }
 
   function currentTriangulation(state) {
@@ -392,6 +416,10 @@
     return streamOverlayPackage.importStreamOverlayPackage(input);
   }
 
+  function projectBlockImageProjection(input, options) {
+    return blockImageProjection.projectBlockImageProjection(input, options || {});
+  }
+
   return {
     createComposer: createComposer,
     reparse: reparse,
@@ -411,6 +439,8 @@
     projectStreamDeclaration: projectStreamDeclaration,
     inspectStreamProjection: inspectStreamProjection,
     currentStreamProjection: currentStreamProjection,
+    projectNarrativeTimeline: projectNarrativeTimeline,
+    currentNarrativeTimeline: currentNarrativeTimeline,
     triangulateSource: triangulateSource,
     triangulateDeclaration: triangulateDeclaration,
     triangulateDocument: triangulateDocument,
@@ -439,6 +469,7 @@
     importBarcodeCompositionBundle: importBarcodeCompositionBundle,
     exportStreamOverlayPackage: exportStreamOverlayPackage,
     importStreamOverlayPackage: importStreamOverlayPackage,
+    projectBlockImageProjection: projectBlockImageProjection,
     exportAll: exportAll,
     exportPackage: exportPackage,
     importPackage: importPackage

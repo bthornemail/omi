@@ -15,167 +15,177 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 
 1. `ARCHITECTURE.md` gives the mental model of the system.
 2. `CORE-PRINCIPLE.md` states the pre-OS CONS/projection principle.
-3. `OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md` defines the first-principles geometry,
+3. `OMI-BOUNDARY-FIRST-LANGUAGE-DOCTRINE.md` defines the omicron boundary law
+   and the document-as-world model.
+4. `OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md` defines the first-principles geometry,
    resolution, and projection doctrine.
-4. `LEXICON.omi` defines the vocabulary.
-5. `ONTOLOGY.omi` defines the core OMI types and relations.
-6. `RULES_GUIDE.md` explains how to read the normative rule file.
-7. `RULES.omi` defines the RFC 2119-style graph constraints.
-8. `FRAMES.omi` defines the future frame/user-space interpretation contract.
-9. `FRAME_ABI.md` explains the frame model in implementation-facing prose.
-10. `GRAPH_MEMORY_SPEC.md` defines the Phase 1 byte-level graph memory ABI.
-11. `BOOT_MODEL.md` explains how the current kernel boots and evaluates memory.
-12. `CONS_THEOREMS.md` records the claims the implementation is trying to make
-   mechanically checkable.
-13. `IMPLEMENTATION-AUDIT-PHASES-20-29.md` records the current observer,
+5. `LEXICON.omi` defines the vocabulary.
+6. `ONTOLOGY.omi` defines the core OMI types and relations.
+7. `RULES_GUIDE.md` explains how to read the normative rule file.
+8. `RULES.omi` defines the RFC 2119-style graph constraints.
+9. `FRAMES.omi` defines the future frame/user-space interpretation contract.
+10. `FRAME_ABI.md` explains the frame model in implementation-facing prose.
+11. `GRAPH_MEMORY_SPEC.md` defines the Phase 1 byte-level graph memory ABI.
+12. `BOOT_MODEL.md` explains how the current kernel boots and evaluates memory.
+13. `CONS_THEOREMS.md` records the claims the implementation is trying to make
+    mechanically checkable.
+14. `IMPLEMENTATION-AUDIT-PHASES-20-29.md` records the current observer,
     projection, and pre-OS law implementation evidence.
-14. `PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md` describes the OSI lens-stack
+15. `PHASE-30-OSI-PROJECTION-INTEGRATION-LAW.md` describes the OSI lens-stack
     bridge over Phase 28 replay.
-15. `FOUNDATION-AUDIT-PRE-OS-OSI.md` proves the Phase 28 -> Phase 29 -> Phase
+16. `FOUNDATION-AUDIT-PRE-OS-OSI.md` proves the Phase 28 -> Phase 29 -> Phase
     30 foundation chain.
-16. `PHASE-31-POLYFORM-BLOCK-RENDERING-API.md` defines the polyform block as
+17. `PHASE-31-POLYFORM-BLOCK-RENDERING-API.md` defines the polyform block as
     the canonical rendering witness over the foundation state.
-17. `PHASE-32-POLYFORM-BLOCK-AS-BOOT-ARTIFACT.md` describes the QEMU boot
+18. `PHASE-32-POLYFORM-BLOCK-AS-BOOT-ARTIFACT.md` describes the QEMU boot
     header that serializes the canonical polyform block and verifies its
     witness.
-18. `PHASE-33-QEMU-MODEL-REGISTRY.md` pins the canonical model registry as a
+19. `PHASE-33-QEMU-MODEL-REGISTRY.md` pins the canonical model registry as a
     booted QEMU serial witness for lazy user-space initialization.
-19. `PHASE-34-LAZY-USERSPACE-INIT.md` defines the first lazy user-space mount
+20. `PHASE-34-LAZY-USERSPACE-INIT.md` defines the first lazy user-space mount
     table over the model registry.
-20. `PHASE-35-LAZY-PROJECTION-EVALUATOR.md` defines demand-driven depth
+21. `PHASE-35-LAZY-PROJECTION-EVALUATOR.md` defines demand-driven depth
     projection over mounted model handles.
-21. `PHASE-36-MODEL-VFS-PROJECTION.md` defines the filesystem-like path
+22. `PHASE-36-MODEL-VFS-PROJECTION.md` defines the filesystem-like path
     projection over model handles and lazy views.
-22. `PHASE-37-HOTPLUG-MODEL-LOADER.md` defines the user-space overlay loader
+23. `PHASE-37-HOTPLUG-MODEL-LOADER.md` defines the user-space overlay loader
     for validated hot-plug model declarations.
-23. `PHASE-38-TIMED-SCANNABLE-MODEL-CARRIERS.md` defines timed carrier
+24. `PHASE-38-TIMED-SCANNABLE-MODEL-CARRIERS.md` defines timed carrier
     receipts and declaration payload registration through the loader.
-24. `PHASE-39-POLYFORM-SVG-RENDERER.md` defines deterministic render traces
+25. `PHASE-39-POLYFORM-SVG-RENDERER.md` defines deterministic render traces
     and non-authoritative SVG witnesses over lazy model projections.
-25. `PHASE-40A-EVENT-MODELS.md` defines declarative event records.
-26. `PHASE-40B-INTENT-MODELS.md` defines declarative projection intents.
-27. `PHASE-40C-TEXTURE-MODELS.md` defines surface texture projections.
-28. `PHASE-40D-DIAGRAM-TEMPLATES.md` defines reusable diagram proof templates.
-29. `PHASE-40E-DECLARATIVE-SURFACE-INTEGRATION.md` proves the pre-app
+26. `PHASE-40A-EVENT-MODELS.md` defines declarative event records.
+27. `PHASE-40B-INTENT-MODELS.md` defines declarative projection intents.
+28. `PHASE-40C-TEXTURE-MODELS.md` defines surface texture projections.
+29. `PHASE-40D-DIAGRAM-TEMPLATES.md` defines reusable diagram proof templates.
+30. `PHASE-40E-DECLARATIVE-SURFACE-INTEGRATION.md` proves the pre-app
     declarative surface.
-30. `PHASE-41-DECLARATIVE-APPLICATIONS.md` defines applications as model
+31. `PHASE-41-DECLARATIVE-APPLICATIONS.md` defines applications as model
     declarations over existing declarative surfaces.
-31. `PHASE-42-DECLARATIVE-DEVICE-MODELS.md` defines devices as model
+32. `PHASE-42-DECLARATIVE-DEVICE-MODELS.md` defines devices as model
     declarations over event, render, carrier, network, and storage surfaces.
-32. `PHASE-43-QEMU-TCG-PORTABILITY-COURT.md` defines QEMU TCG as the canonical
+33. `PHASE-43-QEMU-TCG-PORTABILITY-COURT.md` defines QEMU TCG as the canonical
     portable execution witness.
-33. `PHASE-44-OMI-PAGE-COURT.md` defines the typed memory region witness and
+34. `PHASE-44-OMI-PAGE-COURT.md` defines the typed memory region witness and
     page-court law.
-34. `PHASE-45-MMIO-DEVICE-PROJECTION-COURT.md` defines the typed MMIO device
+35. `PHASE-45-MMIO-DEVICE-PROJECTION-COURT.md` defines the typed MMIO device
     projection court.
-35. `PHASE-46A-HARDWARE-EVENT-PACKET-LAW.md` defines the compact typed packet
+36. `PHASE-46A-HARDWARE-EVENT-PACKET-LAW.md` defines the compact typed packet
     carried across device and MMIO boundaries.
-36. `PHASE-46B-ESP32-EVENT-WITNESS-PROFILE.md` defines the ESP32-class
+37. `PHASE-46B-ESP32-EVENT-WITNESS-PROFILE.md` defines the ESP32-class
     low-power witness profile over the hardware event packet law.
-37. `PHASE-46C-OMI-WORLD-WORKBENCH.md` defines the first source-first visual
+38. `PHASE-46C-OMI-WORLD-WORKBENCH.md` defines the first source-first visual
     organizer for OMI world models.
-38. `PHASE-47-INTERACTIVE-OMI-WORLD-WORKBENCH.md` defines the interactive
+39. `PHASE-47-INTERACTIVE-OMI-WORLD-WORKBENCH.md` defines the interactive
     workbench projection backends, pointer routing, and export law.
-39. `PHASE-48-WORKBENCH-EDIT-LOG.md` defines append-only workbench edit
+40. `PHASE-48-WORKBENCH-EDIT-LOG.md` defines append-only workbench edit
     events, replay reconstruction, and undo/redo law.
-40. `PHASE-49-WORKBENCH-COLLABORATION-MERGE-COURT.md` defines deterministic
+41. `PHASE-49-WORKBENCH-COLLABORATION-MERGE-COURT.md` defines deterministic
     local merge for append-only workbench edit logs and explicit conflict
     records.
-41. `PHASE-50-WORKBENCH-SYNC-PACKET-COURT.md` defines transport-neutral sync
+42. `PHASE-50-WORKBENCH-SYNC-PACKET-COURT.md` defines transport-neutral sync
     packets for append-only edit logs, merge logs, and explicit conflict
     records.
-42. `PHASE-51A-FILE-BASED-WORKBENCH-SYNC.md` defines the first durable
+43. `PHASE-51A-FILE-BASED-WORKBENCH-SYNC.md` defines the first durable
     transport adapter for validated sync packets and ordered sync bundles.
-43. `PHASE-51C-BARCODE-WORKBENCH-SYNC.md` defines the scannable barcode
+44. `PHASE-51C-BARCODE-WORKBENCH-SYNC.md` defines the scannable barcode
     carrier adapter for validated sync packets using Phase 38 carrier roles.
-44. `PHASE-51D-ESP32-WORKBENCH-SYNC.md` defines the ESP32-class simulator
+45. `PHASE-51D-ESP32-WORKBENCH-SYNC.md` defines the ESP32-class simulator
     carrier adapter for transporting validated sync packets through the Phase
     46 witness profile.
-45. `PHASE-52-LITERATE-ORG-TREESITTER-COURT.md` defines deterministic Org
+46. `PHASE-52-LITERATE-ORG-TREESITTER-COURT.md` defines deterministic Org
     bundle export, property drawers, Babel blocks, noweb/tangle, TRAMP carrier
     locators, and a tree-sitter interoperability bridge.
-46. `PHASE-53-DIAGRAM-GRAPH-TEMPLATE-TANGLE-COURT.md` defines deterministic
+47. `PHASE-53-DIAGRAM-GRAPH-TEMPLATE-TANGLE-COURT.md` defines deterministic
     DOT/SVG/relations/index artifact generation from canonical world relations
     and diagram templates.
-47. `PHASE-54-OMI-POLYFORM-COORDINATE-LAW.md` defines FS/GS/RS/US as the
+48. `PHASE-54-OMI-POLYFORM-COORDINATE-LAW.md` defines FS/GS/RS/US as the
     canonical x/y/z/w coordinate depth of polyform expression blocks.
-48. `PHASE-54C-CANONICAL-BARCODE-MULTIGRAPH-SCOPE-LAW.md` defines the
+49. `PHASE-54C-CANONICAL-BARCODE-MULTIGRAPH-SCOPE-LAW.md` defines the
     canonical/barcode scope multi-graph over shared coordinate and closure
     receipts.
-49. `PHASE-55-DIAGRAM-RENDERER-ADAPTER-COURT.md` defines deterministic diagram
+50. `PHASE-55-DIAGRAM-RENDERER-ADAPTER-COURT.md` defines deterministic diagram
     renderer adapters over tangle artifacts, coordinates, and scope graph
     metadata.
-50. `PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md` defines the OS-level workbench
+51. `PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md` defines the OS-level workbench
     composer shell for importing, composing, inspecting, and exporting OMI
     world-model projections.
-51. `PHASE-57-POLYFORM-GPU-PROJECTION-COURT.md` defines deterministic
+52. `PHASE-57-POLYFORM-GPU-PROJECTION-COURT.md` defines deterministic
     renderer-neutral GPU command streams over coordinates, closures, scope
     edges, and composer scenes.
-52. `PHASE-58-WEBGL-RUNTIME-ADAPTER-COURT.md` defines deterministic WebGL
+53. `PHASE-58-WEBGL-RUNTIME-ADAPTER-COURT.md` defines deterministic WebGL
     runtime plans over GPU command streams without requiring a browser
     context.
-53. `PHASE-59A-WEBGL-CANVAS-PREVIEW-COURT.md` defines deterministic browser
+54. `PHASE-59A-WEBGL-CANVAS-PREVIEW-COURT.md` defines deterministic browser
     preview surfaces over WebGL runtime plans without requiring a real GPU
     context.
-54. `PHASE-59B-OPENGL-ES-ADAPTER-COURT.md` defines deterministic OpenGL ES
+55. `PHASE-59B-OPENGL-ES-ADAPTER-COURT.md` defines deterministic OpenGL ES
     plans over GPU command streams without requiring a GLES context.
-55. `PHASE-59C-OPENGL-DESKTOP-ADAPTER-COURT.md` defines deterministic desktop
+56. `PHASE-59C-OPENGL-DESKTOP-ADAPTER-COURT.md` defines deterministic desktop
     OpenGL plans over GPU command streams without requiring an OpenGL
     context.
-56. `PHASE-59D-GRAPHICS-BACKEND-EQUIVALENCE-COURT.md` defines deterministic
+57. `PHASE-59D-GRAPHICS-BACKEND-EQUIVALENCE-COURT.md` defines deterministic
     comparison witnesses over the WebGL, GLES, and OpenGL backend summaries.
-57. `PHASE-60-VISUAL-ARTIFACT-EXPORT-EQUIVALENCE-COURT.md` defines
+58. `PHASE-60-VISUAL-ARTIFACT-EXPORT-EQUIVALENCE-COURT.md` defines
     deterministic visual artifact identity equivalence across SVG, glTF,
     OBJ/MTL, WebGL, GLES, and OpenGL projections.
-58. `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md` records the normalized 240/60/16/7/8
+59. `LIGHT-GARDEN-240-PROJECTIVE-FRAME.md` records the normalized 240/60/16/7/8
     timing law as the public projective frame for polyform coordinates.
-59. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
+60. `QEMU-TCG-MMU-OMI-MEMORY-LAW.md` records the QEMU software-MMU memory and
     MMIO doctrine for future page/device courts.
-60. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
+61. `PRECURSOR-REFERENCE-AUDIT.md` records reference-only material from the
     older Omnicron and OMI-LISP trees.
-61. `PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md` records the deterministic
+62. `PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md` records the deterministic
     composer package bundle that carries source, logs, receipts, artifacts,
     plans, and equivalence summaries.
-62. `PHASE-62-COMPOSER-PACKAGE-SIGNING-TRUST-COURT.md` records deterministic
+63. `PHASE-62-COMPOSER-PACKAGE-SIGNING-TRUST-COURT.md` records deterministic
     trust metadata that attests to package receipts without changing package
     authority.
-63. `PHASE-63-GEOMETRIC-RECONCILIATION-LAYER.md` records the chart/geometry
+64. `PHASE-63-GEOMETRIC-RECONCILIATION-LAYER.md` records the chart/geometry
     doctrine that treats lazy, greedy, static, and animated views as
     deterministic projections of the same declared object.
-64. `PHASE-64-LAZY-GREEDY-VIEW-SWITCHER.md` records the workbench switcher
+65. `PHASE-64-LAZY-GREEDY-VIEW-SWITCHER.md` records the workbench switcher
     that toggles the same declared object between lazy, greedy, static, and
     animated projections.
-65. `PHASE-65-5040-STATE-ANIMATION-TIMELINE.md` records the deterministic
+66. `PHASE-65-5040-STATE-ANIMATION-TIMELINE.md` records the deterministic
     5040-frame animation control surface over the animated projection.
-66. `PHASE-66-FRACTAL-SUBCHART-UNFOLDER.md` records the unfold/refold
+67. `PHASE-66-FRACTAL-SUBCHART-UNFOLDER.md` records the unfold/refold
     surface that opens a sealed vertex into a greedy subchart and returns it
     to the same lazy address.
-67. `PHASE-67-CUBE-DIFFERENTIAL-AS-BARCODE-TEMPLATE.md` records the cube
+68. `PHASE-67-CUBE-DIFFERENTIAL-AS-BARCODE-TEMPLATE.md` records the cube
     witness as a lazy/greedy switchable barcode template component.
-68. `PHASE-68-BARCODE-TEMPLATE-COMPOSITION-COURT.md` records the deterministic
+69. `PHASE-68-BARCODE-TEMPLATE-COMPOSITION-COURT.md` records the deterministic
     composition gallery for imported barcode templates and registry fixtures.
-69. `PHASE-69-COMPOSITION-TRUST-BUNDLES.md` records the trust bundle that
+70. `PHASE-69-COMPOSITION-TRUST-BUNDLES.md` records the trust bundle that
     seals composition identity receipts without treating view state as the
     trust anchor.
-70. `PHASE-70-COMPOSITION-BUNDLE-COURT.md` records the deterministic bundle
+71. `PHASE-70-COMPOSITION-BUNDLE-COURT.md` records the deterministic bundle
     that packages composition identity, gallery projection, and trust seal
     together.
-71. `PHASE-71-SCOPED-STREAM-DECLARATION-COURT.md` records the executable
+72. `PHASE-71-SCOPED-STREAM-DECLARATION-COURT.md` records the executable
     stream declaration surface for raw binary, character encoding, endian,
     text direction, traversal, and presentation scopes.
-72. `PHASE-72-SCOPED-STREAM-PROJECTION-COURT.md` records the executable
+73. `PHASE-72-SCOPED-STREAM-PROJECTION-COURT.md` records the executable
     stream projection surface for barcode and chart readouts over the same
     declared stream.
-73. `PHASE-73-MULTI-REGION-OVERLAY-PROJECTION.md` records deterministic
+74. `PHASE-73-MULTI-REGION-OVERLAY-PROJECTION.md` records deterministic
     overlay resolution for overlapping stream declarations.
-74. `PHASE-74-OVERLAY-AS-PACKAGE-EXPORT.md` records portable export/import of
+75. `PHASE-74-OVERLAY-AS-PACKAGE-EXPORT.md` records portable export/import of
     declaration stacks together with overlay projection receipts.
-75. `PHASE-75-OMI-LISP-CANONICAL-DECLARATION-SURFACE.md` records canonical
+76. `PHASE-75-OMI-LISP-CANONICAL-DECLARATION-SURFACE.md` records canonical
     `.omilisp` declarations for the narrative world and Addr128 locator
     surface.
-76. `PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md` records the
+77. `PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md` records the
     gauge-resolved declaration-to-triplet triangulation surface over canonical
     declarations and legacy FS/GS/RS/US traces.
+78. `PHASE-77-OMI-BLOCK-IMAGE-DECLARATION-COURT.md` records declared block
+    images with fixed block sizing, sparse chunk tables, and deterministic
+    chunk receipts.
+79. `PHASE-78-BLOCK-IMAGE-PROJECTION-COURT.md` records deterministic lazy,
+    greedy, static, and animated readouts over declared block images.
+80. `PHASE-79-NARRATIVE-TIMELINE-AS-DECLARED-WORLD.md` records the declared
+    narrative timeline and movie surface derived from the canonical world
+    series.
 
 ## File Roles
 
