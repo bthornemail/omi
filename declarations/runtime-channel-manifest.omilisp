@@ -1,0 +1,165 @@
+(omi
+  (identity
+    (sid runtime-channel-manifest)
+    (title "Runtime Channel Manifest Court")
+    (kind runtime.channel-manifest)
+    (source "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md"))
+  (address
+    (addr runtime-channel-manifest.self)
+    (locator network-bootable-runtime-resolver.self)
+    (binding runtime-channel-manifest.binding.v0))
+  (scope
+    (fs omi)
+    (gs runtime)
+    (rs channel)
+    (us manifest))
+  (rule
+    (statement "Phase 87 names the runtime lattice before the runtime opens it")
+    (guardrail "POSIX paths are projection bindings, not authority")
+    (declared-channel-is-opened-channel false))
+  (roots
+    (root run
+      (path "/run/omi")
+      (kind posix-runtime-root)
+      (created false)
+      (authority false))
+    (root dev
+      (path "/dev/omi")
+      (kind posix-device-root)
+      (created false)
+      (authority false))
+    (root repo
+      (path ".omi/runtime")
+      (kind repo-adapter-root)
+      (created false)
+      (authority false)))
+  (channels
+    (channel declaration-in
+      (kind fifo)
+      (path "/run/omi/declaration.in")
+      (direction input)
+      (role declared-propagation-edge)
+      (capability read-declaration)
+      (opened false)
+      (identity_receipt channel.declaration-in.v0))
+    (channel receipt-out
+      (kind fifo)
+      (path "/run/omi/receipt.out")
+      (direction output)
+      (role coherence-witness-stream)
+      (capability emit-receipt)
+      (opened false)
+      (identity_receipt channel.receipt-out.v0))
+    (channel projection-worker
+      (kind pipe)
+      (path "/run/omi/projection.worker")
+      (direction duplex)
+      (role projection-worker-edge)
+      (capability project-view)
+      (opened false)
+      (identity_receipt channel.projection-worker.v0))
+    (channel peer-sync
+      (kind socket)
+      (path "/run/omi/peer.sock")
+      (direction duplex)
+      (role routable-receipt-sync-surface)
+      (capability connect-peer)
+      (opened false)
+      (identity_receipt channel.peer-sync.v0))
+    (channel block-image-view
+      (kind device-projection)
+      (path "/dev/omi/block-image-view")
+      (direction readout)
+      (role declared-storage-projection)
+      (capability read-block-projection)
+      (opened false)
+      (identity_receipt channel.block-image-view.v0))
+    (channel repo-adapter
+      (kind repo-path)
+      (path ".omi/runtime/repo-adapter")
+      (direction duplex)
+      (role posix-repo-projection-binding)
+      (capability adapt-repo)
+      (opened false)
+      (identity_receipt channel.repo-adapter.v0)))
+  (process-roles
+    (process-role resolver
+      (role declaration-resolver)
+      (channel declaration-in)
+      (emits receipt-out)
+      (capability resolve-declaration)
+      (spawned false))
+    (process-role receipt-verifier
+      (role coherence-verifier)
+      (channel receipt-out)
+      (capability verify-receipt)
+      (spawned false))
+    (process-role projection-worker
+      (role projection-renderer-adapter)
+      (channel projection-worker)
+      (capability project-view)
+      (spawned false))
+    (process-role peer-sync-worker
+      (role receipt-synchronization-worker)
+      (channel peer-sync)
+      (capability connect-peer)
+      (spawned false))
+    (process-role repo-adapter
+      (role posix-repo-adapter)
+      (channel repo-adapter)
+      (capability adapt-repo)
+      (spawned false)))
+  (capabilities
+    (capability read-declaration
+      (domain declaration)
+      (authority identity_receipt)
+      (effect read-only))
+    (capability resolve-declaration
+      (domain resolver)
+      (authority identity_receipt)
+      (effect emit-receipt))
+    (capability emit-receipt
+      (domain receipt)
+      (authority coherence-witness)
+      (effect append-only))
+    (capability verify-receipt
+      (domain receipt)
+      (authority coherence-witness)
+      (effect read-only))
+    (capability project-view
+      (domain projection)
+      (authority projection_receipt)
+      (effect projection-only))
+    (capability connect-peer
+      (domain network)
+      (authority package_receipt)
+      (effect receipt-sync))
+    (capability read-block-projection
+      (domain block-image)
+      (authority projection_receipt)
+      (effect readout-only))
+    (capability adapt-repo
+      (domain posix-repo)
+      (authority projection-binding)
+      (effect adapter-only)))
+  (guardrails
+    (guard declared-not-opened
+      (statement "A declared channel names a possible runtime edge but does not open it"))
+    (guard paths-not-authority
+      (statement "POSIX paths are projection bindings, not authority"))
+    (guard capabilities-separate
+      (statement "Capabilities gate channel use but remain declared separately from channel names"))
+    (guard no-os-resource-creation
+      (statement "Phase 87 does not create FIFOs sockets devices directories or processes"))
+    (guard receipts-required
+      (statement "Runtime effects must emit receipts to remain replayable")))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

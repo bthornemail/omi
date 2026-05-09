@@ -1,0 +1,137 @@
+(omi
+  (identity
+    (sid omi-observer-lattice-sitter)
+    (title "OMI Observer / Lattice-Sitter Doctrine")
+    (kind observer.projection-resolver)
+    (source "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md"))
+  (address
+    (addr omi-observer-lattice-sitter.self)
+    (locator boundary-geometry-constitution.self)
+    (binding observer.lattice-sitter.v0))
+  (scope
+    (fs omi)
+    (gs observer)
+    (rs lattice-sitter)
+    (us projection-resolver))
+  (rule
+    (statement "The OMI observer does not create meaning; it selects an admissible orientation frame and translates boundary structure into receipt-verifiable projections")
+    (observer-is-authority false)
+    (observer-is-ai-agent false)
+    (observer-is-projection-resolver true)
+    (stochastic-interpretation false)
+    (receipt-seeded-orientation true)
+    (canonical-declarations-and-receipts-are-authority true))
+  (operational-ladder
+    (step surface
+      (order 0)
+      (role input-surface))
+    (step boundary
+      (order 1)
+      (role boundary-detection))
+    (step cons-edge
+      (order 2)
+      (role oriented-boundary-edge))
+    (step binary-quadratic-relation
+      (order 3)
+      (role paired-boundary-incidence-transform))
+    (step fano-7-factorial-orientation
+      (order 4)
+      (role deterministic-orientation-resolver))
+    (step triad-incidence-frame
+      (order 5)
+      (role local-admissible-incidence-frame))
+    (step spom-declaration
+      (order 6)
+      (role translated-declaration-projection))
+    (step receipt-witness
+      (order 7)
+      (role coherence-witness)))
+  (input-surfaces
+    (surface omi-lisp
+      (role canonical-declaration-surface))
+    (surface org
+      (role literate-boundary-surface))
+    (surface tree-sitter-ast
+      (role syntax-tree-projection-surface))
+    (surface raw-binary
+      (role chunked-carrier-surface))
+    (surface barcode
+      (role sealed-carrier-surface))
+    (surface wordnet-prolog-facts
+      (role lexical-relation-adapter-surface))
+    (surface svg-json-canvas
+      (role diagram-and-canvas-projection-surface))
+    (surface runtime-channel-message
+      (role runtime-propagation-surface)))
+  (incidence-transform
+    (edge cons-edge
+      (sid cons-edge)
+      (statement "A CONS edge is an oriented boundary pair")
+      (role oriented-pair))
+    (relation binary-quadratic-relation
+      (sid binary-quadratic-relation)
+      (statement "A binary quadratic relation relates paired boundary states across a CONS edge")
+      (role incidence-transform))
+    (frame triad-incidence-frame
+      (sid triad-incidence-frame)
+      (statement "A selected triad supplies the local S-P-O incidence frame")
+      (subject channel)
+      (predicate channel)
+      (object channel)
+      (modality orientation)))
+  (orientation-resolver
+    (sid fano-lottery)
+    (statement "Fano lottery is a deterministic orientation resolver")
+    (fano-points 7)
+    (selector-permutations 5040)
+    (seed identity-receipt)
+    (deterministic true)
+    (stochastic false))
+  (translation
+    (sid observer-translation)
+    (input canonical-input)
+    (seed identity-receipt)
+    (select fano-orientation)
+    (frame triad-incidence-frame)
+    (output translated-declaration)
+    (witness receipt))
+  (spom-output
+    (sid observer-spom-frame)
+    (statement "S-P-O-M is the observer output frame, not source authority")
+    (subject boundary)
+    (predicate incidence)
+    (object translated-declaration)
+    (modality receipt-seeded-orientation)
+    (authority false))
+  (guardrails
+    (guard observer-not-authority
+      (statement "Observer outputs are candidate projections until receipt-verified"))
+    (guard no-ml-authority
+      (statement "The observer is not an ML authority or stochastic meaning source"))
+    (guard no-runtime-agent
+      (statement "Phase 93 does not start an autonomous agent or live resolver"))
+    (guard receipt-first-admission
+      (statement "Translated declarations become admissible only through receipt verification")))
+  (references
+    (surface phase-76-spom
+      (path "docs/PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md")
+      (role spom-triangulation-surface))
+    (surface phase-85-orientation-incidence
+      (path "docs/PHASE-85-ORIENTATION-INCIDENCE-BLACKBOARD-DOCTRINE.md")
+      (role orientation-incidence-doctrine))
+    (surface phase-91-boundary-geometry
+      (path "docs/PHASE-91-BOUNDARY-GEOMETRY-CONSTITUTION.md")
+      (role boundary-geometry-constitution))
+    (surface phase-92-qemu-portability
+      (path "docs/PHASE-92-QEMU-MULTI-PLATFORM-PORTABILITY-COURT.md")
+      (role portability-observation-court)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

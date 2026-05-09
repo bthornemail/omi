@@ -1,0 +1,81 @@
+(omi
+  (identity
+    (sid boundary-geometry-constitution)
+    (title "Boundary Geometry Constitution")
+    (kind constitutional.doctrine)
+    (source "docs/PHASE-91-BOUNDARY-GEOMETRY-CONSTITUTION.md"))
+  (address
+    (addr boundary-geometry-constitution.self)
+    (locator addr128.v0)
+    (binding boundary-geometry.constitution.v0))
+  (scope
+    (fs omi)
+    (gs constitution)
+    (rs boundary)
+    (us geometry))
+  (constitution
+    (statement "OMI is a constitutional system for admissible differentiation through oriented boundaries"))
+  (cons
+    (sid cons)
+    (statement "CONS is the minimal oriented boundary through which admissible differentiation becomes projectable")
+    (role admissible-circumscription-operator))
+  (closed_null
+    (sid closed_null)
+    (statement "() is a closed admissible null")
+    (role latent-closure))
+  (differentiated_null
+    (sid differentiated_null)
+    (statement "()! is explicitly differentiated null")
+    (role oriented-closure))
+  (omicron_threshold
+    (sid omicron_threshold)
+    (statement "0x20 is the omicron threshold")
+    (role admissible-propagation-boundary))
+  (spom_boundary_frame
+    (sid spom_boundary_frame)
+    (statement "S-P-O-M is an incidence frame over a boundary")
+    (subject boundary)
+    (predicate null)
+    (object projection)
+    (modality orientation)
+    (role incidence-frame))
+  (sparse_hole
+    (sid sparse_hole)
+    (statement "A sparse hole is a declared admissible void")
+    (role declared-absence))
+  (chunk_receipt
+    (sid chunk_receipt)
+    (statement "A chunk receipt is a boundary witness")
+    (role boundary-witness))
+  (projection
+    (sid projection)
+    (statement "Projection is the observable rendering of differentiated structure")
+    (role observable-rendering))
+  (references
+    (statement "Phase 91 links Phase 90 and the sovereign geometry docs"))
+  (phase_90_chunk_index
+    (sid phase_90_chunk_index)
+    (path "declarations/raw-binary-chunk-receipt-index.omilisp")
+    (role raw-binary-chunk-receipt-index))
+  (phase_90_doc
+    (sid phase_90_doc)
+    (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+    (role raw-binary-chunk-index-doctrine))
+  (constitutional_geometry
+    (sid constitutional_geometry)
+    (path "docs/OMI-CONSTITUTIONAL-GEOMETRY.md")
+    (role sovereign-doctrine))
+  (core_principle
+    (sid core_principle)
+    (path "docs/CORE-PRINCIPLE.md")
+    (role pre-os-principle))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

@@ -1,0 +1,206 @@
+(omi
+  (identity
+    (sid orientation-incidence-blackboard)
+    (title "Orientation Incidence Blackboard Doctrine")
+    (kind algebra.derived-orientation-doctrine)
+    (source "docs/PHASE-85-ORIENTATION-INCIDENCE-BLACKBOARD-DOCTRINE.md"))
+  (address
+    (addr orientation-incidence-blackboard.self)
+    (locator omi-system.self)
+    (binding derived-orientation.binding.v0))
+  (scope
+    (fs omi)
+    (gs orientation)
+    (rs incidence)
+    (us blackboard))
+  (rule
+    (statement "The blackboard does not look up values; it selects an incidence frame and resolves admissibility")
+    (authority derived-orientation)
+    (axiom false))
+  (basis
+    (units 32)
+    (imaginary-units 31)
+    (distinguished-triples 155)
+    (triad-fixtures representative)
+    (triad-corpus "declarations/trigintaduonion-triads.omilisp")
+    (source-fixture "tests/fixtures/trigintaduonion-triads.tsv")
+    (families
+      (family alpha-alpha-beta
+        (count 45))
+      (family beta-beta-beta-a
+        (count 20))
+      (family beta-beta-beta-b
+        (count 15))
+      (family alpha-beta-gamma
+        (count 60))
+      (family beta-gamma-gamma
+        (count 15))))
+  (blackboard-procedure
+    (steps
+      (step
+        (sid pending-pattern)
+        (order 0)
+        (role "unresolved declared pattern"))
+      (step
+        (sid receipt-seed)
+        (order 1)
+        (role "receipt-derived selector seed"))
+      (step
+        (sid selected-triad)
+        (order 2)
+        (role "local incidence frame"))
+      (step
+        (sid oriented-incidence)
+        (order 3)
+        (role "subject predicate object orientation"))
+      (step
+        (sid admitted-declaration)
+        (order 4)
+        (role "resolved admissible declaration"))
+      (step
+        (sid receipt-witness)
+        (order 5)
+        (role "coherence witness"))))
+  (lottery
+    (selector fano-variable)
+    (seed receipt-hash)
+    (period 155)
+    (resolution
+      (choose family)
+      (choose representative-triad)
+      (orient triad)
+      (apply lookup)))
+  (triad-fixtures
+    (triad triad.e3.e13.e14
+      (sid triad.e3.e13.e14)
+      (family alpha-alpha-beta)
+      (units e3 e13 e14)
+      (subject e3)
+      (predicate e13)
+      (object e14)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e3)
+        (predicate e13)
+        (object e14)))
+    (triad triad.e3.e5.e6
+      (sid triad.e3.e5.e6)
+      (family beta-beta-beta-a)
+      (units e3 e5 e6)
+      (subject e3)
+      (predicate e5)
+      (object e6)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e3)
+        (predicate e5)
+        (object e6)))
+    (triad triad.e3.e12.e15
+      (sid triad.e3.e12.e15)
+      (family beta-beta-beta-b)
+      (units e3 e12 e15)
+      (subject e3)
+      (predicate e12)
+      (object e15)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e3)
+        (predicate e12)
+        (object e15)))
+    (triad triad.e1.e6.e7
+      (sid triad.e1.e6.e7)
+      (family alpha-beta-gamma)
+      (units e1 e6 e7)
+      (subject e1)
+      (predicate e6)
+      (object e7)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e1)
+        (predicate e6)
+        (object e7)))
+    (triad triad.e1.e2.e3
+      (sid triad.e1.e2.e3)
+      (family beta-gamma-gamma)
+      (units e1 e2 e3)
+      (subject e1)
+      (predicate e2)
+      (object e3)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e1)
+        (predicate e2)
+        (object e3)))
+    (triad triad.e7.e11.e12
+      (sid triad.e7.e11.e12)
+      (family alpha-alpha-beta)
+      (units e7 e11 e12)
+      (subject e7)
+      (predicate e11)
+      (object e12)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e7)
+        (predicate e11)
+        (object e12)))
+    (triad triad.e8.e16.e24
+      (sid triad.e8.e16.e24)
+      (family beta-gamma-gamma)
+      (units e8 e16 e24)
+      (subject e8)
+      (predicate e16)
+      (object e24)
+      (orientation canonical)
+      (role incidence-frame)
+      (projection
+        (subject e8)
+        (predicate e16)
+        (object e24))))
+  (orientation-examples
+    (example canonical-spom
+      (triad triad.e3.e13.e14)
+      (subject e3)
+      (predicate e13)
+      (object e14)
+      (meaning "selected triad frames a local S-P-O admissibility line"))
+    (example inverse-orientation
+      (forward "e3 e13 -> e14")
+      (inverse "e13 e3 -> -e14")
+      (meaning "orientation reversal changes sign and traversal direction"))
+    (example receipt-seeded-resolution
+      (input pending-pattern)
+      (selector "identity_receipt mod 155")
+      (selected-triad representative)
+      (output admitted-declaration)))
+  (guardrails
+    (guard compatible-not-required
+      (statement "Trigintaduonion triads are compatible incidence frames, not mandatory runtime algebra"))
+    (guard representative-not-corpus
+      (statement "Phase 85 doctrine carries representative triads; the full 155-triad corpus is canonical reference data in a separate declaration"))
+    (guard spom-derived
+      (statement "S-P-O-M derives from selected incidence and remains non-authoritative"))
+    (guard admissibility-not-binary
+      (statement "Orientation conditions admissibility; admissibility is not reducible to binary truth assignment")))
+  (references
+    (source wikipedia-trigintaduonion
+      (path "https://en.wikipedia.org/wiki/Trigintaduonion")
+      (role "triad count and family reference"))
+    (source cawagas-2009
+      (path "https://arxiv.org/abs/0907.2047")
+      (role "subalgebra structure guardrail")))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

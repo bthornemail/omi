@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 400 400">
+<metadata data-omi-sid="demo-polyomino-cross" data-omi-basis="polyomino"/>
+<g id="world-objects" fill="none" stroke="currentColor">
+  <rect data-cell="0" x="0" y="0" width="30" height="30"/>
+  <rect data-cell="1" x="30" y="0" width="30" height="30"/>
+  <rect data-cell="2" x="-30" y="0" width="30" height="30"/>
+  <rect data-cell="3" x="0" y="30" width="30" height="30"/>
+  <rect data-cell="4" x="0" y="-30" width="30" height="30"/>
+</g>
+<g id="shadow-canvas" opacity="0.35"></g>
+</svg>

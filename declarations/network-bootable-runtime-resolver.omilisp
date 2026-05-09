@@ -1,0 +1,114 @@
+(omi
+  (identity
+    (sid network-bootable-runtime-resolver)
+    (title "Network-Bootable OMI Runtime Resolver")
+    (kind runtime.resolver-doctrine)
+    (source "docs/PHASE-86-NETWORK-BOOTABLE-OMI-RUNTIME-RESOLVER.md"))
+  (address
+    (addr network-bootable-runtime-resolver.self)
+    (locator omi-system.self)
+    (binding runtime-resolver.binding.v0))
+  (scope
+    (fs omi)
+    (gs runtime)
+    (rs resolver)
+    (us lattice))
+  (rule
+    (statement "The runtime lattice is mutable and local; the declaration lattice remains canonical and replayable")
+    (authority runtime-doctrine)
+    (axiom false))
+  (layers
+    (layer boot-carrier
+      (order 0)
+      (role "raw boot image and PXE QEMU TCG carrier")
+      (authority false))
+    (layer declaration-authority
+      (order 1)
+      (role "declaration resolver and receipt verifier")
+      (authority canonical-declarations-and-receipts))
+    (layer propagation-lattice
+      (order 2)
+      (role "FIFOs pipes sockets and process edges")
+      (authority projection-channel))
+    (layer projection-workers
+      (order 3)
+      (role "renderers adapters repo bridges and package exporters")
+      (authority projection-worker))
+    (layer workbook-surfaces
+      (order 4)
+      (role "UI canvas Org Emacs Electron Firefox and JSON Canvas surfaces")
+      (authority presentation)))
+  (runtime-channels
+    (channel fifo
+      (role declared-propagation-edge)
+      (posix mkfifo)
+      (replayable true))
+    (channel process
+      (role local-resolver-projection-node)
+      (posix process)
+      (replayable true))
+    (channel pipe
+      (role admissible-traversal-path)
+      (posix pipe)
+      (replayable true))
+    (channel socket
+      (role routable-propagation-surface)
+      (posix socket)
+      (replayable true))
+    (channel receipt
+      (role coherence-witness)
+      (posix file-or-stream)
+      (replayable true)))
+  (boot-shape
+    (carrier raw-image)
+    (network-boot pxe)
+    (emulator qemu)
+    (translator tcg)
+    (mode in-memory-resolver)
+    (posix-adapter repo-adapter-vm))
+  (replay-law
+    (mutation runtime-local)
+    (emits receipts)
+    (reconstructible-from "canonical declarations plus receipts")
+    (runtime-authority false)
+    (declaration-authority true))
+  (peer-sync
+    (role receipt-synchronization)
+    (mode declarative)
+    (repair "reconstruct local runtime lattice from canonical declarations and receipt witnesses")
+    (consensus not-implemented)
+    (network-device not-implemented))
+  (capabilities
+    (capability boot-resolve
+      (surface boot-carrier)
+      (authority receipt-verified))
+    (capability fifo-propagate
+      (surface propagation-lattice)
+      (authority projection-channel))
+    (capability render-project
+      (surface projection-workers)
+      (authority projection-receipt))
+    (capability peer-repair
+      (surface peer-sync)
+      (authority identity-and-receipt-witness)))
+  (guardrails
+    (guard boot-not-authority
+      (statement "The boot image is a carrier, not source authority"))
+    (guard runtime-not-authority
+      (statement "A runtime node resolves declarations locally but does not define identity"))
+    (guard posix-not-ontology
+      (statement "POSIX channels are projection channels, not OMI ontology"))
+    (guard peer-not-authority
+      (statement "Network peers synchronize receipts but do not redefine canonical declarations"))
+    (guard no-live-consensus
+      (statement "Phase 86 defines the resolver lattice and does not implement live decentralized consensus")))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

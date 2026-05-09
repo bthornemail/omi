@@ -2,6 +2,9 @@
 
 Status: audit.
 
+This audit supports the sovereign doctrine source:
+[OMI Constitutional Geometry](OMI-CONSTITUTIONAL-GEOMETRY.md).
+
 ## Scope
 
 This audit treats messaging as propagation across declared OMI boundaries, not

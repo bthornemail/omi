@@ -1,0 +1,130 @@
+(omi
+  (identity
+    (sid omi-transmutator-roundtrip)
+    (title "OMI Transmutator Roundtrip Court")
+    (kind transmutator.roundtrip-court)
+    (source "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md"))
+  (address
+    (addr omi-transmutator-roundtrip.self)
+    (locator wordnet-prolog-semantic-grounding.self)
+    (binding transmutator.roundtrip.v0))
+  (scope
+    (fs omi)
+    (gs transmutator)
+    (rs roundtrip)
+    (us court))
+  (rule
+    (statement "The transmutator may change notation, but it must preserve declared identity or explicitly emit a changed receipt")
+    (transmutator-is-authority false)
+    (target-syntax-is-authority false)
+    (wordnet-synset-is-authority false)
+    (prolog-fact-is-authority false)
+    (rdf-triple-is-authority false)
+    (canonical-omi-declaration-and-receipts-are-authority true))
+  (transmutator-law
+    (step source-surface
+      (order 0)
+      (role input-notation))
+    (step adapter-parse-projection
+      (order 1)
+      (role non-authoritative-adapter-readout))
+    (step canonical-omi-declaration
+      (order 2)
+      (role identity-authority))
+    (step spom-triangulation
+      (order 3)
+      (role incidence-projection))
+    (step target-projection
+      (order 4)
+      (role output-notation))
+    (step receipt-comparison
+      (order 5)
+      (role identity-preservation-check)))
+  (roundtrip-surfaces
+    (surface omi-lisp
+      (role canonical-declaration-surface)
+      (authority true))
+    (surface spom
+      (role incidence-triplet-projection)
+      (authority false))
+    (surface prolog-like-facts
+      (role logic-projection-syntax)
+      (authority false))
+    (surface rdf-like-triples
+      (role semantic-web-projection-syntax)
+      (authority false))
+    (surface json-like-projection
+      (role structured-projection-syntax)
+      (authority false))
+    (surface phrase-synset-stub
+      (role lexical-grounding-projection)
+      (authority false)))
+  (roundtrip-cases
+    (case omi-lisp-to-spom-to-omi
+      (preserve-identity true)
+      (authority canonical-omi-declaration))
+    (case omi-lisp-to-prolog-to-omi
+      (preserve-identity true)
+      (authority canonical-omi-declaration))
+    (case omi-lisp-to-rdf-to-omi
+      (preserve-identity true)
+      (authority canonical-omi-declaration))
+    (case omi-lisp-to-json-to-omi
+      (preserve-identity true)
+      (authority canonical-omi-declaration))
+    (case phrase-synset-to-spom-grounding
+      (preserve-identity false)
+      (authority canonical-omi-declaration)
+      (projection-changes true)))
+  (orientation-algebra-compatibility
+    (model cayley-dickson-like-doubling
+      (role compatible-orientation-model)
+      (authority false))
+    (model modified-split-forms
+      (role bifurcation-duality-isotropic-boundary-cases)
+      (authority false))
+    (model trigintaduonion-triads
+      (role local-spom-incidence-frames)
+      (authority false))
+    (model sixty-four-dimensional-continuation
+      (role compatible-0x00-0x3f-constitutional-surface)
+      (authority false))
+    (model neural-gnn-transformer-backends
+      (role later-projection-engines)
+      (authority false)))
+  (guardrails
+    (guard transmutator-not-authority
+      (statement "Transmutation output is a projection until receipt comparison admits it"))
+    (guard syntax-not-authority
+      (statement "Target syntax never replaces canonical OMI declaration authority"))
+    (guard changed-identity-must-receipt
+      (statement "Identity changes must be explicit through changed receipts"))
+    (guard adapter-authority-disabled
+      (statement "WordNet Prolog RDF and phrase adapters remain projection surfaces"))
+    (guard orientation-model-not-authority
+      (statement "Cayley-Dickson-like doubling is a compatible orientation model, not authority"))
+    (guard neural-backend-not-authority
+      (statement "A neural transformer may become one backend of the OMI transmutator, but OMI transmutation is older than neural attention")))
+  (references
+    (surface phase-75-omilisp
+      (path "docs/PHASE-75-OMI-LISP-CANONICAL-DECLARATION-SURFACE.md")
+      (role canonical-declaration-surface))
+    (surface phase-76-spom
+      (path "docs/PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md")
+      (role spom-triangulation-surface))
+    (surface phase-93-observer
+      (path "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md")
+      (role observer-projection-resolver))
+    (surface phase-94-semantic-grounding
+      (path "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md")
+      (role semantic-grounding-adapter)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

@@ -1,0 +1,16 @@
+0x20 SP mask=0 TT=0 TF=0 FT=0 FF=0 unasserted-empty
+0x21 ! mask=1 TT=0 TF=0 FT=0 FF=1 asserted-empty
+0x22 " mask=2 TT=0 TF=0 FT=1 FF=0 cdr-only-assertion
+0x23 # mask=3 TT=0 TF=0 FT=1 FF=1 car-null
+0x24 $ mask=4 TT=0 TF=1 FT=0 FF=0 car-only-assertion
+0x25 % mask=5 TT=0 TF=1 FT=0 FF=1 cdr-null
+0x26 & mask=6 TT=0 TF=1 FT=1 FF=0 xor-exactly-one-side
+0x27 ' mask=7 TT=0 TF=1 FT=1 FF=1 nand-not-both
+0x28 ( mask=8 TT=1 TF=0 FT=0 FF=0 and-both-declared
+0x29 ) mask=9 TT=1 TF=0 FT=0 FF=1 xnor-both-same
+0x2A * mask=A TT=1 TF=0 FT=1 FF=0 project-cdr
+0x2B + mask=B TT=1 TF=0 FT=1 FF=1 implication-p-to-q
+0x2C , mask=C TT=1 TF=1 FT=0 FF=0 project-car
+0x2D - mask=D TT=1 TF=1 FT=0 FF=1 converse-q-to-p
+0x2E . mask=E TT=1 TF=1 FT=1 FF=0 or-cons-continuation
+0x2F / mask=F TT=1 TF=1 FT=1 FF=1 tautological-enclosure

@@ -1,0 +1,139 @@
+(omi
+  (identity
+    (sid wordnet-prolog-semantic-grounding)
+    (title "WordNet / Prolog Semantic Grounding Adapter")
+    (kind semantic.grounding-adapter)
+    (source "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md"))
+  (address
+    (addr wordnet-prolog-semantic-grounding.self)
+    (locator omi-observer-lattice-sitter.self)
+    (binding semantic.grounding-adapter.v0))
+  (scope
+    (fs omi)
+    (gs semantic)
+    (rs grounding)
+    (us adapter))
+  (rule
+    (statement "WordNet and Prolog ground language and logic projections over the OMI CONS lattice; they do not define authority")
+    (wordnet-synset-is-authority false)
+    (prolog-fact-is-authority false)
+    (rdf-triple-is-authority false)
+    (gnn-activation-is-authority false)
+    (pubsub-message-is-authority false)
+    (canonical-cons-declarations-and-receipts-are-authority true))
+  (semantic-ladder
+    (step raw-binary-memory
+      (order 0)
+      (role carrier-substrate))
+    (step cons-pointer-embedding
+      (order 1)
+      (role receipt-stable-memory-edge))
+    (step spom-incidence-fact
+      (order 2)
+      (role semantic-incidence-projection))
+    (step wordnet-prolog-grounding
+      (order 3)
+      (role lexical-and-logic-grounding))
+    (step graph-message-passing
+      (order 4)
+      (role projection-weight-propagation))
+    (step decentralized-pubsub
+      (order 5)
+      (role receipt-propagation-channel))
+    (step semantic-projection-surface
+      (order 6)
+      (role external-semantic-readout)))
+  (cons-pointer
+    (sid cons-pointer)
+    (statement "Each CONS is a raw binary memory pointer embedding and semantic incidence edge")
+    (car raw-address-a)
+    (cdr raw-address-b)
+    (predicate admissible-boundary-frame)
+    (modality receipt-verified)
+    (embedding optional-feature-vector)
+    (receipt cons-edge-receipt)
+    (role memory-edge-semantic-relation-projection-handle))
+  (adapters
+    (adapter wordnet
+      (role lexical-grounding-adapter)
+      (authority false)
+      (input synset)
+      (output lexical-relation-projection))
+    (adapter prolog
+      (role logic-projection-adapter)
+      (authority false)
+      (input fact-rule)
+      (output query-proof-projection))
+    (adapter rdf
+      (role semantic-web-interchange-adapter)
+      (authority false)
+      (input triple)
+      (output graph-exchange-projection))
+    (adapter sparql
+      (role semantic-web-query-adapter)
+      (authority false)
+      (input query)
+      (output projected-binding-set))
+    (adapter scgnn
+      (role graph-message-passing-projection)
+      (authority false)
+      (input receipt-stable-cons-graph)
+      (output projection-weights))
+    (adapter pubsub
+      (role decentralized-propagation-channel)
+      (authority false)
+      (input receipt-bearing-event)
+      (output propagated-candidate-projection)))
+  (projection-laws
+    (law wordnet-grounding
+      (statement "WordNet synsets ground lexical projections but do not admit state"))
+    (law prolog-grounding
+      (statement "Prolog facts and rules project logic relations but do not define OMI authority"))
+    (law semantic-web-grounding
+      (statement "RDF and SPARQL exchange S-P-O-M projections without replacing receipts"))
+    (law neural-grounding
+      (statement "GNN message passing suggests projection weights; receipts admit state"))
+    (law pubsub-grounding
+      (statement "Pub/sub propagates receipt-bearing candidates; connection does not imply trust")))
+  (spom-bridge
+    (sid semantic-grounding-spom)
+    (statement "Semantic grounding reads CONS pointers as S-P-O-M incidence facts")
+    (subject cons-car)
+    (predicate grounded-relation)
+    (object cons-cdr)
+    (modality receipt-verified-grounding)
+    (authority false))
+  (guardrails
+    (guard no-wordnet-authority
+      (statement "WordNet synsets are lexical grounding adapters, not source truth"))
+    (guard no-prolog-authority
+      (statement "Prolog facts are logic projections, not declaration authority"))
+    (guard no-rdf-authority
+      (statement "RDF triples are interchange projections over OMI S-P-O-M"))
+    (guard no-neural-authority
+      (statement "GNN activations can weight projections but cannot admit state"))
+    (guard no-pubsub-authority
+      (statement "Pub/sub messages propagate candidates but do not establish identity")))
+  (references
+    (surface phase-76-spom
+      (path "docs/PHASE-76-GAUGE-RESOLVED-CANONICAL-UNIFICATION.md")
+      (role spom-triangulation-surface))
+    (surface phase-93-observer
+      (path "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md")
+      (role observer-projection-resolver))
+    (surface phase-88-adapters
+      (path "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md")
+      (role distributed-adapter-vocabulary))
+    (surface phase-91-boundary-geometry
+      (path "docs/PHASE-91-BOUNDARY-GEOMETRY-CONSTITUTION.md")
+      (role boundary-geometry-constitution)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

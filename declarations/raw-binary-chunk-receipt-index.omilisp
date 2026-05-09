@@ -1,0 +1,81 @@
+(omi
+  (identity
+    (sid raw-binary-chunk-receipt-index)
+    (title "Raw Binary Chunk Receipt Index")
+    (kind lattice.chunk-receipt-index)
+    (source "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md"))
+  (address
+    (addr raw-binary-chunk-receipt-index.self)
+    (locator raw-binary-decentralized-lattice.self)
+    (binding raw-binary-chunk-index.binding.v0))
+  (scope
+    (fs omi)
+    (gs lattice)
+    (rs chunk)
+    (us receipt))
+  (rule
+    (statement "Phase 90 makes raw binary shareable by receipt before it becomes networked by protocol")
+    (raw-bytes-are-authority false)
+    (chunk-receipts-are-witnesses true)
+    (sparse-chunks-are-declared-holes true)
+    (qemu-runtime false)
+    (network-runtime false)
+    (device-runtime false))
+  (core-object
+    (chunk schema
+      (sid chunk)
+      (role receipt-index-entry)
+      (field-offset offset)
+      (field-size size)
+      (field-sparse sparse)
+      (field-sparse-marker sparse-marker)
+      (field-content-hash content-hash)
+      (field-receipt receipt)))
+  (determinism-laws
+    (law same-bytes-same-block-size
+      (statement "same bytes and block size produce the same index receipt"))
+    (law content-edit-changes-affected-chunk
+      (statement "a changed byte changes the affected chunk receipt and index receipt"))
+    (law all-zero-block
+      (statement "an all-zero chunk is a sparse declarative hole"))
+    (law non-sparse-block
+      (statement "a non-sparse chunk carries a content hash"))
+    (law projection-view-non-authority
+      (statement "projection and view modes do not change identity receipt")))
+  (receipts-model
+    (receipt identity_receipt
+      (role index-authority-witness))
+    (receipt projection_receipt
+      (role readout-lens-witness))
+    (receipt package_receipt
+      (role serialization-witness))
+    (receipt view_receipt
+      (role presentation-witness))
+    (receipt chunk_receipt
+      (role chunk-witness))
+    (receipt index_receipt
+      (role ordered-chunk-table-witness)))
+  (projections
+    (lazy sealed-chunk-manifest)
+    (greedy expanded-chunk-chart)
+    (static receipt-reconciliation)
+    (animated offset-sweep))
+  (guardrails
+    (guard no-qemu
+      (statement "Phase 90 does not open QEMU QMP QAPI or block devices"))
+    (guard no-vfio-user
+      (statement "Phase 90 does not create vfio-user device resolver sockets"))
+    (guard no-network
+      (statement "Phase 90 does not synchronize peers or chunks over a network"))
+    (guard raw-carrier-not-authority
+      (statement "Raw bytes are a carrier; chunk receipts witness deterministic identity"))
+    (guard sparse-hole-not-missing-data
+      (statement "Sparse chunks are declared holes, not missing data")))
+  (implementation
+    (module "workbench/src/raw_binary_chunk_index.js")
+    (test "tests/workbench_raw_binary_chunk_index_test.js"))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

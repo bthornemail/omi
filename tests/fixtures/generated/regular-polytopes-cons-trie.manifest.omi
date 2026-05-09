@@ -1,0 +1,32 @@
+(omi
+  (identity
+    (sid regular-polytopes-cons-trie-manifest)
+    (title "Regular Polytopes Cons Trie Build Manifest")
+    (kind build.manifest)
+    (source "List of regular polytopes - Wikipedia"))
+  (scope
+    (fs regular-polytopes)
+    (gs build)
+    (rs manifest)
+    (us receipt))
+  (inputs
+    (source-file "List of regular polytopes - Wikipedia")
+    (records-tsv "polytope_records.tsv")
+    (compiler-c "omi_polytope_cons_trie.c"))
+  (build
+    (cc "cc -std=c11 -O2 -Wall -Wextra")
+    (command "./omi_polytope_cons_trie polytope_records.tsv regular-polytopes-cons-trie.omi")
+    (records 48)
+    (trie-nodes 9793)
+    (cons-cells 19586)
+    (root-cons 19586)
+    (root-digest "fnv1a64:d0a8e4f74dedf214"))
+  (artifacts
+    (artifact (path "omi_polytope_cons_trie.c") (sha256 "61ed42c6bd1593a5fbb493dc6bc93d885f04fe77de4e036dfd50e12d5cba2c57"))
+    (artifact (path "polytope_records.tsv") (sha256 "8a43f294a959a398c57d53dc9a411369fc2b6a4fb0012d9d0d0a2d931b0469b0"))
+    (artifact (path "regular-polytopes-cons-trie.omi") (sha256 "6389ab0d9a3523d18ba649dcd8657ea18ff65d86bbd11793cf1aaaa3a1db890b"))
+  )
+  (receipts
+    (identity "fnv1a64:d0a8e4f74dedf214")
+    (projection pending)
+    (package pending)))

@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -516,6 +516,42 @@ workbench-omilisp-declaration-test:
 workbench-spom-triangulation-test:
 	node tests/workbench_spom_triangulation_test.js
 
+workbench-omi-self-declaration-test:
+	node tests/workbench_omi_self_declaration_test.js
+
+workbench-polyform-cons-reconstruction-test:
+	node tests/workbench_polyform_cons_reconstruction_test.js
+
+workbench-orientation-incidence-blackboard-test:
+	node tests/workbench_orientation_incidence_blackboard_test.js
+
+workbench-network-runtime-resolver-test:
+	node tests/workbench_network_bootable_runtime_resolver_test.js
+
+workbench-runtime-channel-manifest-test:
+	node tests/workbench_runtime_channel_manifest_test.js
+
+workbench-distributed-adapter-transport-registry-test:
+	node tests/workbench_distributed_adapter_transport_registry_test.js
+
+workbench-raw-binary-decentralized-lattice-test:
+	node tests/workbench_raw_binary_decentralized_lattice_test.js
+
+workbench-raw-binary-chunk-index-test:
+	node tests/workbench_raw_binary_chunk_index_test.js
+
+workbench-boundary-geometry-constitution-test:
+	node tests/workbench_boundary_geometry_constitution_test.js
+
+workbench-omi-observer-lattice-sitter-test:
+	node tests/workbench_omi_observer_lattice_sitter_test.js
+
+workbench-wordnet-prolog-semantic-grounding-test:
+	node tests/workbench_wordnet_prolog_semantic_grounding_test.js
+
+workbench-omi-transmutator-roundtrip-test:
+	node tests/workbench_omi_transmutator_roundtrip_test.js
+
 workbench-block-image-test:
 	node tests/workbench_block_image_declaration_test.js
 
@@ -600,6 +636,12 @@ qemu-portable-test:
 qemu-platform-test: iso
 	sh ./tools/qemu_multi_platform_test.sh $(OMI_ISO)
 
+qemu-multi-platform-court: iso $(BUILD_DIR)/polyform_witness_recompute
+	sh ./tools/qemu_multi_platform_court.sh $(OMI_ISO) $(BUILD_DIR)/qemu-multi-platform-court $(BUILD_DIR)/polyform_witness_recompute
+
+qemu-multi-platform-report-test:
+	node tests/qemu_multi_platform_report_test.js
+
 qemu-cross-arch-readiness:
 	sh ./tools/qemu_cross_arch_readiness.sh
 
@@ -666,6 +708,18 @@ unit-test:
 	$(MAKE) workbench-stream-overlay-package-test
 	$(MAKE) workbench-omilisp-declaration-test
 	$(MAKE) workbench-spom-triangulation-test
+	$(MAKE) workbench-omi-self-declaration-test
+	$(MAKE) workbench-polyform-cons-reconstruction-test
+	$(MAKE) workbench-orientation-incidence-blackboard-test
+	$(MAKE) workbench-network-runtime-resolver-test
+	$(MAKE) workbench-runtime-channel-manifest-test
+	$(MAKE) workbench-distributed-adapter-transport-registry-test
+	$(MAKE) workbench-raw-binary-decentralized-lattice-test
+	$(MAKE) workbench-raw-binary-chunk-index-test
+	$(MAKE) workbench-boundary-geometry-constitution-test
+	$(MAKE) workbench-omi-observer-lattice-sitter-test
+	$(MAKE) workbench-wordnet-prolog-semantic-grounding-test
+	$(MAKE) workbench-omi-transmutator-roundtrip-test
 	$(MAKE) workbench-block-image-test
 	$(MAKE) workbench-block-image-projection-test
 	$(MAKE) workbench-narrative-timeline-test
@@ -676,6 +730,7 @@ unit-test:
 	$(MAKE) workbench-opengl-runtime-test
 	$(MAKE) workbench-graphics-equivalence-test
 	$(MAKE) workbench-visual-equivalence-test
+	$(MAKE) qemu-multi-platform-report-test
 	$(MAKE) qemu-page-court-test
 	$(MAKE) qemu-mmio-device-court-test
 

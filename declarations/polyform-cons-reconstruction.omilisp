@@ -1,0 +1,91 @@
+(omi
+  (identity
+    (sid polyform-cons-reconstruction)
+    (title "Polyforms as OMI-CONS Metric Reconstructions")
+    (kind geometry.derived-doctrine)
+    (source "docs/PHASE-84-POLYFORM-CONS-RECONSTRUCTION-DOCTRINE.md"))
+  (address
+    (addr polyform-cons-reconstruction.self)
+    (locator omi-system.self)
+    (binding derived-geometry.binding.v0))
+  (scope
+    (fs omi)
+    (gs cons)
+    (rs metric-geometry)
+    (us polyform))
+  (rule
+    (statement "A polyform is a metric witness of an admissible CONS chain")
+    (authority derived-geometry)
+    (axiom false))
+  (canonical-ladder
+    (steps
+      (step
+        (sid cons-chain)
+        (order 0)
+        (role "abstract admissible continuation"))
+      (step
+        (sid unary-admissible-continuation)
+        (order 1)
+        (role "repeated same-kind incidence"))
+      (step
+        (sid spliced-incidence-chain)
+        (order 2)
+        (role "boundary-reconnected continuation path"))
+      (step
+        (sid reconstructed-metric-carrier)
+        (order 3)
+        (role "squared, triangulated, hexed, layered, or cubed carrier"))
+      (step
+        (sid polyform-diagram-cad-object)
+        (order 4)
+        (role "2D, 2.5D, or 3D projection object"))))
+  (basis
+    (family polyomino
+      (cell square)
+      (dimension 2d)
+      (reconstruction square-cell-cons))
+    (family polyiamond
+      (cell triangle)
+      (dimension 2d)
+      (reconstruction triangle-cell-cons))
+    (family polyhex
+      (cell hexagon)
+      (dimension 2d)
+      (reconstruction hex-cell-cons))
+    (family layered-polyomino
+      (cell square)
+      (dimension 2.5d)
+      (reconstruction z-indexed-cons-layer))
+    (family shadow-polycube
+      (cell square-shadow)
+      (dimension 2.5d)
+      (reconstruction projected-cube-cons-layer))
+    (family polycube
+      (cell cube)
+      (dimension 3d)
+      (reconstruction voxel-cons-complex)))
+  (relations
+    (projects cons-chain unary-admissible-continuation)
+    (splices unary-admissible-continuation spliced-incidence-chain)
+    (reconstructs spliced-incidence-chain reconstructed-metric-carrier)
+    (witnesses reconstructed-metric-carrier polyform-diagram-cad-object)
+    (projects polyform-diagram-cad-object svg)
+    (projects polyform-diagram-cad-object cad)
+    (projects polyform-diagram-cad-object world-object))
+  (guardrails
+    (guard derived-not-axiom
+      (statement "Polyform reconstruction is derived geometry, not a constitutional axiom"))
+    (guard projection-not-authority
+      (statement "SVG, CAD, and world-object surfaces are projections of the metric witness"))
+    (guard cons-incidence-authority
+      (statement "The admissible CONS incidence chain is the declared source for reconstruction")))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

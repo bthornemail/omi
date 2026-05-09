@@ -1,5 +1,8 @@
 # OMI Boundary-First Language Doctrine
 
+This document supports the sovereign doctrine source:
+[OMI Constitutional Geometry](OMI-CONSTITUTIONAL-GEOMETRY.md).
+
 OMI is not symbol-first. OMI is boundary-first.
 
 The foundational object of the system is not the glyph, token, keyword,

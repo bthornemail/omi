@@ -1,0 +1,48 @@
+table-01	Tetrahedron ( 3-simplex )	{3,3}
+table-01	Hexahedron Cube ( 3-cube )	{4,3}
+table-01	Octahedron ( 3-orthoplex )	{3,4}
+table-01	Dodecahedron	{5,3}
+table-01	Icosahedron	{3,5}
+table-02	Digonal hosohedron	{2,2}
+table-02	Trigonal hosohedron	{2,3}
+table-02	Square hosohedron	{2,4}
+table-02	Pentagonal hosohedron	{2,5}
+table-02	Hexagonal hosohedron	{2,6}
+table-03	Digonal dihedron	{2,2}
+table-03	Trigonal dihedron	{3,2}
+table-03	Square dihedron	{4,2}
+table-03	Pentagonal dihedron	{5,2}
+table-03	Hexagonal dihedron	{6,2}
+table-04	Small stellated dodecahedron	{5/2,5}
+table-04	Great dodecahedron	{5,5/2}
+table-04	Great stellated dodecahedron	{5/2,3}
+table-04	Great icosahedron	{3,5/2}
+table-06	5-cell ( 4-simplex )	{3,3,3}
+table-06	8-cell ( 4-cube ) (Tesseract)	{4,3,3}
+table-06	16-cell ( 4-orthoplex )	{3,3,4}
+table-06	24-cell	{3,4,3}
+table-06	120-cell	{5,3,3}
+table-06	600-cell	{3,3,5}
+table-08	regular-polytope-2-3-3	{2,3,3}
+table-08	regular-polytope-2-4-3	{2,4,3}
+table-08	regular-polytope-2-3-4	{2,3,4}
+table-08	regular-polytope-2-5-3	{2,5,3}
+table-08	regular-polytope-2-3-5	{2,3,5}
+table-09	Icosahedral 120-cell (faceted 600-cell)	{3,5,5/2}
+table-09	Small stellated 120-cell	{5/2,5,3}
+table-09	Great 120-cell	{5,5/2,5}
+table-09	Grand 120-cell	{5,3,5/2}
+table-09	Great stellated 120-cell	{5/2,3,5}
+table-09	Grand stellated 120-cell	{5/2,5,5/2}
+table-09	Great grand 120-cell	{5,5/2,3}
+table-09	Great icosahedral 120-cell (great faceted 600-cell)	{3,5/2,5}
+table-09	Grand 600-cell	{3,3,5/2}
+table-09	Great grand stellated 120-cell	{5/2,3,3}
+1-polytope	line segment	{}
+2-polytope	regular p-gon	{p}
+3-polytope-family	tetrahedron / 3-simplex	{3,3}
+3-polytope-family	cube / 3-cube	{4,3}
+3-polytope-family	octahedron / 3-orthoplex	{3,4}
+n-polytope-family	n-simplex	{3^(n-1)}
+n-polytope-family	n-cube	{4,3^(n-2)}
+n-polytope-family	n-orthoplex	{3^(n-2),4}

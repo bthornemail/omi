@@ -1,0 +1,184 @@
+(omi
+  (identity
+    (sid raw-binary-decentralized-lattice)
+    (title "Raw Binary Decentralized Lattice Integration Audit")
+    (kind lattice.integration-audit)
+    (source "docs/PHASE-89-RAW-BINARY-DECENTRALIZED-LATTICE-INTEGRATION-AUDIT.md"))
+  (address
+    (addr raw-binary-decentralized-lattice.self)
+    (locator distributed-adapter-transport-registry.self)
+    (binding raw-binary-lattice.integration.v0))
+  (scope
+    (fs omi)
+    (gs lattice)
+    (rs raw-binary)
+    (us integration))
+  (rule
+    (statement "Generalize by integration, not reinvention")
+    (raw-image-is-authority false)
+    (qemu-is-authority false)
+    (qmp-qapi-is-authority false)
+    (vfio-user-is-authority false)
+    (llvm-is-authority false)
+    (tcg-is-authority false)
+    (network-peer-is-authority false)
+    (canonical-declarations-and-receipts-are-authority true))
+  (existing-courts
+    (court phase-77-block-image-declaration
+      (phase 77)
+      (role declared-storage-topology)
+      (surface "workbench/src/block_image_declaration.js")
+      (doctrine "docs/PHASE-77-OMI-BLOCK-IMAGE-DECLARATION-COURT.md")
+      (reuse required))
+    (court phase-78-block-image-projection
+      (phase 78)
+      (role block-image-readout-projection)
+      (surface "workbench/src/block_image_projection.js")
+      (doctrine "docs/PHASE-78-BLOCK-IMAGE-PROJECTION-COURT.md")
+      (reuse required))
+    (court phase-83-omi-self-map
+      (phase 83)
+      (role canonical-system-map)
+      (surface "declarations/omi-system.omilisp")
+      (doctrine "docs/PHASE-83-OMI-IN-OMI-DECLARATIVE-MAPPING.md")
+      (reuse required))
+    (court phase-86-runtime-resolver
+      (phase 86)
+      (role bootable-runtime-resolver-doctrine)
+      (surface "declarations/network-bootable-runtime-resolver.omilisp")
+      (doctrine "docs/PHASE-86-NETWORK-BOOTABLE-OMI-RUNTIME-RESOLVER.md")
+      (reuse required))
+    (court phase-87-runtime-channel-manifest
+      (phase 87)
+      (role local-runtime-channel-names)
+      (surface "declarations/runtime-channel-manifest.omilisp")
+      (doctrine "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md")
+      (reuse required))
+    (court phase-88-distributed-adapter-registry
+      (phase 88)
+      (role distributed-device-web-adapter-vocabulary)
+      (surface "declarations/distributed-adapter-transport-registry.omilisp")
+      (doctrine "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md")
+      (reuse required)))
+  (integration-ladder
+    (step canonical-declaration
+      (order 0)
+      (role identity-authority))
+    (step block-image-lattice
+      (order 1)
+      (role declared-raw-binary-topology)
+      (reuses phase-77-block-image-declaration))
+    (step block-projection
+      (order 2)
+      (role deterministic-readout)
+      (reuses phase-78-block-image-projection))
+    (step runtime-resolver
+      (order 3)
+      (role local-in-memory-resolver)
+      (reuses phase-86-runtime-resolver))
+    (step channel-manifest
+      (order 4)
+      (role local-posix-channel-naming)
+      (reuses phase-87-runtime-channel-manifest))
+    (step distributed-adapters
+      (order 5)
+      (role transport-device-web-bindings)
+      (reuses phase-88-distributed-adapter-registry))
+    (step future-peer-sync
+      (order 6)
+      (role receipt-first-peer-exchange)
+      (missing-court peer-chunk-sync-protocol))
+    (step future-repair
+      (order 7)
+      (role self-healing-replay-repair)
+      (missing-court self-healing-repair-court)))
+  (missing-courts
+    (court raw-binary-chunk-receipt-index
+      (role deterministic-chunk-index)
+      (needed true)
+      (summary "index raw image chunks by offset size sparse marker hash and receipt"))
+    (court qemu-qmp-block-adapter-declaration
+      (role qemu-block-projection-adapter)
+      (needed true)
+      (summary "declare selected QMP/QAPI block primitives as projection adapters"))
+    (court vfio-user-device-adapter-declaration
+      (role external-device-resolver-boundary)
+      (needed true)
+      (summary "declare vfio-user-style out-of-process device resolver surface"))
+    (court peer-chunk-sync-protocol
+      (role receipt-first-peer-exchange)
+      (needed true)
+      (summary "exchange chunks by receipt before admitting peer data"))
+    (court self-healing-repair-court
+      (role missing-or-corrupt-chunk-repair)
+      (needed true)
+      (summary "detect missing or corrupt chunks and repair from verified receipts"))
+    (court llvm-tcg-projection-witness-adapter
+      (role compiled-and-emulated-projection-witness)
+      (needed true)
+      (summary "declare LLVM as compilation projection and TCG as portability witness")))
+  (adapter-roles
+    (adapter qemu
+      (role block-device-projection-engine)
+      (authority false))
+    (adapter qmp-qapi
+      (role management-schema-and-control-plane-adapter)
+      (authority false))
+    (adapter vfio-user
+      (role out-of-process-device-resolver-socket-boundary)
+      (authority false))
+    (adapter llvm
+      (role compilation-projection-backend)
+      (authority false))
+    (adapter tcg
+      (role deterministic-portability-witness)
+      (authority false))
+    (adapter raw-image
+      (role replayable-binary-carrier)
+      (authority false))
+    (adapter network-peer
+      (role receipt-synchronization-counterparty)
+      (authority false)))
+  (guardrails
+    (guard no-reimplementation
+      (statement "Do not duplicate Phase 77 or Phase 78 block-image logic"))
+    (guard qemu-not-authority
+      (statement "QEMU projects the block lattice but does not define identity"))
+    (guard qmp-qapi-not-authority
+      (statement "QMP and QAPI are adapter schemas and control surfaces, not authority"))
+    (guard vfio-user-not-authority
+      (statement "vfio-user externalizes device resolution but does not define declaration truth"))
+    (guard llvm-not-authority
+      (statement "LLVM compiles projections but compiled artifacts are replay surfaces"))
+    (guard tcg-not-authority
+      (statement "TCG witnesses portability and replay but is not the performance or authority baseline"))
+    (guard raw-image-not-authority
+      (statement "A raw binary image is a replayable carrier of declared lattice state"))
+    (guard peer-not-authority
+      (statement "A connected peer is not trusted until receipts verify admitted state")))
+  (future-phases
+    (phase raw-binary-chunk-receipt-index
+      (after 89)
+      (type receipt-court))
+    (phase qemu-qmp-block-adapter
+      (after raw-binary-chunk-receipt-index)
+      (type adapter-declaration))
+    (phase vfio-user-device-resolver
+      (after qemu-qmp-block-adapter)
+      (type adapter-declaration))
+    (phase peer-chunk-sync
+      (after vfio-user-device-resolver)
+      (type protocol-doctrine))
+    (phase self-healing-repair
+      (after peer-chunk-sync)
+      (type repair-court)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

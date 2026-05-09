@@ -1,5 +1,33 @@
 # omi
 
+OMI is boundary-first, not parser-first.
+
+> OMI treats boundaries, segmentation, and traversal as constitutional
+> structure; parsing, rendering, messaging, and presentation are projections
+> over that structure.
+
+```text
+canonical bytes
+→ admissible segmentation
+→ declared structure
+→ gauge law
+→ propagation
+→ projection
+→ receipts
+→ presentation
+```
+
+The constitutional doctrine:
+
+- [DOCTRINE.md](/root/omi/DOCTRINE.md)
+- [docs/OMI-CONSTITUTIONAL-GEOMETRY.md](/root/omi/docs/OMI-CONSTITUTIONAL-GEOMETRY.md)
+
+Supporting doctrine surfaces:
+
+- [docs/OMI-BOUNDARY-FIRST-LANGUAGE-DOCTRINE.md](/root/omi/docs/OMI-BOUNDARY-FIRST-LANGUAGE-DOCTRINE.md)
+- [docs/PHASE-80-MESSAGING-CONFLICT-AUDIT.md](/root/omi/docs/PHASE-80-MESSAGING-CONFLICT-AUDIT.md)
+- [docs/PHASE-81-PROPAGATION-DOCTRINE.md](/root/omi/docs/PHASE-81-PROPAGATION-DOCTRINE.md)
+
 OMI is an experimental bootable graph-machine substrate. The project starts
 with a QEMU-loadable flat memory image and grows toward an OMI-LISP layer that
 executes as close to bare metal as possible.
@@ -13,9 +41,9 @@ The guiding model is simple and strict:
 - external encodings are projections, not the source of truth
 
 See [AGENTS.md](/root/omi/AGENTS.md) for the repository coordination contract,
-[docs/README.md](/root/omi/docs/README.md) for the documentation map, and
-[docs/BOOT_MODEL.md](/root/omi/docs/BOOT_MODEL.md) for the first boot target.
-The first-principles geometry/runtime doctrine is
+[docs/README.md](/root/omi/docs/README.md) for the canonical documentation map,
+and [docs/BOOT_MODEL.md](/root/omi/docs/BOOT_MODEL.md) for the first boot
+target. The first-principles geometry/runtime doctrine is
 [docs/OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md](/root/omi/docs/OMI-FUNDAMENTAL-GEOMETRY-RUNTIME.md).
 
 The normative graph constraint layer is [docs/RULES.omi](/root/omi/docs/RULES.omi).

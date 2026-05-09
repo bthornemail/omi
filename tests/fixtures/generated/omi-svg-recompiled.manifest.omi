@@ -1,0 +1,16 @@
+(omi
+  (identity
+    (sid omi-svg-recompiled-bundle)
+    (title "OMI SVG Recompiled Bundle Manifest")
+    (kind package.manifest)
+    (source "omi-svg-recompiled.omi"))
+  (package
+    (entry (sid genaille-division-rods) (source "Genaille_division_rods.txt") (digest "sha256:30463fd4d0dd66f416e993d083a709cc22af8c9bd27eedb0c391681437f13381") (elements 1087))
+    (entry (sid karnaugh-map-torus) (source "Karnaugh_map_torus.txt") (digest "sha256:35eb5dcfd35e9a9dfa4ce44d0fa00b3ae8feb802712294f9dc86f8c89066074c") (elements 110))
+    (entry (sid four-bit-adder-carry-lookahead) (source "Four_bit_adder_with_carry_lookahead.txt") (digest "sha256:27b8c8343f923e215204544cd2896b8bc4cc88df736217c1da03fb42dbffea89") (elements 421))
+    (entry (sid double-cube-corner-distances) (source "Distances_between_double_cube_corners.txt") (digest "sha256:ecc448686dc01fe2b62bad5976b9303154ce938525ab91156ed442a99396a4aa") (elements 17))
+    (entry (sid smith-chart-generator) (source "Smith_chart_gen.txt") (digest "sha256:3cb1f492beb5f4664a3c24995e9f2a68658c3058a7be69e175bbc3566d099156") (elements 1550))
+    (entry (sid angle-trisection-60deg) (source "01-_Dreiteilung_des_Winkels_60°.txt") (digest "sha256:5a8a2023ad14c58354c875721a49e7a3421b1cd8a98a7c7f3539080139b6d4b9") (elements 1974))
+  )
+  (receipts
+    (package "sha256:093313edb95a99122c33668625ff9930c0d48826489b3fd97990168672a99544")))

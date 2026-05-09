@@ -1,0 +1,185 @@
+(omi
+  (identity
+    (sid distributed-adapter-transport-registry)
+    (title "Distributed Adapter Transport Registry")
+    (kind runtime.adapter-transport-registry)
+    (source "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md"))
+  (address
+    (addr distributed-adapter-transport-registry.self)
+    (locator runtime-channel-manifest.self)
+    (binding distributed-adapter-transport-registry.binding.v0))
+  (scope
+    (fs omi)
+    (gs runtime)
+    (rs adapter)
+    (us transport))
+  (rule
+    (statement "Phase 88 gives OMI peers a transport vocabulary without trusting transport as identity")
+    (adapter-is-authority false)
+    (transport-is-identity false)
+    (device-is-declaration false))
+  (adapter-classes
+    (class network
+      (role peer-propagation-surface)
+      (authority projection-binding))
+    (class local-ipc
+      (role local-process-propagation-surface)
+      (authority projection-binding))
+    (class web
+      (role browser-and-semantic-web-projection)
+      (authority projection-binding))
+    (class ledger
+      (role append-only-receipt-anchor)
+      (authority witness-binding))
+    (class filesystem
+      (role inode-and-path-binding)
+      (authority projection-binding))
+    (class device-bus
+      (role physical-device-projection-surface)
+      (authority projection-binding)))
+  (capabilities
+    (capability use-tcp
+      (domain network)
+      (authority package_receipt)
+      (effect stream-propagation))
+    (capability use-udp
+      (domain network)
+      (authority package_receipt)
+      (effect datagram-propagation))
+    (capability use-ipc
+      (domain local-ipc)
+      (authority projection_receipt)
+      (effect local-process-propagation))
+    (capability use-fifo
+      (domain local-ipc)
+      (authority projection_receipt)
+      (effect fifo-propagation))
+    (capability use-unix-socket
+      (domain local-ipc)
+      (authority projection_receipt)
+      (effect local-socket-propagation))
+    (capability use-w3c-web
+      (domain web)
+      (authority projection_receipt)
+      (effect web-projection))
+    (capability anchor-btc-ledger
+      (domain ledger)
+      (authority witness-binding)
+      (effect append-only-receipt-anchor))
+    (capability bind-inode
+      (domain filesystem)
+      (authority projection_receipt)
+      (effect filesystem-address-binding))
+    (capability use-gpio
+      (domain device-bus)
+      (authority projection_receipt)
+      (effect physical-signal-edge))
+    (capability use-scsi
+      (domain device-bus)
+      (authority projection_receipt)
+      (effect block-command-surface))
+    (capability use-i2c
+      (domain device-bus)
+      (authority projection_receipt)
+      (effect peripheral-bus-channel)))
+  (adapters
+    (adapter tcp
+      (class network)
+      (role routable-peer-stream)
+      (binding tcp-port)
+      (capability use-tcp)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter udp
+      (class network)
+      (role datagram-propagation-channel)
+      (binding udp-port)
+      (capability use-udp)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter ipc
+      (class local-ipc)
+      (role local-process-channel)
+      (binding process-handle)
+      (capability use-ipc)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter fifo
+      (class local-ipc)
+      (role declared-propagation-edge)
+      (binding posix-fifo-path)
+      (capability use-fifo)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter unix-sock
+      (class local-ipc)
+      (role local-socket-surface)
+      (binding unix-domain-socket-path)
+      (capability use-unix-socket)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter w3c-web
+      (class web)
+      (role browser-semantic-web-projection)
+      (binding uri)
+      (capability use-w3c-web)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter btc-ledger
+      (class ledger)
+      (role append-only-receipt-anchor)
+      (binding transaction-or-script-witness)
+      (capability anchor-btc-ledger)
+      (authority witness-binding)
+      (runtime-opened false))
+    (adapter inode
+      (class filesystem)
+      (role filesystem-address-binding)
+      (binding inode-path)
+      (capability bind-inode)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter gpio
+      (class device-bus)
+      (role physical-signal-edge)
+      (binding pin-line)
+      (capability use-gpio)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter scsi
+      (class device-bus)
+      (role block-device-command-surface)
+      (binding target-lun-command)
+      (capability use-scsi)
+      (authority projection-binding)
+      (runtime-opened false))
+    (adapter i2c
+      (class device-bus)
+      (role peripheral-bus-channel)
+      (binding bus-address-register)
+      (capability use-i2c)
+      (authority projection-binding)
+      (runtime-opened false)))
+  (guardrails
+    (guard adapter-not-authority
+      (statement "External adapters are capability bindings over OMI declarations, not replacement authorities"))
+    (guard transport-not-identity
+      (statement "Transport surfaces do not define identity"))
+    (guard device-not-declaration
+      (statement "Device surfaces do not become declarations"))
+    (guard capabilities-not-permissions
+      (statement "Adapter bindings reference declared capabilities, not raw OS permissions"))
+    (guard receipts-required
+      (statement "Runtime effects over adapters must emit receipts"))
+    (guard no-runtime-open
+      (statement "Phase 88 declares adapter vocabulary and does not open transports or devices")))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

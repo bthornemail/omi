@@ -1,6 +1,7 @@
 # OMI Core Principle
 
 See also:
+[OMI Constitutional Geometry](OMI-CONSTITUTIONAL-GEOMETRY.md),
 [OMI: A Pre-OS Measurement Machine](PRE-OS-MEASUREMENT-MACHINE.md),
 [OMI Canonical Encoding Law](CANONICAL-ENCODING-LAW.md), and the boundary-first
 language doctrine at

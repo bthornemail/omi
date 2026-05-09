@@ -1,0 +1,403 @@
+(omi
+  (identity
+    (sid omi-system)
+    (title "OMI Declarative Self Map")
+    (kind constitutional.self-map)
+    (source "docs/OMI-CONSTITUTIONAL-GEOMETRY.md"))
+  (address
+    (addr omi-system.self)
+    (locator addr128.v0)
+    (binding declaration.self-map.v0))
+  (scope
+    (fs omi)
+    (gs constitution)
+    (rs declaration)
+    (us self-map))
+  (causal-ladder
+    (steps
+      (step
+        (sid canonical-bytes)
+        (order 0)
+        (role substrate)
+        (law "byte identity is preserved before interpretation"))
+      (step
+        (sid admissible-segmentation)
+        (order 1)
+        (role boundary)
+        (law "boundaries define traversal before parsing"))
+      (step
+        (sid declared-structure)
+        (order 2)
+        (role authority)
+        (law "declarations define meaning boundaries"))
+      (step
+        (sid gauge-law)
+        (order 3)
+        (role hearing)
+        (law "gauge defines local transformation over byte-resolved structure"))
+      (step
+        (sid propagation)
+        (order 4)
+        (role wave)
+        (law "waves describe traversal through declared segmented structure"))
+      (step
+        (sid projection)
+        (order 5)
+        (role observation)
+        (law "projection is observed spectrum, not source authority"))
+      (step
+        (sid receipts)
+        (order 6)
+        (role coherence)
+        (law "receipts witness identity, projection, package, and view separately"))
+      (step
+        (sid presentation)
+        (order 7)
+        (role rendering)
+        (law "presentation surfaces projections without rewriting identity"))))
+  (byte-strata
+    (bands
+      (band
+        (sid latent-control-reference)
+        (range "0x00..0x1F")
+        (role "latent control and reference substrate"))
+      (band
+        (sid omicron-boundary)
+        (range "0x20")
+        (role "admissible propagation boundary and first printable separation"))
+      (band
+        (sid operator-aperture)
+        (range "0x21..0x2F")
+        (role "operator, masking, and CONS aperture geometry"))
+      (band
+        (sid measurement-geometry)
+        (range "0x30..0x3F")
+        (role "measurement, digit, and simplex visibility"))
+      (band
+        (sid projection-field)
+        (range "0x40..0x7F")
+        (role "symbolic projection and presentation field"))))
+  (constitutional-laws
+    (laws
+      (law
+        (sid omicron-boundary-law)
+        (statement "0x20 is the admissible threshold between latent structure and observable projection"))
+      (law
+        (sid cons-aperture-law)
+        (statement "CONS is an oriented propagation aperture; car opens and cdr closes traversal"))
+      (law
+        (sid projection-law)
+        (statement "Parsing is projection, not authority"))
+      (law
+        (sid receipt-separation-law)
+        (statement "identity, projection, package, and view receipts remain distinct"))
+      (law
+        (sid propagation-law)
+        (statement "Gauge is local field law; wave is propagation; receipt is coherence witness; projection is observed spectrum"))))
+  (segmentation-planes
+    (planes
+      (plane
+        (sid FS)
+        (role "full world or document scope")
+        (authority structural-coordinate))
+      (plane
+        (sid GS)
+        (role "grouped region or scene scope")
+        (authority structural-coordinate))
+      (plane
+        (sid RS)
+        (role "record, line, path, or statement scope")
+        (authority structural-coordinate))
+      (plane
+        (sid US)
+        (role "unit, token, glyph, or cell scope")
+        (authority structural-coordinate))))
+  (semantic-projection
+    (surface S-P-O-M)
+    (authority derived-triangulation)
+    (source-authority false)
+    (terms
+      (term
+        (sid S)
+        (role subject)
+        (meaning "declared source, node, or identity anchor"))
+      (term
+        (sid P)
+        (role predicate)
+        (meaning "relation, propagation path, or structural edge"))
+      (term
+        (sid O)
+        (role object)
+        (meaning "target, value, resonance point, or terminal state"))
+      (term
+        (sid M)
+        (role modality)
+        (meaning "authority, scope, evidence, and phase condition"))))
+  (message-roles
+    (rule "message is not an authority class")
+    (roles
+      (role
+        (sid declaration)
+        (authority identity_receipt)
+        (phase source))
+      (role
+        (sid event)
+        (authority projection_receipt)
+        (phase impulse))
+      (role
+        (sid packet)
+        (authority package_receipt)
+        (phase transport))
+      (role
+        (sid receipt)
+        (authority coherence-witness)
+        (phase alignment))
+      (role
+        (sid projection)
+        (authority projection_receipt)
+        (phase observation))
+      (role
+        (sid view)
+        (authority view_receipt)
+        (phase presentation))
+      (role
+        (sid trust)
+        (authority identity_receipt)
+        (phase seal))
+      (role
+        (sid narrative)
+        (authority projection_receipt)
+        (phase semantic-resonance))
+      (role
+        (sid carrier)
+        (authority package_receipt)
+        (phase replay-envelope))))
+  (receipt-roles
+    (roles
+      (receipt
+        (sid identity_receipt)
+        (role "declaration authority"))
+      (receipt
+        (sid projection_receipt)
+        (role "readout and reconciliation witness"))
+      (receipt
+        (sid package_receipt)
+        (role "portable serialization witness"))
+      (receipt
+        (sid view_receipt)
+        (role "presentation state"))))
+  (derived-geometries
+    (geometry polyform-cons-reconstruction
+      (kind geometry.derived-doctrine)
+      (rule "A polyform is a metric witness of an admissible CONS chain")
+      (declaration "declarations/polyform-cons-reconstruction.omilisp")
+      (doctrine "docs/PHASE-84-POLYFORM-CONS-RECONSTRUCTION-DOCTRINE.md")))
+  (derived-algebras
+    (algebra orientation-incidence-blackboard
+      (kind algebra.derived-orientation-doctrine)
+      (rule "The blackboard selects an incidence frame and resolves admissibility")
+      (declaration "declarations/orientation-incidence-blackboard.omilisp")
+      (corpus "declarations/trigintaduonion-triads.omilisp")
+      (doctrine "docs/PHASE-85-ORIENTATION-INCIDENCE-BLACKBOARD-DOCTRINE.md")))
+  (runtime-resolvers
+    (resolver network-bootable-runtime-resolver
+      (kind runtime.resolver-doctrine)
+      (rule "The runtime lattice is mutable and local; the declaration lattice remains canonical and replayable")
+      (declaration "declarations/network-bootable-runtime-resolver.omilisp")
+      (doctrine "docs/PHASE-86-NETWORK-BOOTABLE-OMI-RUNTIME-RESOLVER.md")))
+  (runtime-manifests
+    (manifest runtime-channel-manifest
+      (kind runtime.channel-manifest)
+      (rule "Phase 87 names the runtime lattice before the runtime opens it")
+      (declaration "declarations/runtime-channel-manifest.omilisp")
+      (doctrine "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md")))
+  (adapter-registries
+    (registry distributed-adapter-transport-registry
+      (kind runtime.adapter-transport-registry)
+      (rule "Phase 88 gives OMI peers a transport vocabulary without trusting transport as identity")
+      (declaration "declarations/distributed-adapter-transport-registry.omilisp")
+      (doctrine "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md")))
+  (integration-audits
+    (audit raw-binary-decentralized-lattice
+      (kind lattice.integration-audit)
+      (rule "Generalize by integration, not reinvention")
+      (declaration "declarations/raw-binary-decentralized-lattice.omilisp")
+      (doctrine "docs/PHASE-89-RAW-BINARY-DECENTRALIZED-LATTICE-INTEGRATION-AUDIT.md")))
+  (receipt-courts
+    (court raw-binary-chunk-receipt-index
+      (kind lattice.chunk-receipt-index)
+      (rule "Phase 90 makes raw binary shareable by receipt before it becomes networked by protocol")
+      (module "workbench/src/raw_binary_chunk_index.js")
+      (declaration "declarations/raw-binary-chunk-receipt-index.omilisp")
+      (doctrine "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")))
+  (observer-resolvers
+    (resolver omi-observer-lattice-sitter
+      (kind observer.projection-resolver)
+      (rule "The observer selects an admissible orientation frame and translates boundary structure into receipt-verifiable projections")
+      (declaration "declarations/omi-observer-lattice-sitter.omilisp")
+      (doctrine "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md")))
+  (semantic-grounding-adapters
+    (adapter wordnet-prolog-semantic-grounding
+      (kind semantic.grounding-adapter)
+      (rule "WordNet and Prolog ground language and logic projections over the OMI CONS lattice; they do not define authority")
+      (declaration "declarations/wordnet-prolog-semantic-grounding.omilisp")
+      (doctrine "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md")))
+  (transmutator-courts
+    (court omi-transmutator-roundtrip
+      (kind transmutator.roundtrip-court)
+      (rule "The transmutator may change notation, carrier, or projection while preserving declared identity unless it explicitly emits a changed receipt")
+      (module "workbench/src/omi_transmutator.js")
+      (declaration "declarations/omi-transmutator-roundtrip.omilisp")
+      (doctrine "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")))
+  (surfaces
+    (paths
+      (surface
+        (sid constitutional-geometry)
+        (path "docs/OMI-CONSTITUTIONAL-GEOMETRY.md")
+        (role sovereign-doctrine))
+      (surface
+        (sid ontology)
+        (path "docs/ONTOLOGY.omi")
+        (role vocabulary))
+      (surface
+        (sid rules)
+        (path "docs/RULES.omi")
+        (role normative-constraints))
+      (surface
+        (sid gauge-table)
+        (path "docs/GAUGE_TABLE.omi")
+        (role byte-hearing-table))
+      (surface
+        (sid frames)
+        (path "docs/FRAMES.omi")
+        (role frame-contract))
+      (surface
+        (sid core-principle)
+        (path "docs/CORE-PRINCIPLE.md")
+        (role constitutional-summary))
+      (surface
+        (sid phase-80-messaging-conflict-audit)
+        (path "docs/PHASE-80-MESSAGING-CONFLICT-AUDIT.md")
+        (role conflict-audit))
+      (surface
+        (sid phase-81-propagation-doctrine)
+        (path "docs/PHASE-81-PROPAGATION-DOCTRINE.md")
+        (role propagation-doctrine))
+      (surface
+        (sid phase-82-inclusion-audit)
+        (path "docs/PHASE-82-OPERATOR-BAND-CONS-TRIE-INCLUSION-AUDIT.md")
+        (role inclusion-audit))
+      (surface
+        (sid phase-84-polyform-cons-reconstruction)
+        (path "docs/PHASE-84-POLYFORM-CONS-RECONSTRUCTION-DOCTRINE.md")
+        (role derived-geometry-doctrine))
+      (surface
+        (sid polyform-cons-reconstruction-declaration)
+        (path "declarations/polyform-cons-reconstruction.omilisp")
+        (role derived-geometry-declaration))
+      (surface
+        (sid phase-85-orientation-incidence-blackboard)
+        (path "docs/PHASE-85-ORIENTATION-INCIDENCE-BLACKBOARD-DOCTRINE.md")
+        (role derived-orientation-doctrine))
+      (surface
+        (sid orientation-incidence-blackboard-declaration)
+        (path "declarations/orientation-incidence-blackboard.omilisp")
+        (role derived-orientation-declaration))
+      (surface
+        (sid trigintaduonion-triads-corpus)
+        (path "declarations/trigintaduonion-triads.omilisp")
+        (role canonical-reference-corpus))
+      (surface
+        (sid trigintaduonion-triads-fixture)
+        (path "tests/fixtures/trigintaduonion-triads.tsv")
+        (role source-reference-fixture))
+      (surface
+        (sid phase-86-network-bootable-runtime-resolver)
+        (path "docs/PHASE-86-NETWORK-BOOTABLE-OMI-RUNTIME-RESOLVER.md")
+        (role runtime-resolver-doctrine))
+      (surface
+        (sid network-bootable-runtime-resolver-declaration)
+        (path "declarations/network-bootable-runtime-resolver.omilisp")
+        (role runtime-resolver-declaration))
+      (surface
+        (sid phase-87-runtime-channel-manifest)
+        (path "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md")
+        (role runtime-channel-manifest-doctrine))
+      (surface
+        (sid runtime-channel-manifest-declaration)
+        (path "declarations/runtime-channel-manifest.omilisp")
+        (role runtime-channel-manifest-declaration))
+      (surface
+        (sid phase-88-distributed-adapter-transport-registry)
+        (path "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md")
+        (role adapter-transport-registry-doctrine))
+      (surface
+        (sid distributed-adapter-transport-registry-declaration)
+        (path "declarations/distributed-adapter-transport-registry.omilisp")
+        (role adapter-transport-registry-declaration))
+      (surface
+        (sid phase-89-raw-binary-decentralized-lattice)
+        (path "docs/PHASE-89-RAW-BINARY-DECENTRALIZED-LATTICE-INTEGRATION-AUDIT.md")
+        (role raw-binary-lattice-integration-audit))
+      (surface
+        (sid raw-binary-decentralized-lattice-declaration)
+        (path "declarations/raw-binary-decentralized-lattice.omilisp")
+        (role raw-binary-lattice-integration-declaration))
+      (surface
+        (sid phase-90-raw-binary-chunk-receipt-index)
+        (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+        (role raw-binary-chunk-receipt-index-doctrine))
+      (surface
+        (sid raw-binary-chunk-receipt-index-declaration)
+        (path "declarations/raw-binary-chunk-receipt-index.omilisp")
+        (role raw-binary-chunk-receipt-index-declaration))
+      (surface
+        (sid raw-binary-chunk-index-module)
+        (path "workbench/src/raw_binary_chunk_index.js")
+        (role raw-binary-chunk-index-module))
+      (surface
+        (sid phase-91-boundary-geometry-constitution)
+        (path "docs/PHASE-91-BOUNDARY-GEOMETRY-CONSTITUTION.md")
+        (role boundary-geometry-constitution-doctrine))
+      (surface
+        (sid boundary-geometry-constitution-declaration)
+        (path "declarations/boundary-geometry-constitution.omilisp")
+        (role boundary-geometry-constitution-declaration))
+      (surface
+        (sid phase-93-omi-observer-lattice-sitter)
+        (path "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md")
+        (role observer-lattice-sitter-doctrine))
+      (surface
+        (sid omi-observer-lattice-sitter-declaration)
+        (path "declarations/omi-observer-lattice-sitter.omilisp")
+        (role observer-lattice-sitter-declaration))
+      (surface
+        (sid phase-94-wordnet-prolog-semantic-grounding)
+        (path "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md")
+        (role semantic-grounding-adapter-doctrine))
+      (surface
+        (sid wordnet-prolog-semantic-grounding-declaration)
+        (path "declarations/wordnet-prolog-semantic-grounding.omilisp")
+        (role semantic-grounding-adapter-declaration))
+      (surface
+        (sid phase-95-omi-transmutator-roundtrip)
+        (path "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")
+        (role transmutator-roundtrip-court-doctrine))
+      (surface
+        (sid omi-transmutator-roundtrip-declaration)
+        (path "declarations/omi-transmutator-roundtrip.omilisp")
+        (role transmutator-roundtrip-court-declaration))
+      (surface
+        (sid omi-transmutator-module)
+        (path "workbench/src/omi_transmutator.js")
+        (role transmutator-roundtrip-module))))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))
