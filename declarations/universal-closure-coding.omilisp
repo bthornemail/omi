@@ -1,0 +1,125 @@
+(omi
+  (identity
+    (sid universal-closure-coding)
+    (title "Universal Closure Coding for 64-Ion Blackboard Pairing")
+    (kind coding.universal-closure-law)
+    (source "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md"))
+  (address
+    (addr universal-closure-coding.self)
+    (locator sixty-four-ion-blackboard-pairing.self)
+    (binding closure-coding.v0))
+  (scope
+    (fs omi)
+    (gs coding)
+    (rs closure)
+    (us blackboard))
+  (rule
+    (statement "A self-delimiting code is a boundary law: it carries not only the value, but the condition under which the value closes")
+    (authority derived-coding)
+    (axiom false))
+  (closure-ladder
+    (step unoperated-closure
+      (order 0)
+      (role closed-admissible-null))
+    (step operated-closure
+      (order 1)
+      (role explicitly-differentiated-null))
+    (step cons-edge
+      (order 2)
+      (role oriented-boundary-pair))
+    (step paired-64-ion-surface
+      (order 3)
+      (role read-write-closure-surface))
+    (step unary-boundary-spine
+      (order 4)
+      (role self-delimiting-spine))
+    (step closure-condition
+      (order 5)
+      (role boundary-termination-law))
+    (step encoded-payload
+      (order 6)
+      (role carrier-projection))
+    (step inverse-readout
+      (order 7)
+      (role decoded-boundary-reconstruction))
+    (step receipt-witness
+      (order 8)
+      (role coherence-witness)))
+  (coding-families
+    (family unary
+      (role boundary-spine)
+      (authority false))
+    (family elias
+      (role self-delimiting-length-code)
+      (authority false))
+    (family fibonacci
+      (role self-delimiting-growth-code)
+      (authority false))
+    (family golomb-rice
+      (role quotient-remainder-closure-code)
+      (authority false))
+    (family binary64
+      (role fixed-width-symbolic-projection)
+      (authority false))
+    (family ecd
+      (role endian-compatible-decode-projection)
+      (authority false))
+    (family endian-variant
+      (role orientation-preserving-carrier-variant)
+      (authority false)))
+  (carrier-projections
+    (carrier character-encoded-form
+      (role readable-notation-carrier)
+      (authority false))
+    (carrier symbol-encoded-form
+      (role symbolic-notation-carrier)
+      (authority false))
+    (carrier binary64-form
+      (role fixed-width-binary-projection)
+      (authority false))
+    (carrier ecd-endian-variant
+      (role endian-compatible-carrier)
+      (authority false))
+    (carrier barcode-carrier
+      (role sealed-visual-carrier)
+      (authority false))
+    (carrier raw-binary-carrier
+      (role byte-carrier)
+      (authority false)))
+  (isomorphism-rule
+    (preserve closure-boundary)
+    (preserve cons-orientation)
+    (preserve payload-readout)
+    (preserve receipt-witness)
+    (statement "Different carriers are isomorphic only when they preserve closure boundary, CONS orientation, payload readout, and receipt witness"))
+  (guardrails
+    (guard universal-code-not-authority
+      (statement "Universal codes are compatible closure laws, not authority"))
+    (guard binary64-not-authority
+      (statement "binary64 is a carrier projection, not authority"))
+    (guard ecd-endian-not-authority
+      (statement "ECD and endian variants are orientation-preserving carriers, not authority"))
+    (guard character-symbol-not-authority
+      (statement "Character and symbol encodings are notation carriers, not authority"))
+    (guard declarations-and-receipts-authority
+      (statement "Canonical declarations and receipts remain authority")))
+  (references
+    (surface phase-97-sixty-four-ion-blackboard-pairing
+      (path "docs/PHASE-97-SIXTY-FOUR-ION-BLACKBOARD-PAIRING-DOCTRINE.md")
+      (role pairwise-blackboard-notation-surface))
+    (surface phase-90-raw-binary-chunk-receipt-index
+      (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+      (role raw-binary-receipt-witness))
+    (surface phase-95-transmutator
+      (path "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")
+      (role notation-carrier-projection-transmutator)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

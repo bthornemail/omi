@@ -1,0 +1,147 @@
+(omi
+  (identity
+    (sid sixty-four-ion-blackboard-pairing)
+    (title "64-Ion Blackboard Pairing Doctrine")
+    (kind algebra.pairwise-blackboard-doctrine)
+    (source "docs/PHASE-97-SIXTY-FOUR-ION-BLACKBOARD-PAIRING-DOCTRINE.md"))
+  (address
+    (addr sixty-four-ion-blackboard-pairing.self)
+    (locator orientation-incidence-blackboard.self)
+    (binding blackboard.pairwise-notation.v0))
+  (scope
+    (fs omi)
+    (gs blackboard)
+    (rs pairwise-notation)
+    (us orientation-surface))
+  (rule
+    (statement "The 64-ion surface is the pair-wise notation layer that lets trigintaduonion triads operate as blackboard resolver frames over OMI boundaries")
+    (authority derived-orientation)
+    (axiom false))
+  (compatibility
+    (trigintaduonion-triads
+      (role incidence-triad-board)
+      (units 32)
+      (imaginary-units 31)
+      (distinguished-triples 155)
+      (authority false))
+    (sixty-four-ion-surface
+      (role pairwise-blackboard-notation-surface)
+      (states 64)
+      (authority false))
+    (omi-constitutional-surface
+      (range "0x00..0x3F")
+      (states 64)
+      (role complete-constitutional-orientation-surface)
+      (authority false)))
+  (surface-split
+    (half latent-control-incidence
+      (range "0x00..0x1F")
+      (role "latent control and incidence half"))
+    (half operated-projectable-measurement
+      (range "0x20..0x3F")
+      (role "operated projectable and measurement half"))
+    (dual projected-symbolic-expansion
+      (range "0x40..0x7F")
+      (role "projected readable dual surface")))
+  (pairing-axes
+    (pair unit-dual
+      (left unit)
+      (right dual)
+      (role algebraic-mirror))
+    (pair claim-counterclaim
+      (left claim)
+      (right counterclaim)
+      (role evidence-balance))
+    (pair car-cdr
+      (left car)
+      (right cdr)
+      (role cons-boundary))
+    (pair source-sink
+      (left source)
+      (right sink)
+      (role propagation-edge))
+    (pair read-write
+      (left read)
+      (right write)
+      (role blackboard-io))
+    (pair open-close
+      (left open)
+      (right close)
+      (role circumscription))
+    (pair null-operated-null
+      (left closed-admissible-null)
+      (right explicitly-differentiated-null)
+      (role boundary-excitation)))
+  (blackboard-pair
+    (sid pending-pattern-selected-frame)
+    (left pending-pattern)
+    (right selected-frame)
+    (orientation dual)
+    (resolver receipt-seeded)
+    (admission receipt-verified)
+    (authority false))
+  (resolution-ladder
+    (step closure
+      (order 0)
+      (role closed-admissible-null))
+    (step operated-closure
+      (order 1)
+      (role explicitly-differentiated-null))
+    (step cons-edge
+      (order 2)
+      (role oriented-boundary-edge))
+    (step triad-incidence-frame
+      (order 3)
+      (role local-spom-frame))
+    (step trigintaduonion-board
+      (order 4)
+      (role incidence-triad-board))
+    (step sixty-four-ion-pairwise-surface
+      (order 5)
+      (role pairwise-notation-surface))
+    (step blackboard-resolver
+      (order 6)
+      (role pair-unresolved-boundary-with-frame))
+    (step spom-emission
+      (order 7)
+      (role declared-incidence-output))
+    (step receipt-admission
+      (order 8)
+      (role coherence-witness)))
+  (guardrails
+    (guard sixty-four-ion-not-authority
+      (statement "64-ion algebra is a compatibility model, not authority"))
+    (guard triads-not-truth
+      (statement "Trigintaduonion triads are incidence frames, not truth"))
+    (guard blackboard-receipt-seeded
+      (statement "Blackboard resolution is receipt-seeded and receipt-admitted"))
+    (guard no-runtime
+      (statement "Phase 97 declares pair-wise notation doctrine and does not add a live distributed blackboard runtime"))
+    (guard declarations-and-receipts-authority
+      (statement "Canonical declarations and receipts remain authority")))
+  (references
+    (surface phase-85-orientation-incidence-blackboard
+      (path "docs/PHASE-85-ORIENTATION-INCIDENCE-BLACKBOARD-DOCTRINE.md")
+      (role triad-incidence-board-doctrine))
+    (surface orientation-incidence-blackboard-declaration
+      (path "declarations/orientation-incidence-blackboard.omilisp")
+      (role representative-triad-board))
+    (surface trigintaduonion-triads-corpus
+      (path "declarations/trigintaduonion-triads.omilisp")
+      (role complete-triad-reference-corpus))
+    (surface phase-95-transmutator
+      (path "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")
+      (role orientation-preserving-transmutation))
+    (surface phase-96-unicode-annotation-lattice
+      (path "docs/PHASE-96-UNICODE-LEXEME-BITMASK-ANNOTATION-LATTICE.md")
+      (role sixty-four-state-annotation-surface-neighbor)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

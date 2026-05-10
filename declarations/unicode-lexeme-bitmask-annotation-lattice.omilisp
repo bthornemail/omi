@@ -1,0 +1,108 @@
+(omi
+  (identity
+    (sid unicode-lexeme-bitmask-annotation-lattice)
+    (title "Unicode Lexeme Bitmask Annotation Lattice")
+    (kind annotation.unicode-bitmask-lattice)
+    (source "docs/PHASE-96-UNICODE-LEXEME-BITMASK-ANNOTATION-LATTICE.md"))
+  (address
+    (addr unicode-lexeme-bitmask-annotation-lattice.self)
+    (locator omi-transmutator-roundtrip.self)
+    (binding unicode.annotation.lattice.v0))
+  (scope
+    (fs omi)
+    (gs annotation)
+    (rs unicode)
+    (us lexeme))
+  (locked-rule
+    (statement "Any Unicode block can become a versioned annotation lattice: codepoints act as mux/demux feature operators over lexeme and synset edges, while canonical declarations and receipts remain authority"))
+  (rules
+    (unicode-codepoint-is-authority false)
+    (unicode-block-is-authority false)
+    (annotation-is-authority false)
+    (personality-genealogy-dna-symbol-song-ontology-label-is-authority false)
+    (canonical-declarations-and-receipts-are-authority true))
+  (lattice-law
+    (step unicode-block
+      (order 0)
+      (role versioned-codepoint-space))
+    (step codepoint-partition
+      (order 1)
+      (role deterministic-row-column-surface))
+    (step bitmask-hierarchy
+      (order 2)
+      (role mux-demux-feature-operator))
+    (step lexeme-annotation
+      (order 3)
+      (role projection-feature-binding))
+    (step synset-edge-interpolation
+      (order 4)
+      (role lexical-grounding-edge))
+    (step spom-relation
+      (order 5)
+      (role incidence-triangulation))
+    (step message-passing-projection
+      (order 6)
+      (role scgnn-compatible-projection))
+    (step receipt-witness
+      (order 7)
+      (role coherence-admission)))
+  (unicode-blocks
+    (block unicode-alchemical-symbols
+      (unicode-version "15.1.0")
+      (range-start "U+1F700")
+      (range-end "U+1F77F")
+      (row-width 16)
+      (role symbolic-feature-space)
+      (authority false)
+      (projection scgnn-feature-mask))
+    (block unicode-braille-patterns
+      (unicode-version "15.1.0")
+      (range-start "U+2800")
+      (range-end "U+28FF")
+      (row-width 16)
+      (role tactile-bitmask-feature-space)
+      (authority false)
+      (projection cell-feature-mask))
+    (block unicode-musical-symbols
+      (unicode-version "15.1.0")
+      (range-start "U+1D100")
+      (range-end "U+1D1FF")
+      (row-width 16)
+      (role cadence-feature-space)
+      (authority false)
+      (projection timing-feature-mask)))
+  (annotation-example
+    (edge word-fire-alchemical-projection
+      (lexeme word.fire)
+      (synset synset.fire.n.01)
+      (codepoint "U+1F702")
+      (predicate evokes-symbol)
+      (modality annotation.projection)
+      (authority false)))
+  (privacy-guardrails
+    (guard persona-archetype-projection
+      (statement "Personality-style labels are UI fixtures and archetype projections, not psychological diagnoses or identity classifications"))
+    (guard dna-genealogy-sensitive
+      (statement "DNA and genealogy annotations require explicit consent or synthetic/public demo data and never infer ancestry health or identity from projection symbols alone"))
+    (guard symbol-not-person
+      (statement "Symbols songs Unicode blocks and ontology types annotate projection pathways; they do not classify real people")))
+  (references
+    (surface phase-93-observer
+      (path "docs/PHASE-93-OMI-OBSERVER-LATTICE-SITTER.md")
+      (role observer-projection-resolver))
+    (surface phase-94-semantic-grounding
+      (path "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md")
+      (role lexical-grounding-boundary))
+    (surface phase-95-transmutator
+      (path "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")
+      (role notation-carrier-projection-transmutator)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

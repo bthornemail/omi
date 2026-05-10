@@ -1,0 +1,92 @@
+(omi
+  (identity
+    (sid autonomous-world-interjection-overlay)
+    (title "Autonomous World Interjection Overlay")
+    (kind world.interjection-overlay)
+    (source "docs/PHASE-102-AUTONOMOUS-WORLD-INTERJECTION-OVERLAY.md"))
+  (address
+    (addr autonomous-world-interjection-overlay.self)
+    (locator autonomous-world-live-renderer.self)
+    (binding autonomous-world-interjection-overlay.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs interjection)
+    (us overlay))
+  (rule
+    (statement "An interjection is a projected overlay on an admitted world, not a rewrite of the world's authority")
+    (interjection-is-authority false)
+    (overlay-is-canonical-world-state false)
+    (branch-snapshot-is-canonical-history false)
+    (observer-input-requires-receipt-witness true)
+    (admitted-declaration-and-receipts-are-authority true))
+  (overlay-workflow
+    (step receive-interjection
+      (order 0)
+      (role observer-input))
+    (step resolve-target-path
+      (order 1)
+      (role object-relation-or-spom-target))
+    (step emit-overlay-record
+      (order 2)
+      (role projection-overlay))
+    (step witness-overlay
+      (order 3)
+      (role overlay-receipt))
+    (step project-branch
+      (order 4)
+      (role projection-only-branch-snapshot))
+    (step show-in-browser
+      (order 5)
+      (role browser-overlay-projection))
+    (step show-in-renderer
+      (order 6)
+      (role render-overlay-projection)))
+  (surfaces
+    (surface interjection-record
+      (role observer-note-branch-or-proposed-relation)
+      (authority false))
+    (surface overlay-record
+      (role projected-world-overlay)
+      (authority false))
+    (surface branch-snapshot
+      (role projection-only-branch)
+      (authority false))
+    (surface browser-overlay
+      (role traversable-overlay-readout)
+      (authority false))
+    (surface renderer-overlay
+      (role render-plan-overlay-readout)
+      (authority false))
+    (surface receipt-panel
+      (role package-closure-raw-binary-overlay-receipt-readout)
+      (authority false)))
+  (guardrails
+    (guard no-authority-rewrite
+      (statement "Overlay projection never rewrites admitted world identity"))
+    (guard projected-interjection
+      (statement "Phase 102 lets the observer speak into the world as projection, while preserving the admitted world as receipt-verified authority"))
+    (guard branch-is-projection
+      (statement "Branch snapshots are projection-only and not canonical history"))
+    (guard display-without-admission
+      (statement "Browser and renderer may show overlays but may not admit them as world state")))
+  (references
+    (surface phase-99-autonomous-world-builder
+      (path "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")
+      (role admitted-world-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role browser-navigation-source))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role renderer-projection-source)))
+  (projections
+    (annotation note)
+    (branch alternate-scene)
+    (relation proposed-relation)
+    (spom incidence-comment))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (overlay pending)
+    (view pending)))

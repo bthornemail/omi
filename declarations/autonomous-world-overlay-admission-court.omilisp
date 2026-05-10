@@ -1,0 +1,103 @@
+(omi
+  (identity
+    (sid autonomous-world-overlay-admission-court)
+    (title "Autonomous World Overlay Admission Court")
+    (kind world.overlay-admission-court)
+    (source "docs/PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md"))
+  (address
+    (addr autonomous-world-overlay-admission-court.self)
+    (locator autonomous-world-interjection-overlay.self)
+    (binding autonomous-world-overlay-admission.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs overlay-admission)
+    (us safe-mutation))
+  (rule
+    (statement "An overlay may become a candidate edit, but only an admitted declaration can become world history")
+    (overlay-is-authority false)
+    (candidate-edit-is-admitted-history false)
+    (rejected-candidate-mutates-world-identity false)
+    (admitted-candidate-emits-new-world-snapshot true)
+    (old-world-identity-remains-referenceable true)
+    (admitted-declaration-and-receipts-are-authority true))
+  (admission-workflow
+    (step select-overlay
+      (order 0)
+      (role phase-102-overlay-input))
+    (step create-candidate-edit
+      (order 1)
+      (role non-authoritative-candidate))
+    (step decide-admission
+      (order 2)
+      (role admit-or-reject))
+    (step reject-candidate
+      (order 3)
+      (role no-world-identity-change))
+    (step admit-candidate
+      (order 4)
+      (role new-world-declaration-snapshot))
+    (step regenerate-witnesses
+      (order 5)
+      (role package-closure-raw-binary-receipts))
+    (step open-and-render
+      (order 6)
+      (role browser-renderer-projection-over-new-snapshot)))
+  (surfaces
+    (surface overlay
+      (role projection-interjection)
+      (authority false))
+    (surface candidate-edit
+      (role proposed-world-mutation)
+      (authority false))
+    (surface rejection-report
+      (role non-mutating-decision-witness)
+      (authority false))
+    (surface admission-report
+      (role mutation-admission-witness)
+      (authority false))
+    (surface new-world-snapshot
+      (role admitted-declaration-history)
+      (authority declaration-and-receipts))
+    (surface regenerated-package
+      (role package-witness)
+      (authority false))
+    (surface regenerated-raw-binary
+      (role raw-binary-witness)
+      (authority false))
+    (surface regenerated-closure
+      (role closure-coding-witness)
+      (authority false)))
+  (report-links
+    (link original-world-identity-receipt)
+    (link overlay-receipt)
+    (link candidate-edit-receipt)
+    (link admission-decision-receipt)
+    (link new-world-identity-receipt))
+  (guardrails
+    (guard accountable-mutation
+      (statement "Phase 103 turns interjection into accountable mutation: projection may propose, but only admission creates history"))
+    (guard no-direct-editing
+      (statement "Overlay admission is not a direct editing surface"))
+    (guard rejection-non-mutating
+      (statement "Rejected candidates keep the admitted world identity stable"))
+    (guard old-identity-referenceable
+      (statement "Admission creates a new snapshot while preserving the old world identity as reference context")))
+  (references
+    (surface phase-99-autonomous-world-builder
+      (path "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")
+      (role original-admission-model))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role browser-validation))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role renderer-validation))
+    (surface phase-102-autonomous-world-interjection-overlay
+      (path "docs/PHASE-102-AUTONOMOUS-WORLD-INTERJECTION-OVERLAY.md")
+      (role overlay-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (candidate pending)
+    (decision pending)))

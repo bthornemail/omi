@@ -1,0 +1,128 @@
+(omi
+  (identity
+    (sid autonomous-world-builder-model)
+    (title "Autonomous World Builder Model")
+    (kind world.autonomous-builder-model)
+    (source "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md"))
+  (address
+    (addr autonomous-world-builder-model.self)
+    (locator universal-closure-coding.self)
+    (binding autonomous-world-builder.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs builder)
+    (us model))
+  (rule
+    (statement "The autonomous world builder may propose world structure, but only receipt-verified declarations are admitted into the world model")
+    (builder-is-authority false)
+    (proposal-is-authority false)
+    (admitted-declaration-and-receipts-are-authority true))
+  (builder-workflow
+    (step seed
+      (order 0)
+      (role deterministic-world-seed))
+    (step template-selection
+      (order 1)
+      (role declared-template-choice))
+    (step object-proposal
+      (order 2)
+      (role non-authoritative-object-plan))
+    (step relation-proposal
+      (order 3)
+      (role non-authoritative-relation-plan))
+    (step closure-coding
+      (order 4)
+      (role boundary-carrier-witness))
+    (step spom-triangulation
+      (order 5)
+      (role incidence-projection))
+    (step composer-commit
+      (order 6)
+      (role deterministic-proposal-commit))
+    (step package-export-import
+      (order 7)
+      (role package-replay-witness))
+    (step receipt-admission
+      (order 8)
+      (role authority-boundary))
+    (step world-declaration-snapshot
+      (order 9)
+      (role admitted-world-model)))
+  (fixture-world
+    (seed world.autonomous-fixture)
+    (target-form alist-compatible-world-declaration)
+    (objects
+      (object trailer.001
+        (model model.trailer.wike-ebike-cargo)
+        (authority false))
+      (object bicycle.001
+        (model model.bicycle.generic-ebike)
+        (authority false))
+      (object cargo.001
+        (model model.box.generic-cargo)
+        (authority false)))
+    (relations
+      (relation hitch-link.001
+        (source bicycle.001.hitch)
+        (target trailer.001.tow-arm)
+        (predicate coupled-traction)
+        (authority false))
+      (relation load-support.001
+        (source cargo.001.mass)
+        (target trailer.001.panel.floor)
+        (predicate supported-by)
+        (authority false))
+      (relation rolling.001
+        (source bicycle.001.forward-motion)
+        (target trailer.001.motion)
+        (predicate transmitted-motion)
+        (authority false))))
+  (projection-path
+    (surface composer
+      (role plan-and-commit-projection)
+      (authority false))
+    (surface package
+      (role replay-bundle-witness)
+      (authority false))
+    (surface visual-equivalence
+      (role svg-gltf-obj-renderer-witness)
+      (authority false))
+    (surface raw-binary
+      (role chunk-receipt-witness)
+      (authority false))
+    (surface closure-coding
+      (role carrier-closure-witness)
+      (authority false)))
+  (guardrails
+    (guard no-live-agent
+      (statement "Phase 99 adds deterministic planning and receipt admission, not a live AI agent"))
+    (guard no-stochastic-generation
+      (statement "The first builder emits a deterministic fixture world, not open-ended generation"))
+    (guard proposal-admission-split
+      (statement "Proposals are non-authoritative until admitted by declaration and receipts"))
+    (guard projection-surfaces-not-authority
+      (statement "Composer packages renderers raw binary QEMU and closure carriers remain witnesses or projections")))
+  (references
+    (surface phase-56-composer
+      (path "docs/PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md")
+      (role composer-world-projection))
+    (surface phase-61-package
+      (path "docs/PHASE-61-OMI-COMPOSER-PACKAGE-COURT.md")
+      (role package-replay-witness))
+    (surface phase-90-raw-binary
+      (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+      (role raw-binary-receipt-index))
+    (surface phase-98-closure-coding
+      (path "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md")
+      (role closure-coding-law)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

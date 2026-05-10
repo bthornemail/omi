@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-unicode-annotation-lattice-test workbench-sixty-four-ion-blackboard-pairing-test workbench-universal-closure-coding-test workbench-autonomous-world-builder-test workbench-autonomous-world-browser-smoke-test workbench-autonomous-world-live-renderer-test workbench-autonomous-world-interjection-overlay-test workbench-autonomous-world-overlay-admission-test workbench-autonomous-world-version-history-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -552,6 +552,33 @@ workbench-wordnet-prolog-semantic-grounding-test:
 workbench-omi-transmutator-roundtrip-test:
 	node tests/workbench_omi_transmutator_roundtrip_test.js
 
+workbench-unicode-annotation-lattice-test:
+	node tests/workbench_unicode_annotation_lattice_test.js
+
+workbench-sixty-four-ion-blackboard-pairing-test:
+	node tests/workbench_sixty_four_ion_blackboard_pairing_test.js
+
+workbench-universal-closure-coding-test:
+	node tests/workbench_universal_closure_coding_test.js
+
+workbench-autonomous-world-builder-test:
+	node tests/workbench_autonomous_world_builder_test.js
+
+workbench-autonomous-world-browser-smoke-test:
+	node tests/workbench_autonomous_world_browser_smoke_test.js
+
+workbench-autonomous-world-live-renderer-test:
+	node tests/workbench_autonomous_world_live_renderer_test.js
+
+workbench-autonomous-world-interjection-overlay-test:
+	node tests/workbench_autonomous_world_interjection_overlay_test.js
+
+workbench-autonomous-world-overlay-admission-test:
+	node tests/workbench_autonomous_world_overlay_admission_test.js
+
+workbench-autonomous-world-version-history-test:
+	node tests/workbench_autonomous_world_version_history_test.js
+
 workbench-block-image-test:
 	node tests/workbench_block_image_declaration_test.js
 
@@ -720,6 +747,15 @@ unit-test:
 	$(MAKE) workbench-omi-observer-lattice-sitter-test
 	$(MAKE) workbench-wordnet-prolog-semantic-grounding-test
 	$(MAKE) workbench-omi-transmutator-roundtrip-test
+	$(MAKE) workbench-unicode-annotation-lattice-test
+	$(MAKE) workbench-sixty-four-ion-blackboard-pairing-test
+	$(MAKE) workbench-universal-closure-coding-test
+	$(MAKE) workbench-autonomous-world-builder-test
+	$(MAKE) workbench-autonomous-world-browser-smoke-test
+	$(MAKE) workbench-autonomous-world-live-renderer-test
+	$(MAKE) workbench-autonomous-world-interjection-overlay-test
+	$(MAKE) workbench-autonomous-world-overlay-admission-test
+	$(MAKE) workbench-autonomous-world-version-history-test
 	$(MAKE) workbench-block-image-test
 	$(MAKE) workbench-block-image-projection-test
 	$(MAKE) workbench-narrative-timeline-test

@@ -1,0 +1,95 @@
+(omi
+  (identity
+    (sid autonomous-world-version-history-court)
+    (title "Autonomous World Version History Court")
+    (kind world.version-history-court)
+    (source "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md"))
+  (address
+    (addr autonomous-world-version-history-court.self)
+    (locator autonomous-world-overlay-admission-court.self)
+    (binding autonomous-world-version-history.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs version-history)
+    (us receipt-linked-graph))
+  (rule
+    (statement "World history is not overwritten; it is a receipt-linked chain of admitted declarations")
+    (history-graph-is-world-authority false)
+    (history-edge-is-admitted-world-state false)
+    (old-identity-remains-referenceable true)
+    (new-identity-admitted-by-phase-103 true)
+    (branching-from-same-old-identity-allowed true)
+    (invalid-edge-missing-admission-receipts-rejects true))
+  (history-edge
+    (field from-identity-receipt)
+    (field overlay-receipt)
+    (field candidate-edit-receipt)
+    (field admission-decision-receipt)
+    (field to-identity-receipt)
+    (field history-edge-receipt))
+  (history-workflow
+    (step receive-admission-report
+      (order 0)
+      (role phase-103-admission-report))
+    (step validate-edge-receipts
+      (order 1)
+      (role required-receipt-check))
+    (step create-history-edge
+      (order 2)
+      (role receipt-linked-version-edge))
+    (step index-snapshot
+      (order 3)
+      (role identity-addressed-admitted-snapshot))
+    (step replay-history
+      (order 4)
+      (role admitted-edge-replay))
+    (step open-version
+      (order 5)
+      (role browser-projection-by-identity))
+    (step render-version
+      (order 6)
+      (role renderer-projection-by-identity)))
+  (surfaces
+    (surface history-graph
+      (role receipt-linked-version-witness)
+      (authority false))
+    (surface history-edge
+      (role admitted-snapshot-transition-witness)
+      (authority false))
+    (surface snapshot-index
+      (role identity-addressed-admitted-snapshots)
+      (authority false))
+    (surface replay
+      (role admitted-history-walk)
+      (authority false))
+    (surface browser-version-open
+      (role version-projection)
+      (authority false))
+    (surface renderer-version-render
+      (role version-render-projection)
+      (authority false)))
+  (guardrails
+    (guard no-history-overwrite
+      (statement "World history is not overwritten; it is a receipt-linked chain of admitted declarations"))
+    (guard memory-without-present-mutation
+      (statement "Phase 104 gives the world memory without smuggling mutation into the present: history is a receipt-linked graph of admitted declarations"))
+    (guard replay-admitted-edges
+      (statement "Replay follows admitted history edges, not overlay projections"))
+    (guard branch-allowed
+      (statement "Branching from the same old identity is allowed when each branch has an admitted edge receipt")))
+  (references
+    (surface phase-103-autonomous-world-overlay-admission
+      (path "docs/PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md")
+      (role admission-report-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role version-browser-projection))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role version-renderer-projection)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (history-edge pending)
+    (history-graph pending)))

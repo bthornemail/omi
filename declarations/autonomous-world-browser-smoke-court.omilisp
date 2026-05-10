@@ -1,0 +1,94 @@
+(omi
+  (identity
+    (sid autonomous-world-browser-smoke-court)
+    (title "Autonomous World UX / Browser Smoke Court")
+    (kind world.browser-smoke-court)
+    (source "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md"))
+  (address
+    (addr autonomous-world-browser-smoke-court.self)
+    (locator autonomous-world-builder-model.self)
+    (binding autonomous-world-browser.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs browser)
+    (us smoke-court))
+  (rule
+    (statement "The world browser may traverse and project an admitted world, but it cannot mutate world authority")
+    (browser-is-authority false)
+    (traversal-is-mutation false)
+    (view-mode-is-identity false)
+    (admitted-declaration-and-receipts-are-authority true))
+  (browser-workflow
+    (step open-admitted-world
+      (order 0)
+      (role world-snapshot-open))
+    (step list-objects
+      (order 1)
+      (role object-navigation))
+    (step list-relations
+      (order 2)
+      (role relation-navigation))
+    (step inspect-path
+      (order 3)
+      (role projection-inspector))
+    (step switch-view-mode
+      (order 4)
+      (role view-projection))
+    (step browse-spom
+      (order 5)
+      (role incidence-navigation))
+    (step show-receipts
+      (order 6)
+      (role package-closure-raw-binary-witness-panel)))
+  (surfaces
+    (surface object-list
+      (role navigable-world-object-projection)
+      (authority false))
+    (surface relation-list
+      (role navigable-world-relation-projection)
+      (authority false))
+    (surface inspector
+      (role path-projection)
+      (authority false))
+    (surface view-switcher
+      (role lazy-greedy-static-animated-projection)
+      (authority false))
+    (surface spom-browser
+      (role incidence-triplet-projection)
+      (authority false))
+    (surface receipt-panel
+      (role package-closure-raw-binary-receipt-readout)
+      (authority false)))
+  (guardrails
+    (guard no-dom-runtime
+      (statement "Phase 100 is headless and does not add DOM Electron Playwright or real browser runtime"))
+    (guard projection-navigator
+      (statement "A world browser is a projection navigator: it reveals admitted world structure without becoming the world's authority"))
+    (guard no-authority-mutation
+      (statement "No browser action mutates admitted identity"))
+    (guard inspector-projection
+      (statement "Inspector paths are projections and not authority")))
+  (references
+    (surface phase-99-autonomous-world-builder
+      (path "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")
+      (role admitted-world-source))
+    (surface phase-56-composer
+      (path "docs/PHASE-56-OMI-COMPOSER-INTERFACE-COURT.md")
+      (role composer-navigation-surface))
+    (surface phase-90-raw-binary
+      (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+      (role raw-binary-receipt-panel))
+    (surface phase-98-closure-coding
+      (path "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md")
+      (role closure-receipt-panel)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

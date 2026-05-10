@@ -249,6 +249,68 @@
       (module "workbench/src/omi_transmutator.js")
       (declaration "declarations/omi-transmutator-roundtrip.omilisp")
       (doctrine "docs/PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md")))
+  (annotation-lattices
+    (lattice unicode-lexeme-bitmask-annotation-lattice
+      (kind annotation.unicode-bitmask-lattice)
+      (rule "Unicode codepoints are annotation operators, not semantic authority")
+      (module "workbench/src/unicode_annotation_lattice.js")
+      (declaration "declarations/unicode-lexeme-bitmask-annotation-lattice.omilisp")
+      (doctrine "docs/PHASE-96-UNICODE-LEXEME-BITMASK-ANNOTATION-LATTICE.md")))
+  (blackboard-pairing-doctrines
+    (doctrine sixty-four-ion-blackboard-pairing
+      (kind algebra.pairwise-blackboard-doctrine)
+      (rule "The 64-ion surface is the pair-wise notation layer that lets trigintaduonion triads operate as blackboard resolver frames over OMI boundaries")
+      (declaration "declarations/sixty-four-ion-blackboard-pairing.omilisp")
+      (doctrine "docs/PHASE-97-SIXTY-FOUR-ION-BLACKBOARD-PAIRING-DOCTRINE.md")))
+  (closure-coding-courts
+    (court universal-closure-coding
+      (kind coding.universal-closure-law)
+      (rule "A self-delimiting code is a boundary law: it carries not only the value, but the condition under which the value closes")
+      (module "workbench/src/universal_closure_coding.js")
+      (declaration "declarations/universal-closure-coding.omilisp")
+      (doctrine "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md")))
+  (world-builder-models
+    (model autonomous-world-builder-model
+      (kind world.autonomous-builder-model)
+      (rule "The autonomous world builder may propose world structure, but only receipt-verified declarations are admitted into the world model")
+      (module "workbench/src/autonomous_world_builder.js")
+      (declaration "declarations/autonomous-world-builder-model.omilisp")
+      (doctrine "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")))
+  (world-browser-courts
+    (court autonomous-world-browser-smoke-court
+      (kind world.browser-smoke-court)
+      (rule "The world browser may traverse and project an admitted world, but it cannot mutate world authority")
+      (module "workbench/src/autonomous_world_browser.js")
+      (declaration "declarations/autonomous-world-browser-smoke-court.omilisp")
+      (doctrine "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")))
+  (world-renderer-courts
+    (court autonomous-world-live-renderer
+      (kind world.live-renderer)
+      (rule "The live renderer may animate and display an admitted world, but it cannot become the world")
+      (module "workbench/src/autonomous_world_live_renderer.js")
+      (declaration "declarations/autonomous-world-live-renderer.omilisp")
+      (doctrine "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")))
+  (world-interjection-overlays
+    (overlay autonomous-world-interjection-overlay
+      (kind world.interjection-overlay)
+      (rule "An interjection is a projected overlay on an admitted world, not a rewrite of the world's authority")
+      (module "workbench/src/autonomous_world_interjection_overlay.js")
+      (declaration "declarations/autonomous-world-interjection-overlay.omilisp")
+      (doctrine "docs/PHASE-102-AUTONOMOUS-WORLD-INTERJECTION-OVERLAY.md")))
+  (world-overlay-admission-courts
+    (court autonomous-world-overlay-admission-court
+      (kind world.overlay-admission-court)
+      (rule "An overlay may become a candidate edit, but only an admitted declaration can become world history")
+      (module "workbench/src/autonomous_world_overlay_admission.js")
+      (declaration "declarations/autonomous-world-overlay-admission-court.omilisp")
+      (doctrine "docs/PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md")))
+  (world-version-history-courts
+    (court autonomous-world-version-history-court
+      (kind world.version-history-court)
+      (rule "World history is not overwritten; it is a receipt-linked chain of admitted declarations")
+      (module "workbench/src/autonomous_world_version_history.js")
+      (declaration "declarations/autonomous-world-version-history-court.omilisp")
+      (doctrine "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -390,7 +452,111 @@
       (surface
         (sid omi-transmutator-module)
         (path "workbench/src/omi_transmutator.js")
-        (role transmutator-roundtrip-module))))
+        (role transmutator-roundtrip-module))
+      (surface
+        (sid phase-96-unicode-lexeme-bitmask-annotation-lattice)
+        (path "docs/PHASE-96-UNICODE-LEXEME-BITMASK-ANNOTATION-LATTICE.md")
+        (role unicode-annotation-lattice-doctrine))
+      (surface
+        (sid unicode-lexeme-bitmask-annotation-lattice-declaration)
+        (path "declarations/unicode-lexeme-bitmask-annotation-lattice.omilisp")
+        (role unicode-annotation-lattice-declaration))
+      (surface
+        (sid unicode-annotation-lattice-module)
+        (path "workbench/src/unicode_annotation_lattice.js")
+        (role unicode-annotation-lattice-module))
+      (surface
+        (sid phase-97-sixty-four-ion-blackboard-pairing)
+        (path "docs/PHASE-97-SIXTY-FOUR-ION-BLACKBOARD-PAIRING-DOCTRINE.md")
+        (role blackboard-pairing-doctrine))
+      (surface
+        (sid sixty-four-ion-blackboard-pairing-declaration)
+        (path "declarations/sixty-four-ion-blackboard-pairing.omilisp")
+        (role blackboard-pairing-declaration))
+      (surface
+        (sid phase-98-universal-closure-coding)
+        (path "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md")
+        (role universal-closure-coding-doctrine))
+      (surface
+        (sid universal-closure-coding-declaration)
+        (path "declarations/universal-closure-coding.omilisp")
+        (role universal-closure-coding-declaration))
+      (surface
+        (sid universal-closure-coding-module)
+        (path "workbench/src/universal_closure_coding.js")
+        (role universal-closure-coding-module))
+      (surface
+        (sid phase-99-autonomous-world-builder-model)
+        (path "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")
+        (role autonomous-world-builder-doctrine))
+      (surface
+        (sid autonomous-world-builder-model-declaration)
+        (path "declarations/autonomous-world-builder-model.omilisp")
+        (role autonomous-world-builder-declaration))
+      (surface
+        (sid autonomous-world-builder-module)
+        (path "workbench/src/autonomous_world_builder.js")
+        (role autonomous-world-builder-module))
+      (surface
+        (sid phase-100-autonomous-world-browser-smoke-court)
+        (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+        (role autonomous-world-browser-smoke-doctrine))
+      (surface
+        (sid autonomous-world-browser-smoke-court-declaration)
+        (path "declarations/autonomous-world-browser-smoke-court.omilisp")
+        (role autonomous-world-browser-smoke-declaration))
+      (surface
+        (sid autonomous-world-browser-module)
+        (path "workbench/src/autonomous_world_browser.js")
+        (role autonomous-world-browser-module))
+      (surface
+        (sid phase-101-autonomous-world-live-renderer)
+        (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+        (role autonomous-world-live-renderer-doctrine))
+      (surface
+        (sid autonomous-world-live-renderer-declaration)
+        (path "declarations/autonomous-world-live-renderer.omilisp")
+        (role autonomous-world-live-renderer-declaration))
+      (surface
+        (sid autonomous-world-live-renderer-module)
+        (path "workbench/src/autonomous_world_live_renderer.js")
+        (role autonomous-world-live-renderer-module))
+      (surface
+        (sid phase-102-autonomous-world-interjection-overlay)
+        (path "docs/PHASE-102-AUTONOMOUS-WORLD-INTERJECTION-OVERLAY.md")
+        (role autonomous-world-interjection-overlay-doctrine))
+      (surface
+        (sid autonomous-world-interjection-overlay-declaration)
+        (path "declarations/autonomous-world-interjection-overlay.omilisp")
+        (role autonomous-world-interjection-overlay-declaration))
+      (surface
+        (sid autonomous-world-interjection-overlay-module)
+        (path "workbench/src/autonomous_world_interjection_overlay.js")
+        (role autonomous-world-interjection-overlay-module))
+      (surface
+        (sid phase-103-autonomous-world-overlay-admission-court)
+        (path "docs/PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md")
+        (role autonomous-world-overlay-admission-doctrine))
+      (surface
+        (sid autonomous-world-overlay-admission-court-declaration)
+        (path "declarations/autonomous-world-overlay-admission-court.omilisp")
+        (role autonomous-world-overlay-admission-declaration))
+      (surface
+        (sid autonomous-world-overlay-admission-module)
+        (path "workbench/src/autonomous_world_overlay_admission.js")
+        (role autonomous-world-overlay-admission-module))
+      (surface
+        (sid phase-104-autonomous-world-version-history-court)
+        (path "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")
+        (role autonomous-world-version-history-doctrine))
+      (surface
+        (sid autonomous-world-version-history-court-declaration)
+        (path "declarations/autonomous-world-version-history-court.omilisp")
+        (role autonomous-world-version-history-declaration))
+      (surface
+        (sid autonomous-world-version-history-module)
+        (path "workbench/src/autonomous_world_version_history.js")
+        (role autonomous-world-version-history-module))))
   (projections
     (lazy barcode)
     (greedy chart)

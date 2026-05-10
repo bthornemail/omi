@@ -235,6 +235,33 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 97. `PHASE-95-OMI-TRANSMUTATOR-ROUNDTRIP-COURT.md` records the executable
     transmutator court that roundtrips OMI declarations through S-P-O-M,
     Prolog-like, RDF-like, and JSON-like projection adapters.
+98. `PHASE-96-UNICODE-LEXEME-BITMASK-ANNOTATION-LATTICE.md` records Unicode
+    blocks as versioned mux/demux annotation lattices over lexeme and synset
+    edges without making codepoints semantic authority.
+99. `PHASE-97-SIXTY-FOUR-ION-BLACKBOARD-PAIRING-DOCTRINE.md` records the
+    64-ion continuation as the pair-wise notation surface that lets
+    trigintaduonion triads operate as blackboard resolver frames.
+100. `PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md` records
+     universal and self-delimiting codes as closure laws over the 64-ion
+     blackboard pairing surface.
+101. `PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md` records the deterministic
+     autonomous world builder model that proposes fixture world structure and
+     admits only receipt-verified declarations into world state.
+102. `PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md` records the
+     headless autonomous world browser smoke court for opening, traversing,
+     projecting, and receipt-checking admitted world state.
+103. `PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md` records the deterministic
+     headless render-plan court for rendering and animating admitted world
+     projections without making the renderer authority.
+104. `PHASE-102-AUTONOMOUS-WORLD-INTERJECTION-OVERLAY.md` records the
+     deterministic headless overlay court for observer interjections that
+     project onto admitted worlds without rewriting world authority.
+105. `PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md` records the first
+     safe mutation pathway where overlays become candidate edits and only
+     admitted declarations become world history.
+106. `PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md` records the
+     receipt-linked version graph over admitted world snapshots without making
+     history itself world authority.
 
 ## File Roles
 

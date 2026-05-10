@@ -1,0 +1,104 @@
+(omi
+  (identity
+    (sid autonomous-world-live-renderer)
+    (title "Autonomous World Live Renderer")
+    (kind world.live-renderer)
+    (source "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md"))
+  (address
+    (addr autonomous-world-live-renderer.self)
+    (locator autonomous-world-browser-smoke-court.self)
+    (binding autonomous-world-live-renderer.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs renderer)
+    (us live-plan))
+  (rule
+    (statement "The live renderer may animate and display an admitted world, but it cannot become the world")
+    (renderer-is-authority false)
+    (render-plan-is-world-state false)
+    (animation-is-mutation false)
+    (camera-view-timeline-change-world-identity false)
+    (admitted-declaration-and-receipts-are-authority true))
+  (render-workflow
+    (step open-browser-state
+      (order 0)
+      (role admitted-world-readout))
+    (step collect-object-paths
+      (order 1)
+      (role renderable-object-paths))
+    (step collect-relation-paths
+      (order 2)
+      (role renderable-relation-paths))
+    (step collect-spom-paths
+      (order 3)
+      (role incidence-render-paths))
+    (step select-view-camera-timeline
+      (order 4)
+      (role projection-configuration))
+    (step emit-render-plan
+      (order 5)
+      (role deterministic-render-body))
+    (step emit-animation-plan
+      (order 6)
+      (role deterministic-timeline-projection))
+    (step show-receipts
+      (order 7)
+      (role package-closure-raw-binary-witness-panel)))
+  (surfaces
+    (surface render-plan
+      (role deterministic-renderable-body)
+      (authority false))
+    (surface animation-plan
+      (role deterministic-timeline-body)
+      (authority false))
+    (surface camera
+      (role projection-configuration)
+      (authority false))
+    (surface timeline
+      (role animation-frame-configuration)
+      (authority false))
+    (surface object-paths
+      (role renderable-object-projections)
+      (authority false))
+    (surface relation-paths
+      (role renderable-relation-projections)
+      (authority false))
+    (surface spom-paths
+      (role renderable-incidence-projections)
+      (authority false))
+    (surface receipt-panel
+      (role package-closure-raw-binary-receipt-readout)
+      (authority false)))
+  (guardrails
+    (guard no-dom-runtime
+      (statement "Phase 101 is headless and does not add DOM Electron canvas WebGL Playwright or real-time app runtime"))
+    (guard projection-body
+      (statement "Phase 101 gives the admitted world a deterministic renderable body, but the body remains projection not authority"))
+    (guard no-authority-mutation
+      (statement "No renderer action mutates admitted identity"))
+    (guard animation-projection
+      (statement "Animation is a timeline projection and not world mutation")))
+  (references
+    (surface phase-99-autonomous-world-builder
+      (path "docs/PHASE-99-AUTONOMOUS-WORLD-BUILDER-MODEL.md")
+      (role admitted-world-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role browser-navigation-source))
+    (surface phase-90-raw-binary
+      (path "docs/PHASE-90-RAW-BINARY-CHUNK-RECEIPT-INDEX.md")
+      (role raw-binary-receipt-panel))
+    (surface phase-98-closure-coding
+      (path "docs/PHASE-98-UNIVERSAL-CLOSURE-CODING-64-ION-BLACKBOARD.md")
+      (role closure-receipt-panel)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (render pending)
+    (view pending)))
