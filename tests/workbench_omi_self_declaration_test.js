@@ -67,6 +67,7 @@ function testSelfDeclarationParses() {
     "world-interjection-overlays",
     "world-overlay-admission-courts",
     "world-version-history-courts",
+    "world-merge-reconciliation-courts",
     "surfaces",
     "projections",
     "receipts"
@@ -228,7 +229,10 @@ function testReferencedSurfacesExist() {
     "workbench/src/autonomous_world_overlay_admission.js",
     "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md",
     "declarations/autonomous-world-version-history-court.omilisp",
-    "workbench/src/autonomous_world_version_history.js"
+    "workbench/src/autonomous_world_version_history.js",
+    "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md",
+    "declarations/autonomous-world-merge-reconciliation-court.omilisp",
+    "workbench/src/autonomous_world_merge_reconciliation.js"
   ];
   const declaredPaths = surfaces.map((surface) => surface.path);
 

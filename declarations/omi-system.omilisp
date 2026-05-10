@@ -311,6 +311,13 @@
       (module "workbench/src/autonomous_world_version_history.js")
       (declaration "declarations/autonomous-world-version-history-court.omilisp")
       (doctrine "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")))
+  (world-merge-reconciliation-courts
+    (court autonomous-world-merge-reconciliation-court
+      (kind world.merge-reconciliation-court)
+      (rule "A merge is a candidate reconciliation between admitted histories; only admission creates the merged world identity")
+      (module "workbench/src/autonomous_world_merge_reconciliation.js")
+      (declaration "declarations/autonomous-world-merge-reconciliation-court.omilisp")
+      (doctrine "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -556,7 +563,19 @@
       (surface
         (sid autonomous-world-version-history-module)
         (path "workbench/src/autonomous_world_version_history.js")
-        (role autonomous-world-version-history-module))))
+        (role autonomous-world-version-history-module))
+      (surface
+        (sid phase-105-autonomous-world-merge-reconciliation-court)
+        (path "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md")
+        (role autonomous-world-merge-reconciliation-doctrine))
+      (surface
+        (sid autonomous-world-merge-reconciliation-court-declaration)
+        (path "declarations/autonomous-world-merge-reconciliation-court.omilisp")
+        (role autonomous-world-merge-reconciliation-declaration))
+      (surface
+        (sid autonomous-world-merge-reconciliation-module)
+        (path "workbench/src/autonomous_world_merge_reconciliation.js")
+        (role autonomous-world-merge-reconciliation-module))))
   (projections
     (lazy barcode)
     (greedy chart)

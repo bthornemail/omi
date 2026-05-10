@@ -262,6 +262,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 106. `PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md` records the
      receipt-linked version graph over admitted world snapshots without making
      history itself world authority.
+107. `PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md` records the
+     deterministic reconciliation court where admitted branches may propose a
+     merge, classify conflicts, and create a merged identity only by admission.
 
 ## File Roles
 

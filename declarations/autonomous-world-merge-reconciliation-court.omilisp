@@ -1,0 +1,126 @@
+(omi
+  (identity
+    (sid autonomous-world-merge-reconciliation-court)
+    (title "Autonomous World Merge / Reconciliation Court")
+    (kind world.merge-reconciliation-court)
+    (source "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md"))
+  (address
+    (addr autonomous-world-merge-reconciliation-court.self)
+    (locator autonomous-world-version-history-court.self)
+    (binding autonomous-world-merge-reconciliation.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs merge-reconciliation)
+    (us admitted-history-join))
+  (rule
+    (statement "A merge is a candidate reconciliation between admitted histories; only admission creates the merged world identity")
+    (merge-candidate-is-authority false)
+    (conflict-record-is-authority false)
+    (rejected-merge-mutates-branches false)
+    (admitted-merge-emits-new-world-snapshot true)
+    (merged-snapshot-references-base-left-right true)
+    (history-links-merged-identity-after-admission true))
+  (merge-workflow
+    (step base-identity
+      (order 0)
+      (role shared-admitted-origin))
+    (step left-admitted-branch
+      (order 1)
+      (role admitted-history-branch))
+    (step right-admitted-branch
+      (order 2)
+      (role admitted-history-branch))
+    (step compare-history-edges
+      (order 3)
+      (role deterministic-branch-comparison))
+    (step produce-merge-candidate
+      (order 4)
+      (role non-authoritative-reconciliation-proposal))
+    (step classify-conflicts
+      (order 5)
+      (role non-authoritative-conflict-records))
+    (step reject-or-admit
+      (order 6)
+      (role receipt-disciplined-decision))
+    (step emit-merged-snapshot
+      (order 7)
+      (role admitted-declaration-only-when-admitted))
+    (step link-version-history
+      (order 8)
+      (role receipt-linked-history-edge-after-admission)))
+  (merge-candidate
+    (field base-identity-receipt)
+    (field left-identity-receipt)
+    (field right-identity-receipt)
+    (field lineage-receipt)
+    (field conflict-receipts)
+    (field merge-candidate-receipt)
+    (authority false))
+  (conflict-record
+    (field target-path)
+    (field left-overlay-receipt)
+    (field right-overlay-receipt)
+    (field left-candidate-edit-receipt)
+    (field right-candidate-edit-receipt)
+    (field conflict-receipt)
+    (authority false))
+  (admission-report
+    (field base-identity-receipt)
+    (field left-identity-receipt)
+    (field right-identity-receipt)
+    (field merge-candidate-receipt)
+    (field conflict-receipts)
+    (field admission-decision-receipt)
+    (field merged-world-identity-receipt)
+    (authority declaration-and-receipts))
+  (surfaces
+    (surface merge-candidate
+      (role reconciliation-proposal)
+      (authority false))
+    (surface conflict-record
+      (role branch-divergence-witness)
+      (authority false))
+    (surface merge-admission-report
+      (role admitted-or-rejected-merge-decision)
+      (authority false))
+    (surface merged-snapshot
+      (role admitted-world-declaration-when-admitted)
+      (authority declaration-and-receipts))
+    (surface browser-merged-open
+      (role merged-world-projection)
+      (authority false))
+    (surface renderer-merged-render
+      (role merged-world-render-projection)
+      (authority false)))
+  (guardrails
+    (guard candidate-not-authority
+      (statement "A merge candidate is not authority"))
+    (guard conflict-not-authority
+      (statement "A conflict record is not authority"))
+    (guard admission-creates-history
+      (statement "Only admission creates the merged world identity"))
+    (guard histories-meet
+      (statement "Phase 105 lets histories meet without collapsing authority: reconciliation may propose a join, but only admission creates the merged world"))
+    (guard branch-preservation
+      (statement "Rejected merges preserve both branch identities")))
+  (references
+    (surface phase-103-autonomous-world-overlay-admission
+      (path "docs/PHASE-103-AUTONOMOUS-WORLD-OVERLAY-ADMISSION-COURT.md")
+      (role candidate-edit-admission-source))
+    (surface phase-104-autonomous-world-version-history
+      (path "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")
+      (role branch-history-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role merged-browser-projection))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role merged-renderer-projection)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (merge-candidate pending)
+    (conflict pending)
+    (admission-decision pending)
+    (merged-world pending)))
