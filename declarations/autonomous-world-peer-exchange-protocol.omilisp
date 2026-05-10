@@ -1,0 +1,106 @@
+(omi
+  (identity
+    (sid autonomous-world-peer-exchange-protocol)
+    (title "Autonomous World Peer Exchange Protocol")
+    (kind world.peer-exchange-protocol)
+    (source "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md"))
+  (address
+    (addr autonomous-world-peer-exchange-protocol.self)
+    (locator autonomous-world-package-sync-court.self)
+    (binding autonomous-world-peer-exchange.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs peer-exchange)
+    (us protocol-court))
+  (rule
+    (statement "A peer may offer world history, but only local receipt verification admits it")
+    (peer-is-authority false)
+    (peer-identity-is-package-authority false)
+    (offer-is-admission false)
+    (transport-is-authority false)
+    (unknown-peer-accepted false)
+    (tampered-package-accepted false)
+    (accepted-exchange-preserves-imported-identities true))
+  (exchange-workflow
+    (step peer-declaration
+      (order 0)
+      (role declared-peer-record))
+    (step offer-sync-package-receipt
+      (order 1)
+      (role non-authoritative-package-offer))
+    (step receive-package
+      (order 2)
+      (role protocol-receive-surface))
+    (step verify-phase-106-package
+      (order 3)
+      (role local-receipt-verification))
+    (step accept-or-reject-locally
+      (order 4)
+      (role local-admission-decision))
+    (step index-admitted-snapshots
+      (order 5)
+      (role imported-history-index-after-verification))
+    (step emit-exchange-receipt
+      (order 6)
+      (role peer-exchange-witness)))
+  (exchange-record
+    (field peer-id)
+    (field peer-receipt)
+    (field offered-package-receipt)
+    (field verification-status)
+    (field accepted-snapshot-identities)
+    (field exchange-receipt)
+    (authority false))
+  (surfaces
+    (surface peer-declaration
+      (role declared-peer-identity)
+      (authority false))
+    (surface package-offer
+      (role offered-sync-package-receipt)
+      (authority false))
+    (surface received-package
+      (role phase-106-sync-package)
+      (authority false))
+    (surface accepted-exchange
+      (role locally-verified-history-evidence)
+      (authority receipts-only))
+    (surface rejected-exchange
+      (role non-admitted-peer-offer)
+      (authority false))
+    (surface browser-accepted-open
+      (role accepted-snapshot-projection)
+      (authority false))
+    (surface renderer-accepted-render
+      (role accepted-snapshot-render-projection)
+      (authority false)))
+  (guardrails
+    (guard peer-not-authority
+      (statement "A peer may offer world history, but only local receipt verification admits it"))
+    (guard offer-not-admission
+      (statement "An offer is not admission"))
+    (guard unknown-peer-rejects
+      (statement "Unknown peers reject unless explicitly declared"))
+    (guard evidence-not-peer-truth
+      (statement "Phase 107 lets peers exchange evidence without becoming evidence themselves"))
+    (guard no-live-network-runtime
+      (statement "Phase 107 models peer exchange without live transport routing pubsub or socket behavior")))
+  (references
+    (surface phase-106-autonomous-world-package-sync
+      (path "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")
+      (role sync-package-verifier))
+    (surface phase-104-autonomous-world-version-history
+      (path "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")
+      (role imported-history-index))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role accepted-browser-projection))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role accepted-renderer-projection)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (peer pending)
+    (offer pending)
+    (exchange pending)))

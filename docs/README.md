@@ -268,6 +268,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 108. `PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md` records the portable
      sync package court for exporting and importing admitted world histories as
      receipt-verifiable transport evidence.
+109. `PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md` records the
+     declared peer exchange protocol for offering Phase 106 sync packages
+     without making peers or transports authoritative.
 
 ## File Roles
 

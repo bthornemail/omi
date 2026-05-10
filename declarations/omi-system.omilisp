@@ -325,6 +325,13 @@
       (module "workbench/src/autonomous_world_package_sync.js")
       (declaration "declarations/autonomous-world-package-sync-court.omilisp")
       (doctrine "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")))
+  (world-peer-exchange-protocols
+    (protocol autonomous-world-peer-exchange-protocol
+      (kind world.peer-exchange-protocol)
+      (rule "A peer may offer world history, but only local receipt verification admits it")
+      (module "workbench/src/autonomous_world_peer_exchange.js")
+      (declaration "declarations/autonomous-world-peer-exchange-protocol.omilisp")
+      (doctrine "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")))
   (surfaces
     (paths
       (surface
@@ -594,7 +601,19 @@
       (surface
         (sid autonomous-world-package-sync-module)
         (path "workbench/src/autonomous_world_package_sync.js")
-        (role autonomous-world-package-sync-module))))
+        (role autonomous-world-package-sync-module))
+      (surface
+        (sid phase-107-autonomous-world-peer-exchange-protocol)
+        (path "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")
+        (role autonomous-world-peer-exchange-doctrine))
+      (surface
+        (sid autonomous-world-peer-exchange-protocol-declaration)
+        (path "declarations/autonomous-world-peer-exchange-protocol.omilisp")
+        (role autonomous-world-peer-exchange-declaration))
+      (surface
+        (sid autonomous-world-peer-exchange-module)
+        (path "workbench/src/autonomous_world_peer_exchange.js")
+        (role autonomous-world-peer-exchange-module))))
   (projections
     (lazy barcode)
     (greedy chart)
