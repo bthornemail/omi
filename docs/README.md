@@ -265,6 +265,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 107. `PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md` records the
      deterministic reconciliation court where admitted branches may propose a
      merge, classify conflicts, and create a merged identity only by admission.
+108. `PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md` records the portable
+     sync package court for exporting and importing admitted world histories as
+     receipt-verifiable transport evidence.
 
 ## File Roles
 

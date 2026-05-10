@@ -1,0 +1,108 @@
+(omi
+  (identity
+    (sid autonomous-world-package-sync-court)
+    (title "Autonomous World Package Sync Court")
+    (kind world.package-sync-court)
+    (source "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md"))
+  (address
+    (addr autonomous-world-package-sync-court.self)
+    (locator autonomous-world-merge-reconciliation-court.self)
+    (binding autonomous-world-package-sync.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs package-sync)
+    (us portable-history-evidence))
+  (rule
+    (statement "A synced world package is transport evidence, not world authority; only receipt verification admits it locally")
+    (sync-package-is-authority false)
+    (sender-is-authority false)
+    (transport-is-authority false)
+    (import-before-verification-is-admission false)
+    (tampered-package-rejects true)
+    (local-admitted-declarations-remain-authority true))
+  (sync-workflow
+    (step receive-admitted-history
+      (order 0)
+      (role admitted-snapshots-and-history-edges))
+    (step export-sync-package
+      (order 1)
+      (role deterministic-transport-evidence))
+    (step carry-witnesses
+      (order 2)
+      (role package-closure-raw-binary-receipts))
+    (step import-package
+      (order 3)
+      (role non-authoritative-local-read))
+    (step verify-receipts
+      (order 4)
+      (role package-history-snapshot-witness-check))
+    (step admit-locally
+      (order 5)
+      (role receipt-verified-local-admission))
+    (step open-imported-snapshot
+      (order 6)
+      (role browser-renderer-projection-after-verification)))
+  (sync-package
+    (field admitted-world-snapshots)
+    (field identity-receipts)
+    (field history-edges)
+    (field branch-metadata)
+    (field overlay-receipts)
+    (field candidate-edit-receipts)
+    (field admission-decision-receipts)
+    (field merge-admission-reports)
+    (field package-receipts)
+    (field closure-coding-witnesses)
+    (field raw-binary-chunk-witnesses)
+    (authority false))
+  (surfaces
+    (surface sync-package
+      (role portable-transport-evidence)
+      (authority false))
+    (surface sender
+      (role package-source-label)
+      (authority false))
+    (surface transport
+      (role package-carrier-label)
+      (authority false))
+    (surface imported-snapshot
+      (role locally-admissible-after-verification)
+      (authority declaration-and-receipts))
+    (surface browser-imported-open
+      (role imported-world-projection)
+      (authority false))
+    (surface renderer-imported-render
+      (role imported-world-render-projection)
+      (authority false)))
+  (guardrails
+    (guard package-not-authority
+      (statement "A synced world package is transport evidence, not world authority"))
+    (guard verify-before-admit
+      (statement "Only receipt verification admits a synced world package locally"))
+    (guard sender-transport-not-authority
+      (statement "Sender and transport labels do not create world authority"))
+    (guard portable-before-networked
+      (statement "Phase 106 makes admitted world histories portable before it makes them networked"))
+    (guard no-live-peer-runtime
+      (statement "Phase 106 adds no live peer transport or networking behavior")))
+  (references
+    (surface phase-104-autonomous-world-version-history
+      (path "docs/PHASE-104-AUTONOMOUS-WORLD-VERSION-HISTORY-COURT.md")
+      (role admitted-history-source))
+    (surface phase-105-autonomous-world-merge-reconciliation
+      (path "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md")
+      (role merge-report-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role imported-browser-projection))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role imported-renderer-projection)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (history-edge pending)
+    (snapshot pending)
+    (local-admission pending)))

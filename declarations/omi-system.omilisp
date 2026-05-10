@@ -318,6 +318,13 @@
       (module "workbench/src/autonomous_world_merge_reconciliation.js")
       (declaration "declarations/autonomous-world-merge-reconciliation-court.omilisp")
       (doctrine "docs/PHASE-105-AUTONOMOUS-WORLD-MERGE-RECONCILIATION-COURT.md")))
+  (world-package-sync-courts
+    (court autonomous-world-package-sync-court
+      (kind world.package-sync-court)
+      (rule "A synced world package is transport evidence, not world authority; only receipt verification admits it locally")
+      (module "workbench/src/autonomous_world_package_sync.js")
+      (declaration "declarations/autonomous-world-package-sync-court.omilisp")
+      (doctrine "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -575,7 +582,19 @@
       (surface
         (sid autonomous-world-merge-reconciliation-module)
         (path "workbench/src/autonomous_world_merge_reconciliation.js")
-        (role autonomous-world-merge-reconciliation-module))))
+        (role autonomous-world-merge-reconciliation-module))
+      (surface
+        (sid phase-106-autonomous-world-package-sync-court)
+        (path "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")
+        (role autonomous-world-package-sync-doctrine))
+      (surface
+        (sid autonomous-world-package-sync-court-declaration)
+        (path "declarations/autonomous-world-package-sync-court.omilisp")
+        (role autonomous-world-package-sync-declaration))
+      (surface
+        (sid autonomous-world-package-sync-module)
+        (path "workbench/src/autonomous_world_package_sync.js")
+        (role autonomous-world-package-sync-module))))
   (projections
     (lazy barcode)
     (greedy chart)
