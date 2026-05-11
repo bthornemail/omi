@@ -1,0 +1,107 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-checkpoint-court)
+    (title "Autonomous World Transport Checkpoint Court")
+    (kind world.transport-checkpoint-court)
+    (source "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md"))
+  (address
+    (addr autonomous-world-transport-checkpoint-court.self)
+    (locator autonomous-world-transport-replay-court.self)
+    (binding autonomous-world-transport-checkpoint.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-checkpoint)
+    (us resume-court))
+  (rule
+    (statement "A checkpoint may accelerate replay, but it cannot replace replay verification")
+    (checkpoint-is-authority false)
+    (checkpoint-summary-is-admission false)
+    (checkpoint-resume-bypasses-verification false)
+    (resume-recomputes-verification true)
+    (stored-accepted-status-admits false)
+    (tampered-log-accepted false)
+    (tampered-checkpoint-accepted false)
+    (live-network-runtime-added false))
+  (checkpoint-workflow
+    (step replay-transport-log
+      (order 0)
+      (role phase-110-replay-through-verification))
+    (step summarize-boundary
+      (order 1)
+      (role accepted-rejected-checkpoint-summary))
+    (step witness-checkpoint
+      (order 2)
+      (role checkpoint-receipt))
+    (step verify-checkpoint
+      (order 3)
+      (role log-head-tail-and-checkpoint-receipt-check))
+    (step resume-later-entries
+      (order 4)
+      (role checkpoint-plus-later-log-replay))
+    (step recompute-verification
+      (order 5)
+      (role phase-109-phase-107-phase-106-phase-108-replay))
+    (step expose-resumed-snapshots
+      (order 6)
+      (role projection-after-resumed-verification-only)))
+  (checkpoint-record
+    (field checkpoint-id)
+    (field boundary-order)
+    (field log-from-receipt)
+    (field log-to-receipt)
+    (field accepted-snapshot-identities)
+    (field rejected-event-receipts)
+    (field checkpoint-receipt)
+    (authority false)
+    (admission false))
+  (resume-record
+    (field checkpoint-receipt)
+    (field transport-log-receipt)
+    (field verification-recomputed)
+    (field accepted-snapshot-identities)
+    (field rejected-event-receipts)
+    (field resume-receipt)
+    (authority false)
+    (admission false))
+  (surfaces
+    (surface checkpoint
+      (role replay-memory-summary)
+      (authority false))
+    (surface resume
+      (role recomputed-replay-continuation)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-resumed-verification)
+      (authority false)))
+  (guardrails
+    (guard checkpoint-not-authority
+      (statement "Checkpoint is not authority"))
+    (guard summary-not-admission
+      (statement "Checkpoint summary is not replay admission"))
+    (guard resume-not-bypass
+      (statement "Checkpoint resume does not bypass verification"))
+    (guard stored-status-not-admission
+      (statement "Stored accepted status alone cannot admit snapshots"))
+    (guard replay-memory-not-authority
+      (statement "Phase 111 gives replay memory not replay authority"))
+    (guard no-live-network
+      (statement "Phase 111 adds no live sockets file watchers pubsub daemons routing or network runtime")))
+  (references
+    (surface phase-110-autonomous-world-transport-replay
+      (path "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")
+      (role replay-log-source))
+    (surface phase-109-autonomous-world-live-transport-adapter
+      (path "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")
+      (role transport-event-source))
+    (surface phase-108-autonomous-world-subscription
+      (path "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md")
+      (role subscription-filter-source))
+    (surface phase-107-autonomous-world-peer-exchange
+      (path "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")
+      (role peer-exchange-verification-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (checkpoint pending)
+    (resume pending)))

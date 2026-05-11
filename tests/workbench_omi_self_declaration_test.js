@@ -72,6 +72,8 @@ function testSelfDeclarationParses() {
     "world-peer-exchange-protocols",
     "world-subscription-courts",
     "world-live-transport-adapter-courts",
+    "world-transport-replay-courts",
+    "world-transport-checkpoint-courts",
     "surfaces",
     "projections",
     "receipts"
@@ -248,7 +250,13 @@ function testReferencedSurfacesExist() {
     "workbench/src/autonomous_world_subscription_court.js",
     "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md",
     "declarations/autonomous-world-live-transport-adapter-court.omilisp",
-    "workbench/src/autonomous_world_live_transport_adapter.js"
+    "workbench/src/autonomous_world_live_transport_adapter.js",
+    "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md",
+    "declarations/autonomous-world-transport-replay-court.omilisp",
+    "workbench/src/autonomous_world_transport_replay.js",
+    "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md",
+    "declarations/autonomous-world-transport-checkpoint-court.omilisp",
+    "workbench/src/autonomous_world_transport_checkpoint.js"
   ];
   const declaredPaths = surfaces.map((surface) => surface.path);
 

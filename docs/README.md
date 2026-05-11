@@ -277,6 +277,12 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 111. `PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md` records the
      deterministic transport adapter plan and event court for carrying package
      offers without making carrier surfaces trust surfaces.
+112. `PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md` records replayable
+     transport event logs that replay offers through receipt verification
+     without making logs or stored processing authoritative.
+113. `PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md` records
+     transport replay checkpoints for resumability without letting checkpoint
+     summaries replace replay verification.
 
 ## File Roles
 

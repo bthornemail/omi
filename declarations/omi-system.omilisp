@@ -346,6 +346,20 @@
       (module "workbench/src/autonomous_world_live_transport_adapter.js")
       (declaration "declarations/autonomous-world-live-transport-adapter-court.omilisp")
       (doctrine "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")))
+  (world-transport-replay-courts
+    (court autonomous-world-transport-replay-court
+      (kind world.transport-replay-court)
+      (rule "A transport log may replay offers, but only receipt verification can replay admission")
+      (module "workbench/src/autonomous_world_transport_replay.js")
+      (declaration "declarations/autonomous-world-transport-replay-court.omilisp")
+      (doctrine "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")))
+  (world-transport-checkpoint-courts
+    (court autonomous-world-transport-checkpoint-court
+      (kind world.transport-checkpoint-court)
+      (rule "A checkpoint may accelerate replay, but it cannot replace replay verification")
+      (module "workbench/src/autonomous_world_transport_checkpoint.js")
+      (declaration "declarations/autonomous-world-transport-checkpoint-court.omilisp")
+      (doctrine "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -651,7 +665,31 @@
       (surface
         (sid autonomous-world-live-transport-adapter-module)
         (path "workbench/src/autonomous_world_live_transport_adapter.js")
-        (role autonomous-world-live-transport-adapter-module))))
+        (role autonomous-world-live-transport-adapter-module))
+      (surface
+        (sid phase-110-autonomous-world-transport-replay-court)
+        (path "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")
+        (role autonomous-world-transport-replay-doctrine))
+      (surface
+        (sid autonomous-world-transport-replay-court-declaration)
+        (path "declarations/autonomous-world-transport-replay-court.omilisp")
+        (role autonomous-world-transport-replay-declaration))
+      (surface
+        (sid autonomous-world-transport-replay-module)
+        (path "workbench/src/autonomous_world_transport_replay.js")
+        (role autonomous-world-transport-replay-module))
+      (surface
+        (sid phase-111-autonomous-world-transport-checkpoint-court)
+        (path "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")
+        (role autonomous-world-transport-checkpoint-doctrine))
+      (surface
+        (sid autonomous-world-transport-checkpoint-court-declaration)
+        (path "declarations/autonomous-world-transport-checkpoint-court.omilisp")
+        (role autonomous-world-transport-checkpoint-declaration))
+      (surface
+        (sid autonomous-world-transport-checkpoint-module)
+        (path "workbench/src/autonomous_world_transport_checkpoint.js")
+        (role autonomous-world-transport-checkpoint-module))))
   (projections
     (lazy barcode)
     (greedy chart)

@@ -1,0 +1,111 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-replay-court)
+    (title "Autonomous World Transport Replay Court")
+    (kind world.transport-replay-court)
+    (source "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md"))
+  (address
+    (addr autonomous-world-transport-replay-court.self)
+    (locator autonomous-world-live-transport-adapter-court.self)
+    (binding autonomous-world-transport-replay.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-replay)
+    (us event-log-court))
+  (rule
+    (statement "A transport log may replay offers, but only receipt verification can replay admission")
+    (transport-log-is-authority false)
+    (replay-entry-is-admission false)
+    (stored-processing-is-trusted false)
+    (replay-recomputes-verification true)
+    (phase-107-verification-required true)
+    (phase-108-subscription-filtering-required true)
+    (live-network-runtime-added false))
+  (replay-workflow
+    (step record-transport-event
+      (order 0)
+      (role non-authoritative-event-log-entry))
+    (step chain-log-entry
+      (order 1)
+      (role previous-entry-receipt-link))
+    (step verify-log-receipts
+      (order 2)
+      (role deterministic-log-integrity-check))
+    (step replay-event
+      (order 3)
+      (role phase-109-transport-event-reprocessing))
+    (step verify-peer-exchange
+      (order 4)
+      (role phase-107-peer-exchange-verification))
+    (step evaluate-subscription
+      (order 5)
+      (role phase-108-filter-evaluation))
+    (step expose-replayed-snapshots
+      (order 6)
+      (role projection-after-verification-only)))
+  (transport-log-record
+    (field log-id)
+    (field entry-receipts)
+    (field transport-log-receipt)
+    (authority false)
+    (admission false))
+  (replay-entry-record
+    (field entry-id)
+    (field order)
+    (field transport-event-receipt)
+    (field previous-entry-receipt)
+    (field replay-entry-receipt)
+    (authority false)
+    (admission false))
+  (replay-result-record
+    (field transport-log-receipt)
+    (field replayed-event-receipts)
+    (field processing-receipts)
+    (field accepted-snapshot-identities)
+    (field replay-receipt)
+    (authority false)
+    (admission false))
+  (surfaces
+    (surface transport-log
+      (role replayable-offer-carrier-log)
+      (authority false))
+    (surface replay-entry
+      (role transport-event-record)
+      (authority false))
+    (surface replay-processing
+      (role recomputed-phase-109-processing)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-replayed-verification)
+      (authority false)))
+  (guardrails
+    (guard log-not-authority
+      (statement "Transport log is not authority"))
+    (guard replay-not-admission
+      (statement "Replay entry is not admission"))
+    (guard verification-replayed-not-stored
+      (statement "Stored processing is not trusted; replay recomputes Phase 107 Phase 106 and Phase 108 verification"))
+    (guard offers-not-admissions
+      (statement "A transport log may replay offers but only receipt verification can replay admission"))
+    (guard no-live-network
+      (statement "Phase 110 adds no live sockets file watchers pubsub daemons routing or network runtime")))
+  (references
+    (surface phase-109-autonomous-world-live-transport-adapter
+      (path "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")
+      (role transport-event-source))
+    (surface phase-108-autonomous-world-subscription
+      (path "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md")
+      (role subscription-filter-source))
+    (surface phase-107-autonomous-world-peer-exchange
+      (path "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")
+      (role peer-exchange-verification-source))
+    (surface phase-106-autonomous-world-package-sync
+      (path "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")
+      (role sync-package-verification-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (transport-log pending)
+    (replay-entry pending)
+    (replay pending)))
