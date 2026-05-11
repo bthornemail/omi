@@ -292,6 +292,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 116. `PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md` records
      deterministic availability maps over local evidence, missing/corrupt
      receipt classifications, and non-authoritative repair source hints.
+117. `PHASE-115-AUTONOMOUS-WORLD-TRANSPORT-REQUEST-SCHEDULER-COURT.md` records
+     deterministic request schedules over availability reports without turning
+     scheduling, supplier priority, or delivery into admission.
 
 ## File Roles
 

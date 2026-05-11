@@ -381,6 +381,13 @@
       (module "workbench/src/autonomous_world_transport_availability.js")
       (declaration "declarations/autonomous-world-transport-availability-court.omilisp")
       (doctrine "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md")))
+  (world-transport-request-scheduler-courts
+    (court autonomous-world-transport-request-scheduler-court
+      (kind world.transport-request-scheduler-court)
+      (rule "A scheduler may choose what to request next, but scheduling is not trust and delivery is not admission")
+      (module "workbench/src/autonomous_world_transport_request_scheduler.js")
+      (declaration "declarations/autonomous-world-transport-request-scheduler-court.omilisp")
+      (doctrine "docs/PHASE-115-AUTONOMOUS-WORLD-TRANSPORT-REQUEST-SCHEDULER-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -746,7 +753,19 @@
       (surface
         (sid autonomous-world-transport-availability-module)
         (path "workbench/src/autonomous_world_transport_availability.js")
-        (role autonomous-world-transport-availability-module))))
+        (role autonomous-world-transport-availability-module))
+      (surface
+        (sid phase-115-autonomous-world-transport-request-scheduler-court)
+        (path "docs/PHASE-115-AUTONOMOUS-WORLD-TRANSPORT-REQUEST-SCHEDULER-COURT.md")
+        (role autonomous-world-transport-request-scheduler-doctrine))
+      (surface
+        (sid autonomous-world-transport-request-scheduler-court-declaration)
+        (path "declarations/autonomous-world-transport-request-scheduler-court.omilisp")
+        (role autonomous-world-transport-request-scheduler-declaration))
+      (surface
+        (sid autonomous-world-transport-request-scheduler-module)
+        (path "workbench/src/autonomous_world_transport_request_scheduler.js")
+        (role autonomous-world-transport-request-scheduler-module))))
   (projections
     (lazy barcode)
     (greedy chart)

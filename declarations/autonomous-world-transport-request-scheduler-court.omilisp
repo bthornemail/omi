@@ -1,0 +1,113 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-request-scheduler-court)
+    (title "Autonomous World Transport Request Scheduler Court")
+    (kind world.transport-request-scheduler-court)
+    (source "docs/PHASE-115-AUTONOMOUS-WORLD-TRANSPORT-REQUEST-SCHEDULER-COURT.md"))
+  (address
+    (addr autonomous-world-transport-request-scheduler-court.self)
+    (locator autonomous-world-transport-availability-court.self)
+    (binding autonomous-world-transport-request-scheduler.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-request-scheduler)
+    (us request-plan-court))
+  (rule
+    (statement "A scheduler may choose what to request next, but scheduling is not trust and delivery is not admission")
+    (scheduler-is-authority false)
+    (request-plan-is-admission false)
+    (supplier-priority-is-trust false)
+    (delivery-success-is-receipt-validity false)
+    (retry-policy-bypasses-verification false)
+    (missing-evidence-hidden false)
+    (corrupt-evidence-treated-available false)
+    (repairable-is-repaired false)
+    (package-sync-plan-is-admission false))
+  (scheduler-workflow
+    (step consume-availability-report
+      (order 0)
+      (role phase-114-evidence-classification))
+    (step classify-request-needs
+      (order 1)
+      (role missing-corrupt-repairable-request-set))
+    (step prioritize-receipts
+      (order 2)
+      (role deterministic-policy-order))
+    (step order-candidate-suppliers
+      (order 3)
+      (role non-authoritative-supplier-choice))
+    (step emit-request-schedule
+      (order 4)
+      (role request-schedule-receipt))
+    (step feed-repair-or-sync-path
+      (order 5)
+      (role phase-113-or-future-dispatch-guidance))
+    (step verify-before-admission
+      (order 6)
+      (role phase-113-106-107-verification-gate)))
+  (request-schedule-record
+    (field source-availability-receipt)
+    (field policy)
+    (field requests)
+    (field unsatisfied)
+    (field schedule-receipt)
+    (authority false)
+    (admission false)
+    (dispatch false))
+  (request-record
+    (field target-receipt)
+    (field target-kind)
+    (field reason)
+    (field candidate-suppliers)
+    (field priority)
+    (field request-receipt)
+    (authority false)
+    (admission false)
+    (dispatch false))
+  (surfaces
+    (surface request-schedule
+      (role deterministic-next-evidence-plan)
+      (authority false))
+    (surface candidate-supplier-priority
+      (role ordering-hint-not-trust)
+      (authority false))
+    (surface scheduled-repair-plan
+      (role phase-113-guidance)
+      (authority false))
+    (surface future-sync-dispatch
+      (role future-transport-surface)
+      (authority false)))
+  (guardrails
+    (guard scheduler-not-authority
+      (statement "Scheduler is not authority"))
+    (guard request-not-admission
+      (statement "Request plan is not admission"))
+    (guard supplier-priority-not-trust
+      (statement "Supplier priority is not trust"))
+    (guard delivery-not-validity
+      (statement "Delivery success is not receipt validity"))
+    (guard retry-not-bypass
+      (statement "Retry policy is not a verification bypass"))
+    (guard corrupt-before-available
+      (statement "Corrupt evidence must be requested before it is treated as available"))
+    (guard request-next-not-trust
+      (statement "Phase 115 lets the node decide what evidence to ask for next without trusting the request the supplier or the delivery path")))
+  (references
+    (surface phase-114-autonomous-world-transport-availability
+      (path "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md")
+      (role availability-map-source))
+    (surface phase-113-autonomous-world-transport-repair
+      (path "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md")
+      (role repair-verification-path))
+    (surface phase-107-autonomous-world-peer-exchange
+      (path "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")
+      (role package-exchange-verification-path))
+    (surface phase-106-autonomous-world-package-sync
+      (path "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")
+      (role package-sync-verification-path)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (schedule pending)
+    (request pending)))
