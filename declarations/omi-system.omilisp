@@ -374,6 +374,13 @@
       (module "workbench/src/autonomous_world_transport_repair.js")
       (declaration "declarations/autonomous-world-transport-repair-court.omilisp")
       (doctrine "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md")))
+  (world-transport-availability-courts
+    (court autonomous-world-transport-availability-court
+      (kind world.transport-availability-court)
+      (rule "Availability may guide repair, but availability is not admissibility")
+      (module "workbench/src/autonomous_world_transport_availability.js")
+      (declaration "declarations/autonomous-world-transport-availability-court.omilisp")
+      (doctrine "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -727,7 +734,19 @@
       (surface
         (sid autonomous-world-transport-repair-module)
         (path "workbench/src/autonomous_world_transport_repair.js")
-        (role autonomous-world-transport-repair-module))))
+        (role autonomous-world-transport-repair-module))
+      (surface
+        (sid phase-114-autonomous-world-transport-availability-court)
+        (path "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md")
+        (role autonomous-world-transport-availability-doctrine))
+      (surface
+        (sid autonomous-world-transport-availability-court-declaration)
+        (path "declarations/autonomous-world-transport-availability-court.omilisp")
+        (role autonomous-world-transport-availability-declaration))
+      (surface
+        (sid autonomous-world-transport-availability-module)
+        (path "workbench/src/autonomous_world_transport_availability.js")
+        (role autonomous-world-transport-availability-module))))
   (projections
     (lazy barcode)
     (greedy chart)

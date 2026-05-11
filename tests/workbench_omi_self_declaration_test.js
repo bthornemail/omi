@@ -76,6 +76,7 @@ function testSelfDeclarationParses() {
     "world-transport-checkpoint-courts",
     "world-transport-compaction-courts",
     "world-transport-repair-courts",
+    "world-transport-availability-courts",
     "surfaces",
     "projections",
     "receipts"
@@ -264,7 +265,10 @@ function testReferencedSurfacesExist() {
     "workbench/src/autonomous_world_transport_compaction.js",
     "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md",
     "declarations/autonomous-world-transport-repair-court.omilisp",
-    "workbench/src/autonomous_world_transport_repair.js"
+    "workbench/src/autonomous_world_transport_repair.js",
+    "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md",
+    "declarations/autonomous-world-transport-availability-court.omilisp",
+    "workbench/src/autonomous_world_transport_availability.js"
   ];
   const declaredPaths = surfaces.map((surface) => surface.path);
 

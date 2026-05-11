@@ -1,0 +1,108 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-availability-court)
+    (title "Autonomous World Transport Availability Court")
+    (kind world.transport-availability-court)
+    (source "docs/PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md"))
+  (address
+    (addr autonomous-world-transport-availability-court.self)
+    (locator autonomous-world-transport-repair-court.self)
+    (binding autonomous-world-transport-availability.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-availability)
+    (us evidence-map-court))
+  (rule
+    (statement "Availability may guide repair, but availability is not admissibility")
+    (availability-is-authority false)
+    (availability-match-is-admission false)
+    (candidate-supplier-is-trust false)
+    (repairable-is-repaired false)
+    (available-evidence-bypasses-verification false)
+    (missing-evidence-hidden false)
+    (corrupt-evidence-available false)
+    (availability-report-opens-snapshots false))
+  (availability-workflow
+    (step collect-local-inventory
+      (order 0)
+      (role evidence-receipt-inventory))
+    (step bind-required-receipts
+      (order 1)
+      (role required-evidence-set))
+    (step classify-availability
+      (order 2)
+      (role available-missing-corrupt-repairable-map))
+    (step identify-candidate-suppliers
+      (order 3)
+      (role non-authoritative-peer-package-sources))
+    (step witness-availability
+      (order 4)
+      (role availability-receipt))
+    (step emit-repair-plan
+      (order 5)
+      (role phase-113-guidance-only))
+    (step verify-after-repair
+      (order 6)
+      (role phase-113-repair-and-verification-path)))
+  (availability-record
+    (field required-receipts)
+    (field available)
+    (field missing)
+    (field corrupt)
+    (field repairable)
+    (field candidate-suppliers)
+    (field availability-receipt)
+    (authority false))
+  (repair-plan-record
+    (field availability-receipt)
+    (field repair-requests)
+    (field candidate-suppliers)
+    (field repair-payloads)
+    (field repair-plan-receipt)
+    (authority false)
+    (admission false))
+  (surfaces
+    (surface availability-report
+      (role evidence-presence-map)
+      (authority false))
+    (surface candidate-supplier
+      (role possible-repair-source)
+      (authority false))
+    (surface repair-plan
+      (role phase-113-guidance)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-repair-verification-only)
+      (authority false)))
+  (guardrails
+    (guard availability-not-authority
+      (statement "Availability is not authority"))
+    (guard match-not-admission
+      (statement "Availability match is not admission"))
+    (guard supplier-not-trust
+      (statement "Candidate supplier is not trust"))
+    (guard repairable-not-repaired
+      (statement "Repairable is not repaired"))
+    (guard availability-guides-only
+      (statement "Availability may guide repair but availability is not admissibility"))
+    (guard node-map-not-admission
+      (statement "Phase 114 tells the node what evidence it has what evidence it lacks and where repair might come from but only verification can admit history")))
+  (references
+    (surface phase-113-autonomous-world-transport-repair
+      (path "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md")
+      (role repair-path-source))
+    (surface phase-112-autonomous-world-transport-compaction
+      (path "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md")
+      (role compaction-evidence-source))
+    (surface phase-111-autonomous-world-transport-checkpoint
+      (path "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")
+      (role checkpoint-boundary-source))
+    (surface phase-110-autonomous-world-transport-replay
+      (path "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")
+      (role replay-log-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (availability pending)
+    (repair-plan pending)))

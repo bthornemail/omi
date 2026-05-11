@@ -289,6 +289,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 115. `PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md` records
      receipt-addressed repair requests and payloads that restore transport
      evidence shape before verification restores admissibility.
+116. `PHASE-114-AUTONOMOUS-WORLD-TRANSPORT-AVAILABILITY-COURT.md` records
+     deterministic availability maps over local evidence, missing/corrupt
+     receipt classifications, and non-authoritative repair source hints.
 
 ## File Roles
 
