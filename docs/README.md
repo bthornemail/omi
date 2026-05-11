@@ -286,6 +286,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 114. `PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md` records
      receipt-preserving compaction bundles that reduce old transport evidence
      without erasing verification receipts or replacing replay.
+115. `PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md` records
+     receipt-addressed repair requests and payloads that restore transport
+     evidence shape before verification restores admissibility.
 
 ## File Roles
 

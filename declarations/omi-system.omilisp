@@ -367,6 +367,13 @@
       (module "workbench/src/autonomous_world_transport_compaction.js")
       (declaration "declarations/autonomous-world-transport-compaction-court.omilisp")
       (doctrine "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md")))
+  (world-transport-repair-courts
+    (court autonomous-world-transport-repair-court
+      (kind world.transport-repair-court)
+      (rule "Repair may restore evidence, but only verification restores admissibility")
+      (module "workbench/src/autonomous_world_transport_repair.js")
+      (declaration "declarations/autonomous-world-transport-repair-court.omilisp")
+      (doctrine "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -708,7 +715,19 @@
       (surface
         (sid autonomous-world-transport-compaction-module)
         (path "workbench/src/autonomous_world_transport_compaction.js")
-        (role autonomous-world-transport-compaction-module))))
+        (role autonomous-world-transport-compaction-module))
+      (surface
+        (sid phase-113-autonomous-world-transport-repair-court)
+        (path "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md")
+        (role autonomous-world-transport-repair-doctrine))
+      (surface
+        (sid autonomous-world-transport-repair-court-declaration)
+        (path "declarations/autonomous-world-transport-repair-court.omilisp")
+        (role autonomous-world-transport-repair-declaration))
+      (surface
+        (sid autonomous-world-transport-repair-module)
+        (path "workbench/src/autonomous_world_transport_repair.js")
+        (role autonomous-world-transport-repair-module))))
   (projections
     (lazy barcode)
     (greedy chart)

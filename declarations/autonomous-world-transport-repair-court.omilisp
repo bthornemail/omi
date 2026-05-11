@@ -1,0 +1,113 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-repair-court)
+    (title "Autonomous World Transport Repair Court")
+    (kind world.transport-repair-court)
+    (source "docs/PHASE-113-AUTONOMOUS-WORLD-TRANSPORT-REPAIR-COURT.md"))
+  (address
+    (addr autonomous-world-transport-repair-court.self)
+    (locator autonomous-world-transport-compaction-court.self)
+    (binding autonomous-world-transport-repair.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-repair)
+    (us evidence-repair-court))
+  (rule
+    (statement "Repair may restore evidence, but only verification restores admissibility")
+    (repair-request-is-authority false)
+    (repair-payload-is-admission false)
+    (repaired-log-is-admitted-history false)
+    (repair-peer-is-authority false)
+    (verification-after-repair-required true)
+    (tampered-repair-payload-accepted false)
+    (stored-repair-status-admits false)
+    (live-peer-repair-runtime-added false))
+  (repair-workflow
+    (step inspect-evidence
+      (order 0)
+      (role transport-log-checkpoint-compaction-inspection))
+    (step detect-missing-or-corrupt-receipt
+      (order 1)
+      (role receipt-addressed-repair-issue))
+    (step emit-repair-request
+      (order 2)
+      (role non-authoritative-request))
+    (step apply-repair-payload
+      (order 3)
+      (role evidence-shape-restoration))
+    (step rebuild-replay-path
+      (order 4)
+      (role repaired-log-and-compaction-path))
+    (step recompute-verification
+      (order 5)
+      (role phase-109-phase-107-phase-106-phase-108-verification))
+    (step expose-repaired-snapshots
+      (order 6)
+      (role projection-after-repaired-verification-only)))
+  (repair-request-record
+    (field target-receipt)
+    (field target-kind)
+    (field reason)
+    (field repair-request-receipt)
+    (authority false))
+  (repair-payload-record
+    (field target-receipt)
+    (field target-kind)
+    (field repair-request-receipt)
+    (field evidence-receipt)
+    (field repair-payload-receipt)
+    (authority false)
+    (admission false))
+  (repair-result-record
+    (field repair-payload-receipts)
+    (field verification-recomputed)
+    (field accepted-snapshot-identities)
+    (field repair-result-receipt)
+    (authority false)
+    (admission false))
+  (surfaces
+    (surface repair-request
+      (role receipt-addressed-evidence-request)
+      (authority false))
+    (surface repair-payload
+      (role replacement-evidence-carrier)
+      (authority false))
+    (surface repaired-replay
+      (role recomputed-verification-path)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-repaired-verification)
+      (authority false)))
+  (guardrails
+    (guard repair-not-authority
+      (statement "Repair request is not authority"))
+    (guard payload-not-admission
+      (statement "Repair payload is not admission"))
+    (guard peer-not-authority
+      (statement "Peer supplying repair is not authority"))
+    (guard verification-restores-admissibility
+      (statement "Repair may restore evidence but only verification restores admissibility"))
+    (guard repair-survivable-not-trusted
+      (statement "Phase 113 makes transport evidence survivable without making repair trustworthy"))
+    (guard no-live-peer-repair
+      (statement "Phase 113 adds no live peer repair requests sockets routing or network runtime")))
+  (references
+    (surface phase-112-autonomous-world-transport-compaction
+      (path "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md")
+      (role compaction-evidence-source))
+    (surface phase-111-autonomous-world-transport-checkpoint
+      (path "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")
+      (role checkpoint-boundary-source))
+    (surface phase-110-autonomous-world-transport-replay
+      (path "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")
+      (role replay-log-source))
+    (surface phase-109-autonomous-world-live-transport-adapter
+      (path "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")
+      (role transport-event-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (repair-request pending)
+    (repair-payload pending)
+    (repair-result pending)))
