@@ -271,6 +271,12 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 109. `PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md` records the
      declared peer exchange protocol for offering Phase 106 sync packages
      without making peers or transports authoritative.
+110. `PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md` records the
+     local subscription and filtering court for requesting peer/world/history
+     streams without trusting the stream that offers them.
+111. `PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md` records the
+     deterministic transport adapter plan and event court for carrying package
+     offers without making carrier surfaces trust surfaces.
 
 ## File Roles
 

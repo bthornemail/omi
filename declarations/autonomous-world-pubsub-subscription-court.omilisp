@@ -1,0 +1,107 @@
+(omi
+  (identity
+    (sid autonomous-world-pubsub-subscription-court)
+    (title "Autonomous World Pub/Sub Subscription Court")
+    (kind world.pubsub-subscription-court)
+    (source "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md"))
+  (address
+    (addr autonomous-world-pubsub-subscription-court.self)
+    (locator autonomous-world-peer-exchange-protocol.self)
+    (binding autonomous-world-subscription-court.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs pubsub-subscription)
+    (us filter-court))
+  (rule
+    (statement "A subscription may request world updates, but only verified exchanged packages become locally admitted history")
+    (subscription-is-authority false)
+    (filter-match-is-admission false)
+    (stream-interest-is-trust false)
+    (peer-world-history-filters-auto-admit false)
+    (matched-tampered-package-accepted false)
+    (unmatched-valid-exchange-admitted false)
+    (live-pubsub-runtime-added false))
+  (subscription-workflow
+    (step declare-subscription
+      (order 0)
+      (role non-authoritative-interest-record))
+    (step bind-filters
+      (order 1)
+      (role peer-world-history-filter-set))
+    (step receive-peer-exchange
+      (order 2)
+      (role phase-107-exchange-record))
+    (step evaluate-subscription-match
+      (order 3)
+      (role deterministic-filter-evaluation))
+    (step request-or-ignore-evidence
+      (order 4)
+      (role matched-package-request-or-ignore))
+    (step verify-through-peer-exchange
+      (order 5)
+      (role phase-107-and-phase-106-receipt-verification))
+    (step expose-accepted-snapshots
+      (order 6)
+      (role projection-after-verification-only)))
+  (subscription-record
+    (field subscription-id)
+    (field peer-filter)
+    (field world-filter)
+    (field history-mode)
+    (field subscription-receipt)
+    (authority false))
+  (evaluation-record
+    (field subscription-receipt)
+    (field exchange-receipt)
+    (field match)
+    (field action)
+    (field verification-status)
+    (field admitted-snapshot-identities)
+    (field evaluation-receipt)
+    (authority false))
+  (surfaces
+    (surface subscription
+      (role declared-local-interest)
+      (authority false))
+    (surface filter-match
+      (role deterministic-interest-match)
+      (authority false))
+    (surface peer-exchange-record
+      (role phase-107-verification-source)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-verified-exchange)
+      (authority false))
+    (surface ignored-exchange
+      (role non-matching-evidence)
+      (authority false)))
+  (guardrails
+    (guard subscription-not-authority
+      (statement "A subscription may request world updates, but only verified exchanged packages become locally admitted history"))
+    (guard match-not-admission
+      (statement "Filter match is not admission"))
+    (guard history-wanted-not-trusted
+      (statement "Phase 108 lets a node state what history it wants without trusting the stream that offers it"))
+    (guard verified-exchange-only
+      (statement "Snapshots become visible only after Phase 107 and Phase 106 verification"))
+    (guard no-live-pubsub
+      (statement "Phase 108 adds no live pubsub sockets routing subscriptions over network or transport runtime")))
+  (references
+    (surface phase-107-autonomous-world-peer-exchange
+      (path "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")
+      (role verified-peer-exchange-source))
+    (surface phase-106-autonomous-world-package-sync
+      (path "docs/PHASE-106-AUTONOMOUS-WORLD-PACKAGE-SYNC-COURT.md")
+      (role sync-package-verification-source))
+    (surface phase-100-autonomous-world-browser
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role accepted-browser-projection))
+    (surface phase-101-autonomous-world-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role accepted-renderer-projection)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (subscription pending)
+    (evaluation pending)))

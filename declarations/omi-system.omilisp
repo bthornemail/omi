@@ -332,6 +332,20 @@
       (module "workbench/src/autonomous_world_peer_exchange.js")
       (declaration "declarations/autonomous-world-peer-exchange-protocol.omilisp")
       (doctrine "docs/PHASE-107-AUTONOMOUS-WORLD-PEER-EXCHANGE-PROTOCOL.md")))
+  (world-subscription-courts
+    (court autonomous-world-pubsub-subscription-court
+      (kind world.pubsub-subscription-court)
+      (rule "A subscription may request world updates, but only verified exchanged packages become locally admitted history")
+      (module "workbench/src/autonomous_world_subscription_court.js")
+      (declaration "declarations/autonomous-world-pubsub-subscription-court.omilisp")
+      (doctrine "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md")))
+  (world-live-transport-adapter-courts
+    (court autonomous-world-live-transport-adapter-court
+      (kind world.live-transport-adapter-court)
+      (rule "A live transport may carry offers, but only the declared exchange and receipt-verification courts admit world history")
+      (module "workbench/src/autonomous_world_live_transport_adapter.js")
+      (declaration "declarations/autonomous-world-live-transport-adapter-court.omilisp")
+      (doctrine "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -613,7 +627,31 @@
       (surface
         (sid autonomous-world-peer-exchange-module)
         (path "workbench/src/autonomous_world_peer_exchange.js")
-        (role autonomous-world-peer-exchange-module))))
+        (role autonomous-world-peer-exchange-module))
+      (surface
+        (sid phase-108-autonomous-world-pubsub-subscription-court)
+        (path "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md")
+        (role autonomous-world-subscription-doctrine))
+      (surface
+        (sid autonomous-world-pubsub-subscription-court-declaration)
+        (path "declarations/autonomous-world-pubsub-subscription-court.omilisp")
+        (role autonomous-world-subscription-declaration))
+      (surface
+        (sid autonomous-world-subscription-module)
+        (path "workbench/src/autonomous_world_subscription_court.js")
+        (role autonomous-world-subscription-module))
+      (surface
+        (sid phase-109-autonomous-world-live-transport-adapter-court)
+        (path "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")
+        (role autonomous-world-live-transport-adapter-doctrine))
+      (surface
+        (sid autonomous-world-live-transport-adapter-court-declaration)
+        (path "declarations/autonomous-world-live-transport-adapter-court.omilisp")
+        (role autonomous-world-live-transport-adapter-declaration))
+      (surface
+        (sid autonomous-world-live-transport-adapter-module)
+        (path "workbench/src/autonomous_world_live_transport_adapter.js")
+        (role autonomous-world-live-transport-adapter-module))))
   (projections
     (lazy barcode)
     (greedy chart)
