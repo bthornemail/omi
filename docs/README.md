@@ -283,6 +283,9 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 113. `PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md` records
      transport replay checkpoints for resumability without letting checkpoint
      summaries replace replay verification.
+114. `PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md` records
+     receipt-preserving compaction bundles that reduce old transport evidence
+     without erasing verification receipts or replacing replay.
 
 ## File Roles
 

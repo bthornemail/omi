@@ -1,0 +1,110 @@
+(omi
+  (identity
+    (sid autonomous-world-transport-compaction-court)
+    (title "Autonomous World Transport Compaction Court")
+    (kind world.transport-compaction-court)
+    (source "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md"))
+  (address
+    (addr autonomous-world-transport-compaction-court.self)
+    (locator autonomous-world-transport-checkpoint-court.self)
+    (binding autonomous-world-transport-compaction.v0))
+  (scope
+    (fs omi)
+    (gs world)
+    (rs transport-compaction)
+    (us evidence-bundle-court))
+  (rule
+    (statement "Compaction may reduce transport evidence size, but it cannot erase the receipts needed to verify history")
+    (compaction-is-authority false)
+    (compaction-bundle-is-admission false)
+    (compaction-erases-required-receipts false)
+    (compaction-replaces-replay-verification false)
+    (resume-recomputes-verification true)
+    (stored-accepted-status-admits false)
+    (tampered-compaction-accepted false)
+    (live-network-runtime-added false))
+  (compaction-workflow
+    (step verify-replay-log
+      (order 0)
+      (role phase-110-log-integrity-source))
+    (step verify-checkpoint
+      (order 1)
+      (role phase-111-resume-boundary-source))
+    (step compact-old-evidence
+      (order 2)
+      (role receipt-preserving-evidence-bundle))
+    (step retain-required-receipts
+      (order 3)
+      (role entry-event-checkpoint-processing-receipts))
+    (step witness-compaction
+      (order 4)
+      (role compaction-receipt))
+    (step resume-through-checkpoint
+      (order 5)
+      (role recomputed-verification-path))
+    (step expose-resumed-snapshots
+      (order 6)
+      (role projection-after-recomputed-verification-only)))
+  (compaction-bundle-record
+    (field compaction-id)
+    (field compacted-range)
+    (field transport-log-receipt)
+    (field log-from-receipt)
+    (field log-to-receipt)
+    (field checkpoint-receipt)
+    (field replay-entry-receipts)
+    (field transport-event-receipts)
+    (field retained-evidence-receipts)
+    (field compaction-receipt)
+    (authority false)
+    (admission false))
+  (compaction-resume-record
+    (field compaction-receipt)
+    (field checkpoint-receipt)
+    (field resume-receipt)
+    (field verification-recomputed)
+    (field accepted-snapshot-identities)
+    (field compaction-resume-receipt)
+    (authority false)
+    (admission false))
+  (surfaces
+    (surface compaction-bundle
+      (role receipt-preserving-transport-evidence)
+      (authority false))
+    (surface compaction-resume
+      (role recomputed-replay-continuation)
+      (authority false))
+    (surface accepted-snapshot-view
+      (role projection-after-compaction-resume-verification)
+      (authority false)))
+  (guardrails
+    (guard compaction-not-authority
+      (statement "Compaction bundle is not authority"))
+    (guard bundle-not-admission
+      (statement "Compaction bundle is not replay admission"))
+    (guard receipts-not-erased
+      (statement "Compaction may reduce transport evidence size but it cannot erase the receipts needed to verify history"))
+    (guard replay-verification-not-replaced
+      (statement "Compaction does not replace replay verification"))
+    (guard stored-status-not-admission
+      (statement "Stored accepted status alone cannot admit snapshots"))
+    (guard no-live-network
+      (statement "Phase 112 adds no live sockets file watchers pubsub daemons routing or network runtime")))
+  (references
+    (surface phase-111-autonomous-world-transport-checkpoint
+      (path "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")
+      (role checkpoint-boundary-source))
+    (surface phase-110-autonomous-world-transport-replay
+      (path "docs/PHASE-110-AUTONOMOUS-WORLD-TRANSPORT-REPLAY-COURT.md")
+      (role replay-log-source))
+    (surface phase-109-autonomous-world-live-transport-adapter
+      (path "docs/PHASE-109-AUTONOMOUS-WORLD-LIVE-TRANSPORT-ADAPTER-COURT.md")
+      (role transport-event-source))
+    (surface phase-108-autonomous-world-subscription
+      (path "docs/PHASE-108-AUTONOMOUS-WORLD-PUBSUB-SUBSCRIPTION-COURT.md")
+      (role subscription-filter-source)))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (compaction pending)
+    (compaction-resume pending)))

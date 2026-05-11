@@ -360,6 +360,13 @@
       (module "workbench/src/autonomous_world_transport_checkpoint.js")
       (declaration "declarations/autonomous-world-transport-checkpoint-court.omilisp")
       (doctrine "docs/PHASE-111-AUTONOMOUS-WORLD-TRANSPORT-CHECKPOINT-COURT.md")))
+  (world-transport-compaction-courts
+    (court autonomous-world-transport-compaction-court
+      (kind world.transport-compaction-court)
+      (rule "Compaction may reduce transport evidence size, but it cannot erase the receipts needed to verify history")
+      (module "workbench/src/autonomous_world_transport_compaction.js")
+      (declaration "declarations/autonomous-world-transport-compaction-court.omilisp")
+      (doctrine "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md")))
   (surfaces
     (paths
       (surface
@@ -689,7 +696,19 @@
       (surface
         (sid autonomous-world-transport-checkpoint-module)
         (path "workbench/src/autonomous_world_transport_checkpoint.js")
-        (role autonomous-world-transport-checkpoint-module))))
+        (role autonomous-world-transport-checkpoint-module))
+      (surface
+        (sid phase-112-autonomous-world-transport-compaction-court)
+        (path "docs/PHASE-112-AUTONOMOUS-WORLD-TRANSPORT-COMPACTION-COURT.md")
+        (role autonomous-world-transport-compaction-doctrine))
+      (surface
+        (sid autonomous-world-transport-compaction-court-declaration)
+        (path "declarations/autonomous-world-transport-compaction-court.omilisp")
+        (role autonomous-world-transport-compaction-declaration))
+      (surface
+        (sid autonomous-world-transport-compaction-module)
+        (path "workbench/src/autonomous_world_transport_compaction.js")
+        (role autonomous-world-transport-compaction-module))))
   (projections
     (lazy barcode)
     (greedy chart)
