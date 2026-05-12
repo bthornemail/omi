@@ -210,6 +210,10 @@
           <div class="panel-body preview-grid" id="backends"></div>
         </div>
         <div class="panel">
+          <h2>Org-OMI Notebook</h2>
+          <div class="panel-body graph-list" id="org-omi-notebook"></div>
+        </div>
+        <div class="panel">
           <h2>ASCII Plane Inspector</h2>
           <div class="panel-body" id="ascii-detail"></div>
         </div>
@@ -418,6 +422,52 @@
       ((US . middle)  . FS.GS.RS)
       ((US . near)    . FS.GS.RS.US)
       ((US . inspect) . full-trace))))`;
+
+    window.OMI_WORKBENCH_ORG_OMI = String.raw`#+TITLE: org-omi Canonical Syntax Surface
+#+OMI_ID: omi://platform/omnicron/org-omi/canonical-syntax
+#+OMI_SURFACE: org-omi
+#+OMI_AUTHORITY: decoded-declaration+deterministic-receipt
+#+OMI_TANGLE_ROOT: declarations/
+#+OMI_TRAMP_ROOT: /ssh:builder@node-a:/srv/omi/blackboard.org
+
+* Root Statement
+:PROPERTIES:
+:OMI_LAYER: declarative
+:END:
+
+#+begin_src omi :tangle declarations/org-omi-envelope.omi
+(omi
+  (identity
+    (sid canonical-syntax)
+    (title "Canonical Syntax"))
+  (scope
+    (fs org-omi)
+    (gs canonical-syntax)
+    (rs declaration)
+    (us receipt))
+  (projection
+    (osi application presentation session transport network data-link physical)
+    (authority non-causal)
+    (runtime org-omi-pinch.v1))
+  (receipt
+    (status pending)))
+#+end_src
+
+* Chronological Event
+:PROPERTIES:
+:OMI_LAYER: chronological
+:OMI_OPERATOR: diametric
+:END:
+
+#+begin_src omi :tangle declarations/derived-boundary.omi
+(omi
+  (identity
+    (sid derived-boundary))
+  (chronological
+    ((subject . derived-boundary)
+     (predicate . admitted-at)
+     (stdout . barcode-boundary))))
+#+end_src`;
   </script>
   <script src="./src/model_parser.js"></script>
   <script src="./src/ascii_plane.js"></script>
@@ -435,6 +485,12 @@
   <script src="./src/obj_mtl_exporter.js"></script>
   <script src="./src/polyform_preview.js"></script>
   <script src="./src/source_buffer.js"></script>
+  <script src="./src/org_property_drawer.js"></script>
+  <script src="./src/org_babel_blocks.js"></script>
+  <script src="./src/org_parser.js"></script>
+  <script src="./src/tramp_path.js"></script>
+  <script src="./src/org_omi_exporter.js"></script>
+  <script src="./src/org_omi_notebook.js"></script>
   <script>
     (function () {
       const parser = window.OMIModelParser;
@@ -452,11 +508,14 @@
       const objExporter = window.OMIObjMtlExporter;
       const preview = window.OMIPolyformPreview;
       const sourceBuffer = window.OMISourceBuffer;
+      const orgOmiExporter = window.OMIOrgOmiExporter;
+      const orgOmiNotebook = window.OMIOrgOmiNotebook;
 
       const state = {
         source: document.getElementById("source"),
         trailer: window.OMI_WORKBENCH_TRAILER,
         world: window.OMI_WORKBENCH_WORLD,
+        orgOmi: window.OMI_WORKBENCH_ORG_OMI,
       };
 
       function metric(label, value) {
@@ -502,6 +561,15 @@
         ].join("");
         document.getElementById("ascii-detail").innerHTML = ascii.renderInspector(asciiView);
         document.getElementById("proposal").innerHTML = `<pre>${sourceBuffer.proposePropertyEdit(doc, "RS.preview-note", "US.status", "draft")}</pre>`;
+        const orgOmiBundle = orgOmiExporter.exportBundle(state.orgOmi, {
+          sourcePath: "org/org-omi-canonical-syntax-surface.org"
+        });
+        document.getElementById("org-omi-notebook").innerHTML = orgOmiNotebook.render({
+          declarationText: orgOmiBundle.declarationText,
+          manifest: orgOmiBundle.manifestJson,
+          markdown: orgOmiBundle.markdown,
+          canvas: orgOmiBundle.canvasJson
+        });
         canvasBackend.renderToCanvas(document.getElementById("workbench-canvas"), canvasProjection);
 
         const firstPointer = doc.records[0] ? pointerRouter.selectPointer({

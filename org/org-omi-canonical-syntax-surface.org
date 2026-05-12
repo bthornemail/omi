@@ -1,0 +1,53 @@
+#+TITLE: org-omi Canonical Syntax Surface
+#+AUTHOR: OMI
+#+LANGUAGE: en
+#+PROPERTY: header-args:omi :exports both :results none
+
+#+OMI_ID: omi://platform/omnicron/org-omi/canonical-syntax
+#+OMI_SURFACE: org-omi
+#+OMI_AUTHORITY: decoded-declaration+deterministic-receipt
+#+OMI_TANGLE_ROOT: declarations/
+#+OMI_TRAMP_ROOT: /ssh:builder@node-a:/srv/omi/blackboard.org
+#+OMI_RECEIPT: pending
+
+* Root Statement
+:PROPERTIES:
+:OMI_LAYER: declarative
+:OMI_SCOPE: root
+:END:
+
+org-omi is a literate declaration surface for Omnicron.
+
+#+begin_src omi :tangle declarations/org-omi-envelope.omi
+(omi
+  (identity
+    (sid canonical-syntax)
+    (title "Canonical Syntax"))
+  (scope
+    (fs org-omi)
+    (gs canonical-syntax)
+    (rs declaration)
+    (us receipt))
+  (projection
+    (osi application presentation session transport network data-link physical)
+    (authority non-causal)
+    (runtime org-omi-pinch.v1))
+  (receipt
+    (status pending)))
+#+end_src
+
+* Chronological Event
+:PROPERTIES:
+:OMI_LAYER: chronological
+:OMI_OPERATOR: diametric
+:END:
+
+#+begin_src omi :tangle declarations/derived-boundary.omi
+(omi
+  (identity
+    (sid derived-boundary))
+  (chronological
+    ((subject . derived-boundary)
+     (predicate . admitted-at)
+     (stdout . barcode-boundary))))
+#+end_src
