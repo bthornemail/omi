@@ -2,9 +2,11 @@
 #define OMI_BOM_H
 
 #include "omi.h"
+#include "layer_clock.h"
 
 typedef struct omi_bom_clock {
     omi_tick_t tick;
+    layer_clock_t semantic_clock;
 } omi_bom_clock_t;
 
 void omi_bom_init(omi_bom_clock_t *clock);

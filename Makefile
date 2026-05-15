@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-org-omi-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-unicode-annotation-lattice-test workbench-sixty-four-ion-blackboard-pairing-test workbench-universal-closure-coding-test workbench-autonomous-world-builder-test workbench-autonomous-world-browser-smoke-test workbench-autonomous-world-live-renderer-test workbench-autonomous-world-interjection-overlay-test workbench-autonomous-world-overlay-admission-test workbench-autonomous-world-version-history-test workbench-autonomous-world-merge-reconciliation-test workbench-autonomous-world-package-sync-test workbench-autonomous-world-peer-exchange-test workbench-autonomous-world-subscription-court-test workbench-autonomous-world-live-transport-adapter-test workbench-autonomous-world-transport-replay-test workbench-autonomous-world-transport-checkpoint-test workbench-autonomous-world-transport-compaction-test workbench-autonomous-world-transport-repair-test workbench-autonomous-world-transport-availability-test workbench-autonomous-world-transport-request-scheduler-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test omi-blob-test org-omi-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test compiler-pipeline-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-org-omi-test workbench-dom-cssom-surface-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-platform-distribution-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-unicode-annotation-lattice-test workbench-sixty-four-ion-blackboard-pairing-test workbench-universal-closure-coding-test workbench-autonomous-world-builder-test workbench-autonomous-world-browser-smoke-test workbench-autonomous-world-live-renderer-test workbench-autonomous-world-interjection-overlay-test workbench-autonomous-world-overlay-admission-test workbench-autonomous-world-version-history-test workbench-autonomous-world-merge-reconciliation-test workbench-autonomous-world-package-sync-test workbench-autonomous-world-peer-exchange-test workbench-autonomous-world-subscription-court-test workbench-autonomous-world-live-transport-adapter-test workbench-autonomous-world-transport-replay-test workbench-autonomous-world-transport-checkpoint-test workbench-autonomous-world-transport-compaction-test workbench-autonomous-world-transport-repair-test workbench-autonomous-world-transport-availability-test workbench-autonomous-world-transport-request-scheduler-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test omi-blob-test org-omi-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -26,7 +26,7 @@ $(BUILD_DIR):
 $(RISCV_BUILD_DIR):
 	mkdir -p $(RISCV_BUILD_DIR)
 
-$(BUILD_DIR)/boot_tests: tests/boot_tests.c kernel/boot/bom_clock.c | $(BUILD_DIR)
+$(BUILD_DIR)/boot_tests: tests/boot_tests.c kernel/boot/bom_clock.c kernel/runtime/layer_clock.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(BUILD_DIR)/graph_tests: tests/graph_tests.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c | $(BUILD_DIR)
@@ -185,14 +185,33 @@ $(BUILD_DIR)/pre_os_measurement_test: tests/pre_os_measurement_test.c kernel/run
 $(BUILD_DIR)/bitwise_kernel.o: kernel/runtime/bitwise_kernel.c kernel/include/bitwise_kernel.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c kernel/runtime/bitwise_kernel.c -o $@
 
-$(BUILD_DIR)/bitwise_kernel_test: tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o -o $@
+$(BUILD_DIR)/bitwise_kernel_test: tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/layer_clock.o kernel/boot/bom_clock.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/bitwise_kernel_test.c $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/layer_clock.o kernel/boot/bom_clock.c -o $@
 
 $(BUILD_DIR)/osi_projection.o: kernel/runtime/osi_projection.c kernel/include/osi_projection.h kernel/include/bitwise_kernel.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c kernel/runtime/osi_projection.c -o $@
 
-$(BUILD_DIR)/osi_projection_test: tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o -o $@
+$(BUILD_DIR)/osi_projection_test: tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/layer_clock.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/osi_projection_test.c $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/layer_clock.o -o $@
+
+# ── Layer clock ────────────────────────────────────
+
+$(BUILD_DIR)/layer_clock.o: kernel/runtime/layer_clock.c kernel/include/layer_clock.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c kernel/runtime/layer_clock.c -o $@
+
+$(BUILD_DIR)/layer_clock_test: tests/layer_clock_test.c $(BUILD_DIR)/layer_clock.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/layer_clock_test.c $(BUILD_DIR)/layer_clock.o -o $@
+
+# ── Term rewriting lexer ───────────────────────────
+
+$(BUILD_DIR)/term_rewriting_lexer.o: kernel/runtime/term_rewriting_lexer.c kernel/include/term_rewriting_lexer.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c kernel/runtime/term_rewriting_lexer.c -o $@
+
+$(BUILD_DIR)/term_rewriting_lexer_test: tests/term_rewriting_lexer_test.c $(BUILD_DIR)/term_rewriting_lexer.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/term_rewriting_lexer_test.c $(BUILD_DIR)/term_rewriting_lexer.o -o $@
+
+$(BUILD_DIR)/compiler_pipeline_test: tests/compiler_pipeline_test.c compiler/lexer/omi_lexer.c compiler/parser/omi_parser.c compiler/parser/graph_builder.c compiler/ir/cons_ssa.c compiler/ir/spectral_ir.c compiler/optimizer/graph_saturation.c compiler/optimizer/eigen_cons.c $(BUILD_DIR)/term_rewriting_lexer.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Icompiler/include tests/compiler_pipeline_test.c compiler/lexer/omi_lexer.c compiler/parser/omi_parser.c compiler/parser/graph_builder.c compiler/ir/cons_ssa.c compiler/ir/spectral_ir.c compiler/optimizer/graph_saturation.c compiler/optimizer/eigen_cons.c $(BUILD_DIR)/term_rewriting_lexer.o -o $@
 
 $(BUILD_DIR)/polyform_block.o: polyform/src/polyform_block.c polyform/include/polyform_block.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Ipolyform/include -c polyform/src/polyform_block.c -o $@
@@ -215,11 +234,11 @@ $(BUILD_DIR)/render_braille.o: polyform/src/render_braille.c polyform/include/po
 $(BUILD_DIR)/render_svg.o: polyform/src/render_svg.c polyform/include/polyform_block.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Ipolyform/include -c polyform/src/render_svg.c -o $@
 
-$(BUILD_DIR)/polyform_block_test: polyform/tests/polyform_block_test.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/polyform_render.o $(BUILD_DIR)/render_text.o $(BUILD_DIR)/render_block_header.o $(BUILD_DIR)/render_braille.o $(BUILD_DIR)/render_svg.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -Ipolyform/include polyform/tests/polyform_block_test.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/polyform_render.o $(BUILD_DIR)/render_text.o $(BUILD_DIR)/render_block_header.o $(BUILD_DIR)/render_braille.o $(BUILD_DIR)/render_svg.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
+$(BUILD_DIR)/polyform_block_test: polyform/tests/polyform_block_test.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/polyform_render.o $(BUILD_DIR)/render_text.o $(BUILD_DIR)/render_block_header.o $(BUILD_DIR)/render_braille.o $(BUILD_DIR)/render_svg.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include polyform/tests/polyform_block_test.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/polyform_render.o $(BUILD_DIR)/render_text.o $(BUILD_DIR)/render_block_header.o $(BUILD_DIR)/render_braille.o $(BUILD_DIR)/render_svg.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
 
-$(BUILD_DIR)/polyform_witness_recompute: tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -Ipolyform/include tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
+$(BUILD_DIR)/polyform_witness_recompute: tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
 
 $(RISCV_BUILD_DIR)/boot.o: riscv/boot.S | $(RISCV_BUILD_DIR)
 	$(RISCV_CC) $(RISCV_CFLAGS) -c $< -o $@
@@ -229,6 +248,9 @@ $(RISCV_BUILD_DIR)/entry.o: riscv/entry.c kernel/include/bitwise_kernel.h kernel
 
 $(RISCV_BUILD_DIR)/bitwise_kernel.o: kernel/runtime/bitwise_kernel.c kernel/include/bitwise_kernel.h | $(RISCV_BUILD_DIR)
 	$(RISCV_CC) $(RISCV_CFLAGS) -c kernel/runtime/bitwise_kernel.c -o $@
+
+$(RISCV_BUILD_DIR)/layer_clock.o: kernel/runtime/layer_clock.c kernel/include/layer_clock.h | $(RISCV_BUILD_DIR)
+	$(RISCV_CC) $(RISCV_CFLAGS) -c kernel/runtime/layer_clock.c -o $@
 
 $(RISCV_BUILD_DIR)/osi_projection.o: kernel/runtime/osi_projection.c kernel/include/osi_projection.h kernel/include/bitwise_kernel.h | $(RISCV_BUILD_DIR)
 	$(RISCV_CC) $(RISCV_CFLAGS) -c kernel/runtime/osi_projection.c -o $@
@@ -254,8 +276,8 @@ $(RISCV_BUILD_DIR)/projection_address.o: polyform/encoding/projection_address.c 
 $(RISCV_BUILD_DIR)/omi_geometry.o: polyform/geometry/omi_geometry.c polyform/geometry/omi_geometry.h | $(RISCV_BUILD_DIR)
 	$(RISCV_CC) $(RISCV_CFLAGS) -c polyform/geometry/omi_geometry.c -o $@
 
-$(RISCV_ELF): $(RISCV_BUILD_DIR)/boot.o $(RISCV_BUILD_DIR)/entry.o $(RISCV_BUILD_DIR)/bitwise_kernel.o $(RISCV_BUILD_DIR)/osi_projection.o $(RISCV_BUILD_DIR)/freestanding.o $(RISCV_BUILD_DIR)/polyform_block.o $(RISCV_BUILD_DIR)/polyform_witness.o $(RISCV_BUILD_DIR)/aegean.o $(RISCV_BUILD_DIR)/braille.o $(RISCV_BUILD_DIR)/projection_address.o $(RISCV_BUILD_DIR)/omi_geometry.o riscv/linker.ld
-	$(RISCV_CC) $(RISCV_CFLAGS) -T riscv/linker.ld $(RISCV_BUILD_DIR)/boot.o $(RISCV_BUILD_DIR)/entry.o $(RISCV_BUILD_DIR)/bitwise_kernel.o $(RISCV_BUILD_DIR)/osi_projection.o $(RISCV_BUILD_DIR)/freestanding.o $(RISCV_BUILD_DIR)/polyform_block.o $(RISCV_BUILD_DIR)/polyform_witness.o $(RISCV_BUILD_DIR)/aegean.o $(RISCV_BUILD_DIR)/braille.o $(RISCV_BUILD_DIR)/projection_address.o $(RISCV_BUILD_DIR)/omi_geometry.o -o $@
+$(RISCV_ELF): $(RISCV_BUILD_DIR)/boot.o $(RISCV_BUILD_DIR)/entry.o $(RISCV_BUILD_DIR)/bitwise_kernel.o $(RISCV_BUILD_DIR)/layer_clock.o $(RISCV_BUILD_DIR)/osi_projection.o $(RISCV_BUILD_DIR)/freestanding.o $(RISCV_BUILD_DIR)/polyform_block.o $(RISCV_BUILD_DIR)/polyform_witness.o $(RISCV_BUILD_DIR)/aegean.o $(RISCV_BUILD_DIR)/braille.o $(RISCV_BUILD_DIR)/projection_address.o $(RISCV_BUILD_DIR)/omi_geometry.o riscv/linker.ld
+	$(RISCV_CC) $(RISCV_CFLAGS) -T riscv/linker.ld $(RISCV_BUILD_DIR)/boot.o $(RISCV_BUILD_DIR)/entry.o $(RISCV_BUILD_DIR)/bitwise_kernel.o $(RISCV_BUILD_DIR)/layer_clock.o $(RISCV_BUILD_DIR)/osi_projection.o $(RISCV_BUILD_DIR)/freestanding.o $(RISCV_BUILD_DIR)/polyform_block.o $(RISCV_BUILD_DIR)/polyform_witness.o $(RISCV_BUILD_DIR)/aegean.o $(RISCV_BUILD_DIR)/braille.o $(RISCV_BUILD_DIR)/projection_address.o $(RISCV_BUILD_DIR)/omi_geometry.o -o $@
 
 $(RISCV_BIN): $(RISCV_ELF)
 	$(RISCV_OBJCOPY) -O binary $< $@
@@ -273,8 +295,8 @@ $(BUILD_DIR)/rewrite_table.kernel.o: $(BUILD_DIR)/rewrite_table.c | $(BUILD_DIR)
 
 rules: $(BUILD_DIR)/rewrite_table.c
 
-$(BUILD_DIR)/replay_validator: tools/replay_validator.c kernel/boot/bom_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o | $(BUILD_DIR)
-	$(CC) $(CFLAGS) tools/replay_validator.c kernel/boot/bom_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o -o $@
+$(BUILD_DIR)/replay_validator: tools/replay_validator.c kernel/boot/bom_clock.c kernel/runtime/layer_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tools/replay_validator.c kernel/boot/bom_clock.c kernel/runtime/layer_clock.c kernel/vm/memory_graph.c kernel/vm/cons_engine.c kernel/runtime/bom.c kernel/runtime/rules_engine.c $(BUILD_DIR)/rewrite_table.o -o $@
 
 $(BUILD_DIR)/boot.o: kernel/boot/boot.S | $(BUILD_DIR)
 	$(CC) $(KERNEL_ASFLAGS) -c $< -o $@
@@ -312,6 +334,12 @@ $(BUILD_DIR)/rules_engine.kernel.o: kernel/runtime/rules_engine.c | $(BUILD_DIR)
 $(BUILD_DIR)/bitwise_kernel.kernel.o: kernel/runtime/bitwise_kernel.c kernel/include/bitwise_kernel.h | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/bitwise_kernel.c -o $@
 
+$(BUILD_DIR)/layer_clock.kernel.o: kernel/runtime/layer_clock.c kernel/include/layer_clock.h | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/layer_clock.c -o $@
+
+$(BUILD_DIR)/term_rewriting_lexer.kernel.o: kernel/runtime/term_rewriting_lexer.c kernel/include/term_rewriting_lexer.h | $(BUILD_DIR)
+	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/term_rewriting_lexer.c -o $@
+
 $(BUILD_DIR)/osi_projection.kernel.o: kernel/runtime/osi_projection.c kernel/include/osi_projection.h kernel/include/bitwise_kernel.h | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c kernel/runtime/osi_projection.c -o $@
 
@@ -342,8 +370,8 @@ $(BUILD_DIR)/projection_address.kernel.o: polyform/encoding/projection_address.c
 $(BUILD_DIR)/omi_geometry.kernel.o: polyform/geometry/omi_geometry.c polyform/geometry/omi_geometry.h | $(BUILD_DIR)
 	$(CC) $(KERNEL_CFLAGS) -c polyform/geometry/omi_geometry.c -o $@
 
-$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o kernel/linker.ld
-	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o -o $@
+$(KERNEL_ELF): $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/layer_clock.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o kernel/linker.ld
+	ld $(KERNEL_LDFLAGS) $(BUILD_DIR)/boot.o $(BUILD_DIR)/entry.o $(BUILD_DIR)/bom_clock.kernel.o $(BUILD_DIR)/memory_graph.kernel.o $(BUILD_DIR)/cons_engine.kernel.o $(BUILD_DIR)/serial.kernel.o $(BUILD_DIR)/bom.kernel.o $(BUILD_DIR)/rules_engine.kernel.o $(BUILD_DIR)/bitwise_kernel.kernel.o $(BUILD_DIR)/osi_projection.kernel.o $(BUILD_DIR)/freestanding.kernel.o $(BUILD_DIR)/model_registry.kernel.o $(BUILD_DIR)/page_court.kernel.o $(BUILD_DIR)/mmio_device_court.kernel.o $(BUILD_DIR)/event_packet.kernel.o $(BUILD_DIR)/model_trace.kernel.o $(BUILD_DIR)/polyform_block.kernel.o $(BUILD_DIR)/polyform_witness.kernel.o $(BUILD_DIR)/aegean.kernel.o $(BUILD_DIR)/braille.kernel.o $(BUILD_DIR)/projection_address.kernel.o $(BUILD_DIR)/omi_geometry.kernel.o $(BUILD_DIR)/layer_clock.kernel.o $(BUILD_DIR)/rewrite_table.kernel.o -o $@
 
 test: $(BUILD_DIR)/boot_tests $(BUILD_DIR)/graph_tests $(BUILD_DIR)/cons_tests $(BUILD_DIR)/bom_tests $(BUILD_DIR)/rules_tests
 	./$(BUILD_DIR)/boot_tests
@@ -465,6 +493,9 @@ workbench-org-test:
 workbench-org-omi-test:
 	node tests/workbench_org_omi_test.js
 
+workbench-dom-cssom-surface-test:
+	node tests/workbench_dom_cssom_surface_adapter_test.js
+
 workbench-diagram-tangle-test:
 	node tests/workbench_diagram_tangle_test.js
 
@@ -542,6 +573,9 @@ workbench-network-runtime-resolver-test:
 
 workbench-runtime-channel-manifest-test:
 	node tests/workbench_runtime_channel_manifest_test.js
+
+workbench-platform-distribution-manifest-test:
+	node tests/workbench_platform_distribution_manifest_test.js
 
 workbench-distributed-adapter-transport-registry-test:
 	node tests/workbench_distributed_adapter_transport_registry_test.js
@@ -725,8 +759,20 @@ riscv-run: riscv-image
 riscv-qemu-foundation-test: riscv-image $(BUILD_DIR)/polyform_witness_recompute
 	sh ./tools/riscv_foundation_test.sh $(RISCV_ELF) $(RISCV_BUILD_DIR)/riscv_foundation.log $(BUILD_DIR)/polyform_witness_recompute
 
+layer-clock-test: $(BUILD_DIR)/layer_clock_test
+	./$(BUILD_DIR)/layer_clock_test
+
+term-rewriting-lexer-test: $(BUILD_DIR)/term_rewriting_lexer_test
+	./$(BUILD_DIR)/term_rewriting_lexer_test
+
+compiler-pipeline-test: $(BUILD_DIR)/compiler_pipeline_test
+	./$(BUILD_DIR)/compiler_pipeline_test
+
 unit-test:
 	$(MAKE) test
+	$(MAKE) layer-clock-test
+	$(MAKE) term-rewriting-lexer-test
+	$(MAKE) compiler-pipeline-test
 	$(MAKE) omi-blob-test
 	$(MAKE) bitwise-test
 	$(MAKE) osi-test
@@ -761,6 +807,7 @@ unit-test:
 	$(MAKE) workbench-esp32-sync-test
 	$(MAKE) workbench-org-test
 	$(MAKE) workbench-org-omi-test
+	$(MAKE) workbench-dom-cssom-surface-test
 	$(MAKE) workbench-diagram-tangle-test
 	$(MAKE) workbench-diagram-renderer-test
 	$(MAKE) workbench-polyform-coordinate-test
@@ -787,6 +834,7 @@ unit-test:
 	$(MAKE) workbench-orientation-incidence-blackboard-test
 	$(MAKE) workbench-network-runtime-resolver-test
 	$(MAKE) workbench-runtime-channel-manifest-test
+	$(MAKE) workbench-platform-distribution-manifest-test
 	$(MAKE) workbench-distributed-adapter-transport-registry-test
 	$(MAKE) workbench-raw-binary-decentralized-lattice-test
 	$(MAKE) workbench-raw-binary-chunk-index-test

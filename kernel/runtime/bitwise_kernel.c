@@ -50,7 +50,22 @@ void kernel_tick(kernel_state_t *ks)
         return;
     }
 
+    if (ks->semantic_clock.combinator == LC_COMB_NONE &&
+        ks->semantic_clock.phase == 0u &&
+        ks->semantic_clock.layer == 0) {
+        lc_init(&ks->semantic_clock);
+    }
+
     ks->K = delta8(ks->K, ks->GS);
     ks->fano = fano_tick(ks->fano);
     ks->sonar = sonar_tick(ks->sonar);
+    lc_step(&ks->semantic_clock, 1u);
+}
+
+void kernel_sync_bom_clock(kernel_state_t *ks, const omi_bom_clock_t *clock)
+{
+    if (!ks || !clock) {
+        return;
+    }
+    ks->semantic_clock = clock->semantic_clock;
 }

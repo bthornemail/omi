@@ -193,6 +193,8 @@ static void qemu_debug_exit(void)
 
 static void print_phase28_qemu(uint32_t tick, const kernel_state_t *state)
 {
+    char cidr[LC_CIDR_BUF_SIZE];
+    lc_cidr(&state->semantic_clock, cidr, sizeof(cidr));
     omi_serial_write_string("PHASE28_QEMU tick=");
     omi_serial_write_u32(tick);
     omi_serial_write_string(" K=");
@@ -203,6 +205,22 @@ static void print_phase28_qemu(uint32_t tick, const kernel_state_t *state)
     omi_serial_write_hex32(state->sonar.hi);
     omi_serial_write_string(" sonar_lo=");
     omi_serial_write_hex32(state->sonar.lo);
+    omi_serial_write_string(" layer=");
+    if (state->semantic_clock.layer < 0) {
+        omi_serial_write_string("-");
+        omi_serial_write_u32((uint32_t)(-(int32_t)state->semantic_clock.layer));
+    } else {
+        omi_serial_write_u32((uint32_t)state->semantic_clock.layer);
+    }
+    omi_serial_write_string(" cidr=");
+    omi_serial_write_string(cidr);
+    omi_serial_write_string(" horizon=");
+    if (state->semantic_clock.projective_layer < 0) {
+        omi_serial_write_string("-");
+        omi_serial_write_u32((uint32_t)(-(int32_t)state->semantic_clock.projective_layer));
+    } else {
+        omi_serial_write_u32((uint32_t)state->semantic_clock.projective_layer);
+    }
     omi_serial_write_string("\n");
 }
 
@@ -246,8 +264,10 @@ static void print_foundation_qemu_proof(void)
         .K = 0x00u,
         .fano = 0x01u,
         .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
-        .GS = OMI_BITWISE_KERNEL_GS
+        .GS = OMI_BITWISE_KERNEL_GS,
+        .semantic_clock = {0}
     };
+    lc_init(&state.semantic_clock);
 
     omi_serial_write_string("FOUNDATION_QEMU_BEGIN\n");
     for (uint32_t tick = 0; tick <= 5u; tick++) {

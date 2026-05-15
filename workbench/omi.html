@@ -1,0 +1,1793 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMI Runtime — Single Static File</title>
+  <meta name="description" content="Decentralized OMI runtime: DOM/CSSOM surface, cons256/meta64 addressing, 5-term state machine, 2-of-5 nonagram, Genaille/Wittgenstein/Karnaugh/Smith projections, 3D scene, DID resolution, WebRTC P2P.">
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    :root {
+      --omi-fs: block-start;
+      --omi-gs: inline-end;
+      --omi-rs: block-end;
+      --omi-us: inline-start;
+      --bg: #0a0a1a;
+      --panel: #12122a;
+      --border: #1a1a3e;
+      --text: #c8c8d8;
+      --accent: #e94560;
+      --accent2: #533483;
+      --accent3: #0f3460;
+      --accent4: #00FFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: ui-monospace, SFMono-Regular, 'Cascadia Code', 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    h1, h2, h3 { font-weight: 600; }
+    h1 { font-size: 14px; color: var(--accent); }
+    h2 { font-size: 12px; color: var(--accent2); }
+    h3 { font-size: 11px; color: var(--accent3); }
+    .shell {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 0;
+      min-height: 100vh;
+    }
+    header {
+      grid-column: 1 / -1;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #0d0d20;
+    }
+    header h1 { display: flex; align-items: center; gap: 8px; }
+    header .meta { color: var(--accent4); font-size: 10px; }
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      background: #0d0d1e;
+    }
+    .main {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel h2 {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      background: #0f0f2a;
+    }
+    .panel-body { padding: 10px 12px; }
+    canvas { width: 100%; border: 1px solid var(--border); border-radius: 4px; background: #050510; }
+    button {
+      font-family: inherit;
+      font-size: 11px;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #1a1a3e;
+      color: var(--text);
+      cursor: pointer;
+    }
+    button:hover { background: #2a2a5e; }
+    button.active { border-color: var(--accent); color: var(--accent); background: #2a0a1e; }
+    .carrier-btn { font-size:9px;padding:2px 6px; }
+    .carrier-btn.active { border-color: var(--accent4); color: var(--accent4); }
+    input, select {
+      font-family: inherit;
+      font-size: 11px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #0f0f2a;
+      color: var(--text);
+    }
+    .grid { display: grid; gap: 8px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .flex { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #1a1a3e;
+      border: 1px solid var(--border);
+      font-size: 10px;
+    }
+    .chip.active { border-color: var(--accent); color: var(--accent); }
+    .mono { font-family: monospace; }
+    .muted { opacity: 0.6; }
+    .accent { color: var(--accent); }
+    .accent4 { color: var(--accent4); }
+    .txt { font-size: 10px; word-break: break-all; }
+    .bar { display: flex; gap: 2px; align-items: flex-end; height: 40px; }
+    .bar div { width: 6px; border-radius: 2px 2px 0 0; transition: height 0.2s; }
+    #smith-canvas { max-width: 320px; margin: 0 auto; }
+    #scene-container { width: 100%; height: 300px; border: 1px solid var(--border); border-radius: 4px; }
+    a-scene { width: 100% !important; height: 300px !important; }
+    .columns { display: flex; gap: 12px; }
+    .columns > * { flex: 1; min-width: 0; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .columns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- Header -->
+  <header>
+    <h1>⏣ OMI Runtime <span class="meta">Layer 10 · cons256 · meta64</span></h1>
+    <span class="chip accent4" id="did-chip">did:omi:loopback</span>
+    <span class="chip" id="receipt-chip">receipt: —</span>
+    <span class="chip" id="peer-chip">peers: 0</span>
+    <span style="flex:1"></span>
+    <button id="btn-reset">⟳ Reset</button>
+    <button id="btn-eval">▶ Eval</button>
+    <button id="btn-peer">⚡ Peer</button>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <!-- CONS State -->
+    <div class="panel">
+      <h2>cons256 (car64 . cdr128) . meta64</h2>
+      <div class="panel-body">
+        <div class="grid grid-4 txt">
+          <div><span class="muted">car64:</span><br><span id="disp-car">0x0000000000000000</span></div>
+          <div><span class="muted">cdr128:</span><br><span id="disp-cdr">0x00000000000000000000000000000000</span></div>
+          <div><span class="muted">meta64:</span><br><span id="disp-meta">0x0000000000000000</span></div>
+          <div><span class="muted">port:</span><br><span id="disp-port">0x0000</span></div>
+        </div>
+        <div class="txt" style="margin-top:6px;">
+          <span class="muted">DID:</span> <span id="disp-did">did:omi:0000:0000:0000:0000:0000:0000:0000:0001</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5-Term State Transition -->
+    <div class="panel">
+      <h2>5-Term State Transition</h2>
+      <div class="panel-body">
+        <div class="grid grid-3 txt">
+          <button class="op-btn active" data-op="bind">BIND</button>
+          <button class="op-btn" data-op="assign">ASSIGN</button>
+          <button class="op-btn" data-op="join">JOIN</button>
+          <button class="op-btn" data-op="compose">COMPOSE</button>
+          <button class="op-btn" data-op="target">TARGET</button>
+          <div><span class="muted">input:</span> <input id="op-input" type="text" value="0x20" style="width:80px"></div>
+        </div>
+        <div class="txt flex" style="margin-top:6px;">
+          <span class="muted">output:</span> <span id="op-output">—</span>
+          <span class="muted">trace:</span> <span id="op-trace">[]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2-of-5 Nonagram Selector -->
+    <div class="panel">
+      <h2>2-of-5 Nonagram Selector</h2>
+      <div class="panel-body">
+        <div class="txt"><span class="muted">Boolean/Metric:</span> <span id="nonagram-bm">itf, code39</span></div>
+        <div class="txt"><span class="muted">Linear Vector:</span> <span id="nonagram-lv">code93, code128</span></div>
+        <div class="txt"><span class="muted">Matrix Projective:</span> <span id="nonagram-mp">maxi, aztec</span></div>
+        <div class="flex" style="margin-top:6px;">
+          <button id="nonagram-rotate">⟳ Rotate Selection</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wittgenstein Truth Table -->
+    <div class="panel">
+      <h2>Wittgenstein Truth Table</h2>
+      <div class="panel-body">
+        <div class="txt" id="witt-display">Row 6: XOR — exactly-one</div>
+        <div style="margin-top:4px;">
+          <canvas id="witt-canvas" width="200" height="60"></canvas>
+        </div>
+        <div class="flex">
+          <button id="witt-prev">◀</button>
+          <input id="witt-slider" type="range" min="0" max="15" value="6" style="flex:1">
+          <button id="witt-next">▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Genaille Chart -->
+    <div class="panel">
+      <h2>Genaille Chart (multiplication)</h2>
+      <div class="panel-body">
+        <div class="flex">
+          <input id="genaille-x" type="number" min="0" max="9" value="7" style="width:60px">
+          <span class="muted">×</span>
+          <input id="genaille-y" type="number" min="0" max="9" value="3" style="width:60px">
+          <span class="muted">=</span>
+          <span id="genaille-result" class="accent" style="font-size:14px;">21</span>
+        </div>
+        <div class="txt muted" id="genaille-path">7→3→1</div>
+        <canvas id="genaille-canvas" width="300" height="40"></canvas>
+      </div>
+    </div>
+
+    <!-- Barcode Carrier Stack -->
+    <div class="panel">
+      <h2>Barcode Carrier Stack (transport)</h2>
+      <div class="panel-body">
+        <div class="txt flex"><span class="muted">carrier:</span> <span id="carrier-name">ITF</span></div>
+        <div class="txt flex"><span class="muted">role:</span> <span id="carrier-role">pulse/metric stream</span></div>
+        <div class="txt flex"><span class="muted">precision:</span> <span id="carrier-precision">binary16</span></div>
+        <div class="txt flex"><span class="muted">law:</span> <span id="carrier-law">()! != ()</span></div>
+        <canvas id="carrier-canvas" width="300" height="36" style="margin:4px 0;"></canvas>
+        <div id="carrier-tetra" style="text-align:center;font-size:8px;line-height:1.4;margin-bottom:4px;background:#050510;border-radius:4px;padding:4px;">
+          <div style="color:#e94560;">▲ Code16K (block body)</div>
+          <div>╱&nbsp;&nbsp;╲</div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#00FFFF;">Code128</span>
+            <span style="color:#ffaa00;">Codabar</span>
+          </div>
+          <div>╲&nbsp;&nbsp;╱</div>
+          <div style="color:#533483;">▼ Code93 (witness)</div>
+          <div style="margin-top:2px;display:flex;justify-content:space-around;">
+            <span style="color:#ff6600;">Aztec</span>
+            <span style="color:#66ff66;">Maxi</span>
+            <span style="color:#ff66ff;">JAB</span>
+            <span style="color:#66ffff;">BeeTag</span>
+          </div>
+        </div>
+        <div class="flex" style="flex-wrap:wrap;">
+          <button class="carrier-btn active" data-carrier="0">ITF</button>
+          <button class="carrier-btn" data-carrier="1">Codabar</button>
+          <button class="carrier-btn" data-carrier="2">Code128</button>
+          <button class="carrier-btn" data-carrier="3">Code16K</button>
+          <button class="carrier-btn" data-carrier="4">Code39</button>
+          <button class="carrier-btn" data-carrier="5">Code93</button>
+          <button class="carrier-btn" data-carrier="6">Aztec</button>
+          <button class="carrier-btn" data-carrier="7">Maxi</button>
+          <button class="carrier-btn" data-carrier="8">JABCode</button>
+          <button class="carrier-btn" data-carrier="9">BeeTag</button>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Row 1: Smith Chart + K-Map -->
+    <div class="grid grid-2">
+      <div class="panel">
+        <h2>Smith Chart (360° · 60-point nonagram)</h2>
+        <div class="panel-body" style="text-align:center;">
+          <canvas id="smith-canvas" width="320" height="320"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Karnaugh Torus (Gray-coded 4×4)</h2>
+        <div class="panel-body" style="text-align:center;">
+          <canvas id="kmap-canvas" width="260" height="260"></canvas>
+          <div class="flex" style="justify-content:center;margin-top:4px;">
+            <span class="chip active">Σm(6,8,9,10,11,12,13,14)</span>
+            <span class="chip">ΠM(0,1,2,3,4,5,7,15)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 1b: Barcode Carrier Visualization -->
+    <div class="panel">
+      <h2>Barcode Transport — All 10 Carriers</h2>
+      <div class="panel-body" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+        <canvas id="carrier-all-canvas" width="700" height="160" style="max-width:100%;"></canvas>
+      </div>
+    </div>
+
+    <!-- Row 1c: Layer Clock + CIDR + Term Rewriting Lexer -->
+    <div class="grid grid-2">
+      <div class="panel">
+        <h2>Layer Clock (−9 → 0 → 9 → −9) · Y/Z Combinator Cycle</h2>
+        <div class="panel-body" style="text-align:center;">
+          <canvas id="clock-canvas" width="320" height="320"></canvas>
+          <div class="flex" style="justify-content:center;margin-top:4px;">
+            <span class="chip" id="clock-current-layer">Layer 0</span>
+            <span class="chip" id="clock-combinator">◇ possibility</span>
+            <span class="chip" id="clock-cidr">10.0.0.0/8</span>
+          </div>
+          <div class="txt flex" style="justify-content:center;margin-top:2px;">
+            <span class="muted">tetra:</span>
+            <span id="clock-tetra">8::0 8888 0::8 :::000 0::8</span>
+          </div>
+          <input id="clock-slider" type="range" min="0" max="360" value="0" style="width:90%;margin-top:4px;">
+          <div class="flex" style="justify-content:center;margin-top:2px;">
+            <button id="clock-step">⏱ Step</button>
+            <button id="clock-auto">▶ Auto</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Term Rewriting Lexer (System L · trace monoid)</h2>
+        <div class="panel-body">
+          <div class="flex">
+            <input id="rewrite-input" type="text" value="bind 0x20 assign 0x80 join 0x01 compose FFFF target 00" style="flex:1;font-family:monospace;font-size:10px;">
+            <button id="rewrite-go">Rewrite</button>
+          </div>
+          <div class="grid grid-3 txt" style="margin-top:4px;">
+            <div><span class="muted">substitutions:</span><br><span id="rewrite-count">0</span></div>
+            <div><span class="muted">critical pairs:</span><br><span id="rewrite-pairs">0</span></div>
+            <div><span class="muted">trace cache:</span><br><span id="rewrite-cache">∅</span></div>
+          </div>
+          <pre id="rewrite-trace" style="font-size:9px;max-height:80px;overflow-y:auto;background:#050510;padding:6px;border-radius:4px;margin-top:4px;">(rewrite trace)</pre>
+          <div class="txt flex"><span class="muted">System L closure:</span> <span id="rewrite-closure">◇□¬◇□¬◇□</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: 3D Scene + DOM Surface -->
+    <div class="grid grid-2">
+      <div class="panel">
+        <h2>3D Scene (A-Frame) — Hypergraph Projection</h2>
+        <div class="panel-body" style="padding:0;">
+          <div id="scene-container">
+            <a-scene id="omi-scene" embedded>
+              <a-entity id="omi-camera" camera position="0 2 5" look-controls></a-entity>
+              <a-entity id="omi-hypergraph"></a-entity>
+              <a-sky color="#0a0a1a"></a-sky>
+            </a-scene>
+          </div>
+        </div>
+      </div>
+      <div class="panel" id="dom-surface-panel">
+        <h2>DOM / CSSOM Surface (data-omi-*)</h2>
+        <div class="panel-body">
+          <div id="dom-surface" data-omi-car="0x20" data-omi-cdr="0x80" data-omi-meta="0x0001" data-omi-port="0xFFFF" data-omi-color="#00FFFF" data-omi-did="did:omi:loopback" style="padding:8px;border:1px solid var(--border);border-radius:4px;background:#0f0f2a;">
+            <div class="txt accent4">did:omi:loopback</div>
+            <div class="grid grid-4 txt" style="margin-top:4px;">
+              <div><span class="muted">car</span><br>0x20</div>
+              <div><span class="muted">cdr</span><br>0x80</div>
+              <div><span class="muted">meta</span><br>0x0001</div>
+              <div><span class="muted">port</span><br>0xFFFF</div>
+            </div>
+            <div class="flex" style="margin-top:6px;">
+              <input id="dom-input-car" type="text" value="0x20" style="width:70px">
+              <input id="dom-input-cdr" type="text" value="0x80" style="width:70px">
+              <input id="dom-input-meta" type="text" value="0x0001" style="width:70px">
+              <button id="dom-apply">Apply</button>
+            </div>
+            <div class="txt mute" style="margin-top:4px;font-size:9px;">
+              CSS: block-start(FS) · inline-end(GS) · block-end(RS) · inline-start(US)
+            </div>
+          </div>
+          <!-- CSSOM projection display -->
+          <div class="grid grid-4 txt" style="margin-top:8px;">
+            <div style="border-block-start:2px solid var(--accent);padding:4px;">
+              <span class="muted">FS</span><br>block-start
+            </div>
+            <div style="border-inline-end:2px solid var(--accent2);padding:4px;">
+              <span class="muted">GS</span><br>inline-end
+            </div>
+            <div style="border-block-end:2px solid var(--accent3);padding:4px;">
+              <span class="muted">RS</span><br>block-end
+            </div>
+            <div style="border-inline-start:2px solid var(--accent4);padding:4px;">
+              <span class="muted">US</span><br>inline-start
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Trace + Receipt + DID + Peer -->
+    <div class="grid grid-2">
+      <div class="panel">
+        <h2>Evaluation Trace</h2>
+        <div class="panel-body">
+          <pre id="trace-display" style="font-size:10px;max-height:120px;overflow-y:auto;background:#050510;padding:8px;border-radius:4px;">(no evaluations yet)</pre>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>DID Resolution / WebRTC Peer Discovery</h2>
+        <div class="panel-body">
+          <div class="flex">
+            <input id="did-input" type="text" value="did:omi:0000:0000:0000:0000:0000:0000:0000:0001" style="flex:1">
+            <button id="did-resolve">Resolve</button>
+          </div>
+          <pre id="did-display" style="font-size:10px;max-height:80px;overflow-y:auto;background:#050510;padding:8px;border-radius:4px;margin-top:6px;">(DID document)</pre>
+          <div class="flex" style="margin-top:6px;">
+            <button id="webrtc-offer">📡 Create Offer</button>
+            <button id="webrtc-answer">📡 Create Answer</button>
+            <span class="muted txt" id="webrtc-status">WebRTC: disconnected</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+// OMI RUNTIME — Single Static File Implementation
+// Layer 0–10: cons256, meta64, 5-term SM, 2-of-5 nomagram,
+// Genaille, Wittgenstein, Karnaugh, Smith, 3D, DID, WebRTC
+// ════════════════════════════════════════════════════════════════════
+
+const OMI = (() => {
+  'use strict';
+
+  // ─── Utilities ──────────────────────────────────────────────────
+  const hex64 = n => '0x' + BigInt(n).toString(16).padStart(16, '0');
+  const hex128 = n => '0x' + BigInt(n).toString(16).padStart(32, '0');
+  const hex = (n, w) => '0x' + Number(n).toString(16).padStart(w || 4, '0');
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+  // FNV-1a 32-bit
+  const fnv1a32 = str => {
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619) >>> 0;
+    }
+    return h;
+  };
+
+  // ─── CONS256 / meta64 ────────────────────────────────────────────
+  class Cons256 {
+    constructor(car = 0x20, cdr = 0x80, meta = 0x0001) {
+      this.car = BigInt(car);
+      this.cdr = BigInt(cdr);
+      this.meta = BigInt(meta);
+    }
+    get port() { return Number(this.meta & 0xFFFFn); }
+    get color() { return '#' + this.port.toString(16).padStart(4, '0'); }
+    get did() {
+      const c = this.car.toString(16).padStart(16, '0');
+      const d = this.cdr.toString(16).padStart(32, '0');
+      return `did:omi:${c}:${d}`;
+    }
+    get meta64() {
+      const s = Number((this.meta >> 8n) & 0xFFn);
+      const a = Number(this.meta & 0xFFn);
+      return `::ffff:10.120.${s}.${a}`;
+    }
+    clone() { return new Cons256(this.car, this.cdr, this.meta); }
+    toString() {
+      return `(car: ${hex64(this.car)} . cdr: ${hex128(this.cdr)}) meta: ${hex64(this.meta)}`;
+    }
+  }
+
+  // ─── 5-Term State Transition Machine ─────────────────────────────
+  class StateMachine {
+    constructor() {
+      this.state = { car: 0x20n, cdr: 0x80n, meta: 0x0001n, port: 0xFFFF };
+      this.trace = [];
+      this.receipt = null;
+    }
+    reset() {
+      this.state = { car: 0x20n, cdr: 0x80n, meta: 0x0001n, port: 0xFFFF };
+      this.trace = [];
+      this.receipt = null;
+    }
+    // The 5-term operations
+    bind(input) {
+      this.state.car = BigInt(input);
+      const out = this.state.car;
+      this.trace.push({ op: 'bind', input, output: Number(out) });
+      return out;
+    }
+    assign(input) {
+      this.state.cdr = BigInt(input);
+      const out = this.state.cdr;
+      this.trace.push({ op: 'assign', input, output: Number(out) });
+      return out;
+    }
+    join(input) {
+      this.state.meta = BigInt(Number(this.state.meta) | Number(input));
+      const out = this.state.meta;
+      this.trace.push({ op: 'join', input, output: Number(out) });
+      return out;
+    }
+    compose(input) {
+      this.state.port = Number(input) & 0xFFFF;
+      const out = this.state.port;
+      this.trace.push({ op: 'compose', input, output: out });
+      return out;
+    }
+    target(input) {
+      const out = input;
+      this.trace.push({ op: 'target', input, output: out });
+      return out;
+    }
+    exec(op, input) {
+      const val = Number(input);
+      switch (op) {
+        case 'bind': return this.bind(val);
+        case 'assign': return this.assign(val);
+        case 'join': return this.join(val);
+        case 'compose': return this.compose(val);
+        case 'target': return this.target(val);
+        default: return null;
+      }
+    }
+    fold() {
+      const str = this.trace.map(t => `${t.op}:${t.input}:${t.output}`).join('|');
+      this.receipt = 'fnv1a32:' + fnv1a32(str).toString(16);
+      return this.receipt;
+    }
+    getCons() {
+      return new Cons256(this.state.car, this.state.cdr, this.state.meta);
+    }
+  }
+
+  // ─── 2-of-5 Nonagram Selector ────────────────────────────────────
+  class Nonagram {
+    constructor() {
+      this.sets = {
+        booleanMetric: ['itf', 'code39', 'barycentric', 'cartesian', 'sexagesimal'],
+        linearVector: ['code93', 'code128', 'code16k', 'codabar', 'receipt'],
+        matrixProjective: ['maxi', 'aztec', 'jabcode', 'beetag', 'canvas']
+      };
+      this.offset = 0;
+    }
+    select() {
+      const o = this.offset;
+      const pick = (arr, i) => [arr[(i + 0) % 5], arr[(i + 1) % 5]];
+      return {
+        booleanMetric: pick(this.sets.booleanMetric, o),
+        linearVector: pick(this.sets.linearVector, o),
+        matrixProjective: pick(this.sets.matrixProjective, o)
+      };
+    }
+    rotate() {
+      this.offset = (this.offset + 1) % 5;
+      return this.select();
+    }
+    allScales() {
+      const s = this.select();
+      return [...s.booleanMetric, ...s.linearVector, ...s.matrixProjective];
+    }
+  }
+
+  // ─── Barcode Carrier Stack ──────────────────────────────────────
+  const BARCODE_CARRIERS = [
+    // Index 0: ITF — stream / pulse
+    { id: 'ITF',     layer: 'stream', role: 'pulse/metric stream',     prec: 'binary16',   law: '()! != ()',        color: '#aaaaaa', fs: 0, gs: 0, rs: 0, us: 0 },
+    // Index 1: Codabar — expression
+    { id: 'Codabar', layer: 'linear', role: 'expression tape',         prec: 'binary16',   law: 'CAR projects',      color: '#ffaa00', fs: 1, gs: 0, rs: 0, us: 0 },
+    // Index 2: Code128 — centroid
+    { id: 'Code128', layer: 'linear', role: 'centroid/address',        prec: 'binary128',  law: 'CDR continues',     color: '#00FFFF', fs: 0, gs: 1, rs: 0, us: 0 },
+    // Index 3: Code16K — block body
+    { id: 'Code16K', layer: 'linear', role: 'block body',              prec: 'binary192',  law: 'CONS encloses',     color: '#e94560', fs: 0, gs: 0, rs: 1, us: 0 },
+    // Index 4: Code39 — observer
+    { id: 'Code39',  layer: 'stream', role: 'observer cube',           prec: 'binary256',  law: 'meta observes',     color: '#ff66ff', fs: 0, gs: 0, rs: 0, us: 1 },
+    // Index 5: Code93 — witness
+    { id: 'Code93',  layer: 'linear', role: 'checked witness',         prec: 'binary256',  law: 'receipt verifies',  color: '#533483', fs: 0, gs: 0, rs: 0, us: 0 },
+    // Index 6: Aztec — FS matrix
+    { id: 'Aztec',   layer: 'matrix', role: 'FS matrix / world frame', prec: 'binary16→256', law: 'world boundary',  color: '#ff6600', fs: 1, gs: 0, rs: 0, us: 0 },
+    // Index 7: Maxi — GS matrix
+    { id: 'Maxi',    layer: 'matrix', role: 'GS matrix / group',       prec: 'binary128',  law: 'group identity',    color: '#66ff66', fs: 0, gs: 1, rs: 0, us: 0 },
+    // Index 8: JABCode — RS matrix
+    { id: 'JABCode', layer: 'matrix', role: 'RS matrix / record',      prec: 'binary256+', law: 'record trace',      color: '#ff66ff', fs: 0, gs: 0, rs: 1, us: 0 },
+    // Index 9: BeeTag — US matrix
+    { id: 'BeeTag',  layer: 'matrix', role: 'US matrix / unit atom',   prec: 'binary16/32', law: 'unit atom',         color: '#66ffff', fs: 0, gs: 0, rs: 0, us: 1 },
+  ];
+  // Locked phrases per layer
+  const CARRIER_PHRASES = {
+    stream: ['ITF pulses.', 'Code39 observes.'],
+    linear: ['Codabar expresses.', 'Code128 centers.', 'Code16K carries.', 'Code93 witnesses.'],
+    matrix: ['Aztec frames.', 'Maxi groups.', 'JAB records.', 'BeeTag units.']
+  };
+
+  // Generate bar pattern from cons256 state for a given carrier
+  function carrierBars(cons, carrierIdx) {
+    const c = BARCODE_CARRIERS[carrierIdx];
+    if (!c) return [];
+    const car = Number(cons.car & 0xFFn);
+    const cdr = Number(cons.cdr & 0xFFn);
+    const meta = Number(cons.meta & 0xFFn);
+    const port = cons.port;
+    // Deterministic pattern: each carrier produces a unique bar/space sequence
+    // bars = modules where bit=1, spaces where bit=0
+    const seed = (car * 31 + cdr * 37 + meta * 41 + port * 43 + carrierIdx * 53) >>> 0;
+    const bars = [];
+    // Generate 48 modules (enough for any barcode family)
+    let s = seed;
+    for (let i = 0; i < 48; i++) {
+      s = ((s * 1103515245 + 12345) >>> 0) & 0x7fffffff;
+      bars.push(s & 1);
+    }
+    return bars;
+  }
+
+  // ─── Barcode Renderer ────────────────────────────────────────────
+  const BarcodeRenderer = {
+    // Draw a single carrier's bar pattern on a canvas
+    drawCarrier(canvas, bars, carrier, label) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      const barCount = bars.length;
+      const barW = W / barCount;
+      const barH = H - 8;
+      // quiet zone markers
+      ctx.fillStyle = '#00FFFF';
+      ctx.fillRect(0, 0, 2, barH);
+      ctx.fillRect(W - 2, 0, 2, barH);
+
+      for (let i = 0; i < barCount; i++) {
+        const x = i * barW;
+        if (bars[i]) {
+          ctx.fillStyle = carrier.color;
+          ctx.fillRect(x, 2, Math.max(1, barW - 0.5), barH - 4);
+        } else {
+          // space — draw subtle guide
+          ctx.fillStyle = '#0a0a20';
+          ctx.fillRect(x, 2, Math.max(1, barW - 0.5), barH - 4);
+        }
+      }
+
+      // Label
+      if (label !== false) {
+        ctx.fillStyle = '#8888aa';
+        ctx.font = '7px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(carrier.id + ' (' + carrier.layer + ')', W/2, H - 1);
+      }
+    },
+
+    // Draw all 10 carriers in a grid on one canvas
+    drawAllCarriers(canvas, cons) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      const rows = 5, cols = 2;
+      const cellW = W / cols, cellH = H / rows;
+
+      for (let i = 0; i < 10; i++) {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        const x = col * cellW, y = row * cellH;
+        const bars = carrierBars(cons, i);
+        const c = BARCODE_CARRIERS[i];
+
+        // Draw bars in cell
+        const barCount = bars.length;
+        const barW = (cellW - 4) / barCount;
+        const barH = cellH - 16;
+        for (let b = 0; b < barCount; b++) {
+          const bx = x + 2 + b * barW;
+          if (bars[b]) {
+            ctx.fillStyle = c.color;
+            ctx.fillRect(bx, y + 2, Math.max(1, barW - 0.3), barH);
+          }
+        }
+
+        // Label
+        ctx.fillStyle = '#6666aa';
+        ctx.font = '7px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(c.id, x + cellW/2, y + cellH - 2);
+        ctx.fillStyle = '#444466';
+        ctx.font = '6px monospace';
+        ctx.fillText(c.layer + ' · ' + c.prec, x + cellW/2, y + cellH - 8);
+        ctx.fillStyle = '#333355';
+        ctx.fillText(c.role.slice(0, 22), x + cellW/2, y + 8);
+      }
+    },
+
+    // Draw the tetrahedron diagram visually
+    drawTetra(canvas) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // Tetrahedron vertices
+      const cx = W/2, cy = H/2;
+      const r = Math.min(W, H) / 2 - 10;
+      // 4 vertices of tetrahedron
+      const pts = [
+        { x: cx, y: cy - r, color: '#e94560', label: 'Code16K\nblock' },        // top
+        { x: cx - r*0.7, y: cy + r*0.4, color: '#00FFFF', label: 'Code128\ncentroid' },  // left
+        { x: cx + r*0.7, y: cy + r*0.4, color: '#ffaa00', label: 'Codabar\nexpr' },     // right
+        { x: cx, y: cy + r*0.8, color: '#533483', label: 'Code93\nwitness' }    // bottom
+      ];
+      // Edges
+      const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+      edges.forEach(([i,j]) => {
+        ctx.beginPath();
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.strokeStyle = '#2a2a4e';
+        ctx.stroke();
+      });
+      // Vertices
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6, 0, 2*Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.fillStyle = '#8888aa';
+        ctx.font = '7px monospace';
+        ctx.textAlign = 'center';
+        const lines = p.label.split('\n');
+        lines.forEach((l, li) => {
+          ctx.fillText(l, p.x, p.y + 12 + li * 8);
+        });
+      });
+    }
+  };
+
+  // ─── Wittgenstein Truth Table (16 operators) ────────────────────
+  const WITTGENSTEIN = [
+    { op: '⊥',   tt: [0,0,0,0], name: 'contradiction' },
+    { op: 'NOR', tt: [0,0,0,1], name: 'neither p nor q' },
+    { op: '↚',   tt: [0,0,1,0], name: 'cdr-only (q and not p)' },
+    { op: '¬p',  tt: [0,0,1,1], name: 'car-null (not p)' },
+    { op: '↛',   tt: [0,1,0,0], name: 'car-only (p and not q)' },
+    { op: '¬q',  tt: [0,1,0,1], name: 'cdr-null (not q)' },
+    { op: 'XOR', tt: [0,1,1,0], name: 'exactly-one' },
+    { op: 'NAND',tt: [0,1,1,1], name: 'not-both' },
+    { op: 'AND', tt: [1,0,0,0], name: 'both' },
+    { op: 'XNOR',tt: [1,0,0,1], name: 'same' },
+    { op: 'q',   tt: [1,0,1,0], name: 'project-cdr' },
+    { op: '→',   tt: [1,0,1,1], name: 'car-implies-cdr' },
+    { op: 'p',   tt: [1,1,0,0], name: 'project-car' },
+    { op: '←',   tt: [1,1,0,1], name: 'cdr-implies-car' },
+    { op: 'OR',  tt: [1,1,1,0], name: 'either' },
+    { op: '⊤',   tt: [1,1,1,1], name: 'tautology' }
+  ];
+
+  // ─── Genaille Chart (10×10 multiplication lookup) ────────────────
+  class Genaille {
+    constructor() {
+      this.table = Array(10).fill().map(() => Array(10).fill(0));
+      for (let i = 0; i < 10; i++)
+        for (let j = 0; j < 10; j++)
+          this.table[i][j] = (i * j) % 10;
+    }
+    multiply(x, y) {
+      const prod = (x * y) % 10;
+      const carry = Math.floor((x * y) / 10);
+      return { product: x * y, digit: prod, carry, path: `${x}→${y}→${carry}→${prod}` };
+    }
+  }
+
+  // ─── Karnaugh Map (Gray-coded 4×4 torus) ────────────────────────
+  class Karnaugh {
+    constructor() {
+      this.cells = Array(16).fill(0);
+      // Default: Σm(6,8,9,10,11,12,13,14)
+      [6,8,9,10,11,12,13,14].forEach(i => { this.cells[i] = 1; });
+    }
+    grayCode(n) { return n ^ (n >> 1); }
+    set(abcd, val) {
+      const [A,B,C,D] = abcd.split('').map(Number);
+      const idx = this.grayCode((A<<3)|(B<<2)|(C<<1)|D);
+      this.cells[idx] = val;
+    }
+    get(row, col) {
+      const idx = this.grayCode((row<<2)|col);
+      return this.cells[idx] || 0;
+    }
+    getMinTerms() {
+      return this.cells.reduce((a, v, i) => v ? [...a, i] : a, []);
+    }
+    getMaxTerms() {
+      return this.cells.reduce((a, v, i) => !v ? [...a, i] : a, []);
+    }
+  }
+
+  // ─── Layer Clock ─────────────────────────────────────────────────
+  class LayerClock {
+    constructor() {
+      this.phase = 0; // degrees 0..360 — one full cycle
+      this.running = false;
+      this.tick = null;
+    }
+    // Layer at current phase: -9 → 0 → 9 → -9 (continuous cycle)
+    // Phase 0° = Layer 0 (centroid)
+    // Phase 180° = Layer 0 inverted
+    get layer() {
+      // Map phase to layer -9..9 using sine
+      const rad = this.phase * Math.PI / 180;
+      return Math.round(9 * Math.sin(rad));
+    }
+    get combinator() {
+      const l = this.layer;
+      if (l === -9) return { sym: 'Y', name: 'Y-combinator (unfold)' };
+      if (l === -1) return { sym: 'Z', name: 'Z-combinator (guard)' };
+      if (l === 1)  return { sym: 'Y', name: 'Y-combinator (fold)' };
+      if (l === 9)  return { sym: 'Z', name: 'Z-combinator (resolve)' };
+      if (l === 0)  return { sym: '◇', name: 'possibility (centroid)' };
+      return { sym: l < 0 ? '¬' : '□', name: l < 0 ? `negation (${-l})` : `necessity (${l})` };
+    }
+    get modal() {
+      const l = this.layer;
+      if (l === 0) return '◇';
+      if (l < 0) return '¬'.repeat(-l);
+      return '□'.repeat(l);
+    }
+    get cidr() {
+      // Map layer + phase to CIDR notation
+      const base = 10 + this.layer;
+      const subnet = Math.abs(this.layer) % 9;
+      const host = Math.floor(this.phase * 256 / 360) % 256;
+      return `10.${base}.${subnet}.${host}/${32 - subnet}`;
+    }
+    get tetra() {
+      // Tetrahedral addresses from 8::0 pattern
+      const p = this.phase;
+      const t0 = `8::${p % 16}`;
+      const t1 = `${Math.floor(p / 16) % 16}888`;
+      const t2 = `0::${(p + 90) % 360}`;
+      const t3 = `:::${Math.floor(p / 90) % 4}000`;
+      const t4 = `0::${(p + 180) % 360}`;
+      return `${t0} ${t1} ${t2} ${t3} ${t4}`;
+    }
+    step(delta = 6) { this.phase = (this.phase + delta) % 360; }
+    reset() { this.phase = 0; }
+    start(ms = 100) {
+      if (this.running) return;
+      this.running = true;
+      this.tick = setInterval(() => { this.step(); }, ms);
+    }
+    stop() {
+      this.running = false;
+      if (this.tick) { clearInterval(this.tick); this.tick = null; }
+    }
+  }
+
+  // ─── Term Rewriting Lexer (System L · trace monoid) ──────────
+  class TermRewritingLexer {
+    constructor() {
+      // Substitution rules (term rewrite system)
+      this.rules = [
+        // Pattern → replacement (with critical pair tracking)
+        { from: /bind\s+(\S+)/gi,       to: 'B#$1',      label: 'bind→B' },
+        { from: /assign\s+(\S+)/gi,     to: 'A#$1',      label: 'assign→A' },
+        { from: /join\s+(\S+)/gi,       to: 'J#$1',      label: 'join→J' },
+        { from: /compose\s+(\S+)/gi,    to: 'C#$1',      label: 'compose→C' },
+        { from: /target\s+(\S+)/gi,     to: 'T#$1',      label: 'target→T' },
+        { from: /0x([0-9a-fA-F]+)/g,   to: (m, h) => String(parseInt(h, 16)), label: 'hex→dec' },
+        { from: /\b(\d+)\b/g,          to: (m, d) => '#' + parseInt(d).toString(16), label: 'dec→hex' },
+        { from: /\s+/g,                 to: ' ',          label: 'collapse' },
+        { from: /^\s+|\s+$/g,           to: '',           label: 'trim' },
+        { from: /(\w)=(\S+)/g,         to: '$1:#$2',     label: 'kv-pair' },
+        // OMI-specific substitutions
+        { from: /cons\b/gi,             to: '(.)',        label: 'cons→(.)' },
+        { from: /\bc[ad]\d*r\b/gi,     to: '↔',          label: 'car/cdr→↔' },
+        { from: /layer\s*(-?\d+)/gi,   to: 'L$1',        label: 'layer→L' },
+      ];
+      this.trace = [];
+      this.criticalPairs = [];
+      this.cache = new Map();
+      this.closure = '';
+    }
+    rewrite(input) {
+      this.trace = [];
+      this.criticalPairs = [];
+      let s = String(input);
+      let prev = '';
+      let steps = 0;
+      const maxSteps = 50;
+      // Apply rules until normal form or limit
+      while (s !== prev && steps < maxSteps) {
+        prev = s;
+        for (const rule of this.rules) {
+          const before = s;
+          s = s.replace(rule.from, rule.to);
+          if (s !== before) {
+            this.trace.push({ step: steps, rule: rule.label, before, after: s });
+            // Detect critical pairs: when two rules could apply
+            const overlap = this.detectCriticalPair(before, rule);
+            if (overlap) this.criticalPairs.push(overlap);
+            steps++;
+          }
+        }
+      }
+      // Build trace monoid closure
+      this.closure = this.trace.map(t => {
+        if (t.rule.startsWith('bind') || t.rule.startsWith('B')) return '□';
+        if (t.rule.startsWith('assign') || t.rule.startsWith('A')) return '◇';
+        if (t.rule.startsWith('join') || t.rule.startsWith('J')) return '¬';
+        if (t.rule.startsWith('compose') || t.rule.startsWith('C')) return '□';
+        if (t.rule.startsWith('target') || t.rule.startsWith('T')) return '◇';
+        return '·';
+      }).join('');
+      // Cache result
+      const key = fnv1a32(input).toString(16);
+      this.cache.set(key, { input, output: s, trace: this.trace.length, steps });
+      return { output: s, trace: this.trace, steps, criticalPairs: this.criticalPairs, closure: this.closure };
+    }
+    detectCriticalPair(before, rule) {
+      // Simple overlap detection: check if another rule matches overlapping region
+      for (const other of this.rules) {
+        if (other === rule) continue;
+        if (other.from.test(before)) {
+          return { rule1: rule.label, rule2: other.label, context: before.slice(0, 40) };
+        }
+      }
+      return null;
+    }
+    // System L: trace monoid composition
+    compose(...inputs) {
+      return inputs.map(i => this.rewrite(i)).reduce((acc, r) => {
+        return { output: acc.output + ' · ' + r.output, trace: [...acc.trace, ...r.trace],
+                 steps: acc.steps + r.steps, closure: acc.closure + r.closure };
+      }, { output: '', trace: [], steps: 0, closure: '' });
+    }
+  }
+
+  // ─── Renderers (extended) ───────────────────────────────────────
+  const ClockRenderer = {
+    draw(canvas, clock) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 20;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      // Draw 24-gon (icositetragon) perimeter
+      ctx.beginPath();
+      for (let i = 0; i < 24; i++) {
+        const a = i * 15 * Math.PI / 180 - Math.PI/2;
+        const x = cx + r * Math.cos(a);
+        const y = cy + r * Math.sin(a);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = '#1a1a3e';
+      ctx.stroke();
+
+      // Vertex markers + layer labels on 24-gon
+      for (let i = 0; i < 24; i++) {
+        const a = i * 15 * Math.PI / 180 - Math.PI/2;
+        const x = cx + r * Math.cos(a);
+        const y = cy + r * Math.sin(a);
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2*Math.PI);
+        ctx.fillStyle = '#2a2a4e';
+        ctx.fill();
+
+        // Label key layers
+        const layerVal = Math.round(9 * Math.sin(i * 15 * Math.PI / 180));
+        if (layerVal === 9 || layerVal === -9 || layerVal === 0 || layerVal === 1 || layerVal === -1) {
+          ctx.fillStyle = '#6666aa';
+          ctx.font = '7px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(`L${layerVal}`, x, y - 8);
+        }
+      }
+
+      // Current phase indicator
+      const rad = clock.phase * Math.PI / 180;
+      const px = cx + r * Math.cos(rad - Math.PI/2);
+      const py = cy + r * Math.sin(rad - Math.PI/2);
+      ctx.beginPath();
+      ctx.arc(px, py, 8, 0, 2*Math.PI);
+      ctx.fillStyle = clock.layer >= 0 ? '#e94560' : '#00FFFF';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Inner tetrahedron (Y/Z combinator modulation)
+      const tetraR = r * 0.5;
+      const tetraPts = [
+        { a: -90 + clock.phase,     label: 'Y', color: '#ff6600' },  // -9 → Y
+        { a: -90 + clock.phase + 90, label: 'Z', color: '#66ff66' },  // -1 → Z
+        { a: -90 + clock.phase + 180,label: 'Y', color: '#ff66ff' },  // 1 → Y
+        { a: -90 + clock.phase + 270,label: 'Z', color: '#66ffff' },  // 9 → Z
+      ];
+      tetraPts.forEach((pt, i) => {
+        const a = pt.a * Math.PI / 180;
+        const x = cx + tetraR * Math.cos(a);
+        const y = cy + tetraR * Math.sin(a);
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2*Math.PI);
+        ctx.fillStyle = pt.color;
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '7px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(pt.label, x, y - 8);
+        // Connect edges of tetrahedron
+        tetraPts.forEach((pt2, j) => {
+          if (j <= i) return;
+          const a2 = pt2.a * Math.PI / 180;
+          const x2 = cx + tetraR * Math.cos(a2);
+          const y2 = cy + tetraR * Math.sin(a2);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = '#2a2a4e';
+          ctx.stroke();
+        });
+      });
+
+      // Center centroid
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, 2*Math.PI);
+      ctx.fillStyle = '#00FFFF';
+      ctx.fill();
+
+      // Layer arc indicator
+      ctx.fillStyle = '#8888aa';
+      ctx.font = '8px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`phase: ${clock.phase}°  layer: ${clock.layer}`, cx, H - 4);
+    }
+  };
+
+  const Renderers = {
+    // Smith Chart: 360° circular nomogram with 60-point scales
+    smithChart(canvas, cons, nonagramScales) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 16;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      // Outer circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, 2*Math.PI);
+      ctx.strokeStyle = '#1a1a3e';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Resistance circles
+      [0.2, 0.5, 1, 2, 5].forEach(rVal => {
+        const ccx = cx + r * (rVal / (rVal + 1));
+        const cr = r / (rVal + 1);
+        ctx.beginPath();
+        ctx.arc(ccx, cy, cr, 0, 2*Math.PI);
+        ctx.strokeStyle = '#2a1a4e';
+        ctx.stroke();
+      });
+
+      // 60-point scales (every 6°)
+      for (let i = 0; i < 60; i++) {
+        const a = i * 6 * Math.PI / 180;
+        const len = i % 5 === 0 ? 12 : (i % 1 === 0 ? 6 : 3);
+        const x1 = cx + r * Math.cos(a);
+        const y1 = cy + r * Math.sin(a);
+        const x2 = cx + (r - len) * Math.cos(a);
+        const y2 = cy + (r - len) * Math.sin(a);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = i % 5 === 0 ? '#e94560' : '#3a3a5e';
+        ctx.stroke();
+      }
+
+      // Active port dot
+      const portAngle = (cons.port % 360) * Math.PI / 180;
+      const portR = r * 0.85;
+      const px = cx + portR * Math.cos(portAngle);
+      const py = cy + portR * Math.sin(portAngle);
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, 2*Math.PI);
+      ctx.fillStyle = cons.color;
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // nonagram scale labels
+      const scales = nonagramScales.allScales();
+      for (let i = 0; i < scales.length; i++) {
+        const a = (i * 60 + 30) * Math.PI / 180;
+        const lx = cx + (r - 20) * Math.cos(a);
+        const ly = cy + (r - 20) * Math.sin(a);
+        ctx.fillStyle = '#6666aa';
+        ctx.font = '7px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(scales[i].slice(0,6), lx, ly);
+      }
+
+      // Center
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2*Math.PI);
+      ctx.fillStyle = '#00FFFF';
+      ctx.fill();
+    },
+
+    // Karnaugh Map on a torus (Gray-coded 4×4)
+    kmap(canvas, kmap) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const s = Math.min(W, H) / 5;
+      const ox = (W - 4 * s) / 2, oy = (H - 4 * s) / 2;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      const labels = ['00','01','11','10'];
+      // Row labels (AB)
+      for (let r = 0; r < 4; r++) {
+        ctx.fillStyle = '#6666aa';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(labels[r], ox - 16, oy + r * s + s/2 + 3);
+      }
+      // Col labels (CD)
+      for (let c = 0; c < 4; c++) {
+        ctx.fillStyle = '#6666aa';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(labels[c], ox + c * s + s/2, oy - 12);
+      }
+
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          const val = kmap.get(r, c);
+          const x = ox + c * s, y = oy + r * s;
+          ctx.fillStyle = val ? '#e94560' : '#1a1a2e';
+          ctx.fillRect(x, y, s, s);
+          ctx.strokeStyle = '#2a2a4e';
+          ctx.strokeRect(x, y, s, s);
+          ctx.fillStyle = val ? '#ffffff' : '#666666';
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'center';
+          const idx = (r << 2) | c;
+          ctx.fillText(idx, x + s/2, y + s/2 + 3);
+        }
+      }
+
+      // Torus wrap indicators
+      ctx.strokeStyle = '#00FFFF';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3,3]);
+      ctx.strokeRect(ox, oy, 4*s, 4*s);
+      ctx.setLineDash([]);
+    },
+
+    // Genaille chart visualization
+    genaille(canvas, x, y, result) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const s = W / 12;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      // Draw rods
+      for (let i = 0; i <= 9; i++) {
+        const xi = s + i * s;
+        ctx.strokeStyle = '#2a2a4e';
+        ctx.strokeRect(xi, 2, s-2, H-4);
+        ctx.fillStyle = i === x ? '#e94560' : (i === y ? '#00FFFF' : '#8888aa');
+        ctx.font = '10px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(i, xi + (s-2)/2, 14);
+        // inner digits
+        for (let j = 0; j <= 9; j++) {
+          const d = this._g ? this._g.table[i][j] : (i * j) % 10;
+          ctx.fillStyle = (i === x && j === y) ? '#ffffff' : '#555577';
+          ctx.font = '7px monospace';
+          ctx.fillText(d, xi + (s-2)/2, 26 + j * 2);
+        }
+      }
+      this._g = this._g || new Genaille();
+    },
+
+    // Wittgenstein truth table visualization
+    wittgenstein(canvas, row) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const entry = WITTGENSTEIN[row];
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W, H);
+
+      // Draw truth table
+      const sw = 30, sh = 15, ox = 10, oy = 5;
+      // Header
+      ctx.fillStyle = '#6666aa';
+      ctx.font = '8px monospace';
+      ctx.fillText('p', ox + sw/2, oy + 10);
+      ctx.fillText('q', ox + sw*1.5, oy + 10);
+      ctx.fillText('f', ox + sw*2.5, oy + 10);
+
+      const pq = [[0,0],[0,1],[1,0],[1,1]];
+      pq.forEach((vals, idx) => {
+        const y = oy + sh + idx * sh;
+        ctx.fillStyle = '#8888aa';
+        ctx.font = '8px monospace';
+        ctx.fillText(vals[0], ox + sw/2, y + 10);
+        ctx.fillText(vals[1], ox + sw*1.5, y + 10);
+        ctx.fillStyle = entry.tt[idx] ? '#e94560' : '#3a3a5e';
+        ctx.fillText(entry.tt[idx], ox + sw*2.5, y + 10);
+      });
+
+      // Op name
+      ctx.fillStyle = '#00FFFF';
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Row ${row}: ${entry.op} — ${entry.name}`, ox + sw*3.5, 12);
+    }
+  };
+
+  // ─── DID Resolver (simulated DNS TXT) ────────────────────────────
+  class DIDResolver {
+    resolve(did) {
+      // In production, do DNS over HTTPS query for _omi._tcp.<id>.did TXT
+      // Here we simulate from the DID string
+      const parts = did.split(':');
+      const id = parts[parts.length - 1] || '0000';
+      return {
+        '@context': 'https://www.w3.org/ns/did/v1',
+        id: did,
+        verificationMethod: [{
+          id: '#meta64',
+          type: 'OMI-META64',
+          controller: did,
+          publicKeyMultibase: id
+        }],
+        service: [{
+          id: '#cons256',
+          type: 'OMI-CONS-RUNTIME',
+          serviceEndpoint: `ip6:${id.replace(/(.{4})/g, '$1:').slice(0, -1)}`
+        }],
+        omi: {
+          car: '0x20',
+          cdr: '0x80',
+          meta: '0x0001',
+          port: '0xFFFF'
+        }
+      };
+    }
+  }
+
+  // ─── WebRTC Peer (stub / framework) ──────────────────────────────
+  class OMIPeer {
+    constructor() {
+      this.peers = new Map();
+      this.channels = new Map();
+      this.status = 'disconnected';
+    }
+    async createOffer() {
+      if (!window.RTCPeerConnection) {
+        this.status = 'WebRTC unavailable';
+        return null;
+      }
+      const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      const dc = pc.createDataChannel('omi-cons');
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      this.status = 'offer created';
+      this._pc = pc;
+      this._dc = dc;
+      return offer;
+    }
+    async createAnswer(offer) {
+      if (!window.RTCPeerConnection) {
+        this.status = 'WebRTC unavailable';
+        return null;
+      }
+      const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      pc.ondatachannel = (ev) => {
+        const dc = ev.channel;
+        this._dc = dc;
+        this.status = 'data channel open';
+      };
+      await pc.setRemoteDescription(offer);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      this.status = 'answer created';
+      this._pc = pc;
+      return answer;
+    }
+    getStatus() { return this.status; }
+  }
+
+  // ─── 3D Hypergraph Scene Update (A-Frame) ────────────────────────
+  function updateScene(cons, trace) {
+    const container = document.getElementById('omi-hypergraph');
+    if (!container) return;
+    // Clear existing entities
+    while (container.firstChild) container.removeChild(container.firstChild);
+
+    // Create nodes from trace + cons
+    const nodes = [
+      { id: 'genesis', x: 0, y: 0, z: 0, color: cons.color, label: 'cons256' },
+      { id: 'car', x: -1.5, y: 0.5, z: 0, color: '#e94560', label: 'car64' },
+      { id: 'cdr', x: 1.5, y: 0.5, z: 0, color: '#00FFFF', label: 'cdr128' },
+      { id: 'meta', x: 0, y: -1, z: 1, color: '#533483', label: 'meta64' },
+      { id: 'port', x: 0, y: -1.5, z: -1, color: '#0f3460', label: 'port' }
+    ];
+    // Add trace nodes
+    trace.slice(-5).forEach((t, i) => {
+      nodes.push({
+        id: `trace-${i}`,
+        x: -2 + i * 1, y: -1 - i * 0.3, z: 1 + i * 0.2,
+        color: '#ffaa00',
+        label: t.op
+      });
+    });
+
+    nodes.forEach(n => {
+      const el = document.createElement('a-entity');
+      el.setAttribute('id', n.id);
+      el.setAttribute('position', `${n.x} ${n.y} ${n.z}`);
+      el.setAttribute('geometry', 'primitive: box; width: 0.4; height: 0.4; depth: 0.4');
+      el.setAttribute('material', `color: ${n.color}; emissive: ${n.color}; emissiveIntensity: 0.2`);
+      // Label as text
+      const text = document.createElement('a-entity');
+      text.setAttribute('text', `value: ${n.label}; color: #ccc; align: center; width: 4`);
+      text.setAttribute('position', '0 0.5 0');
+      el.appendChild(text);
+      container.appendChild(el);
+    });
+
+    // Edges
+    const edges = [
+      ['genesis', 'car'], ['genesis', 'cdr'], ['genesis', 'meta'], ['meta', 'port']
+    ];
+    for (let i = 0; i < trace.length - 1 && i < 4; i++) {
+      edges.push([`trace-${i}`, i < trace.length - 1 ? `trace-${i+1}` : 'genesis']);
+    }
+    edges.forEach(([from, to]) => {
+      const fromEl = document.getElementById(from);
+      const toEl = document.getElementById(to);
+      if (!fromEl || !toEl) return;
+      const fPos = fromEl.getAttribute('position');
+      const tPos = toEl.getAttribute('position');
+      if (!fPos || !tPos) return;
+      const dx = tPos.x - fPos.x, dy = tPos.y - fPos.y, dz = tPos.z - fPos.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      const mx = (fPos.x + tPos.x) / 2, my = (fPos.y + tPos.y) / 2, mz = (fPos.z + tPos.z) / 2;
+      const line = document.createElement('a-entity');
+      line.setAttribute('position', `${mx} ${my} ${mz}`);
+      line.setAttribute('geometry', `primitive: cylinder; height: ${dist}; radius: 0.03`);
+      line.setAttribute('material', 'color: #533483; emissive: #533483; emissiveIntensity: 0.1');
+      // Rotate to align
+      const angleY = Math.atan2(dx, dz) * 180 / Math.PI;
+      const angleX = Math.atan2(dy, Math.sqrt(dx*dx + dz*dz)) * 180 / Math.PI;
+      line.setAttribute('rotation', `${angleX} ${angleY} 0`);
+      container.appendChild(line);
+    });
+  }
+
+  // ─── DOM Surface Update ──────────────────────────────────────────
+  function updateDOMSurface(cons) {
+    const panel = document.getElementById('dom-surface');
+    if (!panel) return;
+    panel.dataset.omiCar = hex64(cons.car);
+    panel.dataset.omiCdr = hex128(cons.cdr);
+    panel.dataset.omiMeta = hex64(cons.meta);
+    panel.dataset.omiPort = hex(cons.port);
+    panel.dataset.omiColor = cons.color;
+    panel.dataset.omiDid = cons.did;
+
+    // Update display
+    const kids = panel.querySelectorAll('.grid-4 > div');
+    if (kids.length >= 4) {
+      kids[0].innerHTML = '<span class="muted">car</span><br>' + hex64(cons.car);
+      kids[1].innerHTML = '<span class="muted">cdr</span><br>' + hex128(cons.cdr);
+      kids[2].innerHTML = '<span class="muted">meta</span><br>' + hex64(cons.meta);
+      kids[3].innerHTML = '<span class="muted">port</span><br>' + hex(cons.port);
+    }
+    const didEl = panel.querySelector('.accent4');
+    if (didEl) didEl.textContent = cons.did;
+  }
+
+  // ─── Main Runtime ────────────────────────────────────────────────
+  class OmiRuntime {
+    constructor() {
+      this.cons = new Cons256();
+      this.sm = new StateMachine();
+      this.nonagram = new Nonagram();
+      this.kmap = new Karnaugh();
+      this.genaille = new Genaille();
+      this.didResolver = new DIDResolver();
+      this.peer = new OMIPeer();
+      this.wittRow = 6;
+      this.listeners = [];
+    }
+    subscribe(fn) { this.listeners.push(fn); }
+    notify() { this.listeners.forEach(fn => fn(this)); }
+
+    reset() {
+      this.cons = new Cons256();
+      this.sm = new StateMachine();
+      this.nonagram.offset = 0;
+      this.kmap = new Karnaugh();
+      this.wittRow = 6;
+      this.notify();
+    }
+
+    // Execute one state transition
+    execOp(op, input) {
+      const out = this.sm.exec(op, input);
+      this.cons = this.sm.getCons();
+      // Update nonagram selection from port
+      this.nonagram.offset = this.cons.port % 5;
+      this.notify();
+      return out;
+    }
+
+    // Full eval: unfold expression → replay → fold
+    eval(expr) {
+      this.sm.reset();
+      // expr is a nested array like ["bind", 1, ["assign", 2, ...]]
+      const unfold = (e) => {
+        if (Array.isArray(e)) return { op: e[0], val: e[1], rest: e.length > 2 ? unfold(e.slice(2)) : null };
+        return e;
+      };
+      const replay = (node) => {
+        if (node && typeof node === 'object' && node.op) {
+          const val = typeof node.val === 'number' ? node.val : parseInt(node.val);
+          this.execOp(node.op, val);
+          if (node.rest) replay(node.rest);
+        }
+      };
+      const ast = unfold(expr);
+      replay(ast);
+      const receipt = this.sm.fold();
+      this.cons = this.sm.getCons();
+      this.notify();
+      return { state: this.sm.state, trace: this.sm.trace, receipt };
+    }
+
+    // Parse an OMI-LISP expression string
+    parseAndEval(str) {
+      try {
+        // Simple parser: "bind 0x20 assign 0x80 join 0x0001 compose 0xFFFF target 0x00"
+        const tokens = str.trim().split(/\s+/);
+        for (let i = 0; i < tokens.length - 1; i += 2) {
+          const op = tokens[i].toLowerCase();
+          let val = tokens[i+1];
+          if (val.startsWith('0x')) val = parseInt(val, 16);
+          else val = parseInt(val, 10);
+          if (!isNaN(val)) this.execOp(op, val);
+        }
+        const receipt = this.sm.fold();
+        this.cons = this.sm.getCons();
+        this.notify();
+        return receipt;
+      } catch (e) {
+        console.error('Parse error:', e);
+        return null;
+      }
+    }
+  }
+
+  // ─── Initialize & Bind UI ────────────────────────────────────────
+  return { OmiRuntime, Cons256, StateMachine, Nonagram, Karnaugh, Genaille,
+           WITTGENSTEIN, BARCODE_CARRIERS, carrierBars, BarcodeRenderer,
+           LayerClock, TermRewritingLexer, ClockRenderer,
+           DIDResolver, OMIPeer, Renderers, updateScene,
+           updateDOMSurface, hex64, hex128, hex, fnv1a32 };
+})();
+
+// ════════════════════════════════════════════════════════════════════
+// UI Binding
+// ════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  const rt = new OMI.OmiRuntime();
+  const sm = rt.sm;
+  const gen = rt.genaille;
+  const clock = new OMI.LayerClock();
+  const lexer = new OMI.TermRewritingLexer();
+
+  // ─── Display update ────────────────────────────────────────────
+  function refresh() {
+    const c = rt.cons;
+    // Header chips
+    document.getElementById('did-chip').textContent = c.did;
+    document.getElementById('receipt-chip').textContent = 'receipt: ' + (sm.receipt || '—');
+
+    // CONS display
+    document.getElementById('disp-car').textContent = OMI.hex64(c.car);
+    document.getElementById('disp-cdr').textContent = OMI.hex128(c.cdr);
+    document.getElementById('disp-meta').textContent = OMI.hex64(c.meta);
+    document.getElementById('disp-port').textContent = OMI.hex(c.port);
+    document.getElementById('disp-did').textContent = c.did;
+
+    // 5-term output
+    const last = sm.trace.length > 0 ? sm.trace[sm.trace.length - 1] : null;
+    document.getElementById('op-output').textContent = last ? OMI.hex(last.output) : '—';
+    document.getElementById('op-trace').textContent = `[${sm.trace.length} steps]`;
+
+    // Nonagram
+    const ns = rt.nonagram.select();
+    document.getElementById('nonagram-bm').textContent = ns.booleanMetric.join(', ');
+    document.getElementById('nonagram-lv').textContent = ns.linearVector.join(', ');
+    document.getElementById('nonagram-mp').textContent = ns.matrixProjective.join(', ');
+
+    // Smith chart
+    const smithCanvas = document.getElementById('smith-canvas');
+    if (smithCanvas) OMI.Renderers.smithChart(smithCanvas, c, rt.nonagram);
+
+    // K-map
+    const kmapCanvas = document.getElementById('kmap-canvas');
+    if (kmapCanvas) OMI.Renderers.kmap(kmapCanvas, rt.kmap);
+
+    // Wittgenstein
+    const wittCanvas = document.getElementById('witt-canvas');
+    if (wittCanvas) OMI.Renderers.wittgenstein(wittCanvas, rt.wittRow);
+    document.getElementById('witt-display').textContent =
+      `Row ${rt.wittRow}: ${OMI.WITTGENSTEIN[rt.wittRow].op} — ${OMI.WITTGENSTEIN[rt.wittRow].name}`;
+
+    // Genaille
+    const gx = parseInt(document.getElementById('genaille-x').value) || 7;
+    const gy = parseInt(document.getElementById('genaille-y').value) || 3;
+    const gres = gen.multiply(gx, gy);
+    document.getElementById('genaille-result').textContent = gres.product;
+    document.getElementById('genaille-path').textContent = gres.path;
+    const genCanvas = document.getElementById('genaille-canvas');
+    if (genCanvas) OMI.Renderers.genaille(genCanvas, gx, gy, gres);
+
+    // DOM surface
+    OMI.updateDOMSurface(c);
+
+    // Trace
+    const traceEl = document.getElementById('trace-display');
+    if (traceEl) {
+      if (sm.trace.length === 0) {
+        traceEl.textContent = '(no evaluations yet)';
+      } else {
+        traceEl.textContent = sm.trace.map((t, i) =>
+          `${i}: ${t.op}(${OMI.hex(t.input)}) → ${OMI.hex(t.output)}`
+        ).join('\n') + '\n\nreceipt: ' + (sm.receipt || 'pending');
+      }
+    }
+
+    // DID
+    const didDoc = rt.didResolver.resolve(c.did);
+    document.getElementById('did-display').textContent = JSON.stringify(didDoc, null, 2);
+
+    // 3D scene
+    OMI.updateScene(c, sm.trace);
+
+    // Peer status
+    document.getElementById('peer-chip').textContent = `peers: ${rt.peer.peers.size}`;
+    document.getElementById('webrtc-status').textContent = `WebRTC: ${rt.peer.getStatus()}`;
+
+    // ─── Layer Clock ───────────────────────────────────────────
+    const clockCanvas = document.getElementById('clock-canvas');
+    if (clockCanvas) OMI.ClockRenderer.draw(clockCanvas, clock);
+    document.getElementById('clock-current-layer').textContent = 'Layer ' + clock.layer;
+    const comb = clock.combinator;
+    document.getElementById('clock-combinator').textContent = `${comb.sym} ${comb.name}`;
+    document.getElementById('clock-cidr').textContent = clock.cidr;
+    document.getElementById('clock-tetra').textContent = clock.tetra;
+
+    // ─── Term Rewriting Lexer ──────────────────────────────────
+    const rwInput = document.getElementById('rewrite-input');
+    if (rwInput && rwInput._lastVal !== undefined) {
+      const result = lexer.rewrite(rwInput.value);
+      document.getElementById('rewrite-count').textContent = result.steps;
+      document.getElementById('rewrite-pairs').textContent = result.criticalPairs.length;
+      document.getElementById('rewrite-cache').textContent = `|${lexer.cache.size}|`;
+      document.getElementById('rewrite-trace').textContent = result.trace.length > 0
+        ? result.trace.map(t => `${t.step}: ${t.rule} → "${t.after.slice(0,60)}"`).join('\n')
+        : '(no rewrites)';
+      document.getElementById('rewrite-closure').textContent = result.closure.slice(0, 24) || '◇□¬◇□¬◇□';
+    }
+
+    // ─── Barcode Carriers ───────────────────────────────────────
+    const cCtx = document.getElementById('carrier-canvas');
+    if (cCtx) {
+      const idx = parseInt(document.querySelector('.carrier-btn.active')?.dataset?.carrier || '0');
+      const carrier = OMI.BARCODE_CARRIERS[idx];
+      document.getElementById('carrier-name').textContent = carrier.id;
+      document.getElementById('carrier-role').textContent = carrier.role;
+      document.getElementById('carrier-precision').textContent = carrier.prec;
+      document.getElementById('carrier-law').textContent = carrier.law;
+      const bars = OMI.carrierBars(c, idx);
+      OMI.BarcodeRenderer.drawCarrier(cCtx, bars, carrier, true);
+    }
+    const allCtx = document.getElementById('carrier-all-canvas');
+    if (allCtx) OMI.BarcodeRenderer.drawAllCarriers(allCtx, c);
+  }
+
+  rt.subscribe(refresh);
+
+  // ─── 5-term op buttons ─────────────────────────────────────────
+  document.querySelectorAll('.op-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const op = btn.dataset.op;
+      const input = document.getElementById('op-input').value;
+      const val = input.startsWith('0x') ? parseInt(input, 16) : parseInt(input);
+      if (!isNaN(val)) {
+        rt.execOp(op, val);
+      }
+    });
+  });
+  document.getElementById('op-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const active = document.querySelector('.op-btn.active');
+      if (active) active.click();
+    }
+  });
+
+  // ─── Reset ─────────────────────────────────────────────────────
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    rt.reset();
+  });
+
+  // ─── Eval ──────────────────────────────────────────────────────
+  document.getElementById('btn-eval').addEventListener('click', () => {
+    // Evaluate a default expression: bind→assign→join→compose→target
+    const expr = ["bind", "0x20", ["assign", "0x80", ["join", "0x0001", ["compose", "0xFFFF", ["target", "0x00"]]]]];
+    const result = rt.eval(expr);
+    console.log('Eval result:', result);
+  });
+
+  // ─── Clock controls ──────────────────────────────────────────
+  document.getElementById('clock-step').addEventListener('click', () => {
+    clock.step(6);
+    refresh();
+  });
+  document.getElementById('clock-slider').addEventListener('input', () => {
+    clock.phase = parseInt(document.getElementById('clock-slider').value);
+    refresh();
+  });
+  const clockAutoBtn = document.getElementById('clock-auto');
+  clockAutoBtn.addEventListener('click', () => {
+    if (clock.running) { clock.stop(); clockAutoBtn.textContent = '▶ Auto'; }
+    else { clock.start(100); clockAutoBtn.textContent = '⏹ Stop'; }
+  });
+  // Sync clock slider + auto tick
+  setInterval(() => {
+    if (clock.running) {
+      clock.step(2);
+      document.getElementById('clock-slider').value = clock.phase;
+      refresh();
+    }
+  }, 100);
+
+  // ─── Term Rewriting Lexer ────────────────────────────────────
+  document.getElementById('rewrite-go').addEventListener('click', () => {
+    const input = document.getElementById('rewrite-input');
+    input._lastVal = input.value;
+    refresh();
+  });
+  document.getElementById('rewrite-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('rewrite-go').click();
+  });
+  // Run initial rewrite
+  setTimeout(() => { document.getElementById('rewrite-go').click(); }, 100);
+
+  // ─── Nonagram rotate ──────────────────────────────────────────
+  document.getElementById('nonagram-rotate').addEventListener('click', () => {
+    rt.nonagram.rotate();
+    refresh();
+  });
+
+  // ─── Wittgenstein slider ──────────────────────────────────────
+  const wittSlider = document.getElementById('witt-slider');
+  wittSlider.addEventListener('input', () => {
+    rt.wittRow = parseInt(wittSlider.value);
+    // Update kmap from witt row
+    const entry = OMI.WITTGENSTEIN[rt.wittRow];
+    // Map truth table to kmap cells (bit pattern)
+    for (let i = 0; i < 4; i++) {
+      // Each truth table entry applies to 4 adjacent cells in the kmap? 
+      // For now just set K-map minterms from the row
+      // Use row as selector for a specific K-map pattern
+    }
+    refresh();
+  });
+  document.getElementById('witt-prev').addEventListener('click', () => {
+    rt.wittRow = (rt.wittRow - 1 + 16) % 16;
+    wittSlider.value = rt.wittRow;
+    refresh();
+  });
+  document.getElementById('witt-next').addEventListener('click', () => {
+    rt.wittRow = (rt.wittRow + 1) % 16;
+    wittSlider.value = rt.wittRow;
+    refresh();
+  });
+
+  // ─── Barcode carrier buttons ────────────────────────────────
+  document.querySelectorAll('.carrier-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.carrier-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      refresh();
+    });
+  });
+
+  // ─── Genaille ──────────────────────────────────────────────────
+  document.getElementById('genaille-x').addEventListener('input', refresh);
+  document.getElementById('genaille-y').addEventListener('input', refresh);
+
+  // ─── DOM Surface apply ─────────────────────────────────────────
+  document.getElementById('dom-apply').addEventListener('click', () => {
+    const car = document.getElementById('dom-input-car').value;
+    const cdr = document.getElementById('dom-input-cdr').value;
+    const meta = document.getElementById('dom-input-meta').value;
+    rt.cons = new OMI.Cons256(
+      car.startsWith('0x') ? parseInt(car, 16) : parseInt(car),
+      cdr.startsWith('0x') ? parseInt(cdr, 16) : parseInt(cdr),
+      meta.startsWith('0x') ? parseInt(meta, 16) : parseInt(meta)
+    );
+    rt.sm.state.car = rt.cons.car;
+    rt.sm.state.cdr = rt.cons.cdr;
+    rt.sm.state.meta = rt.cons.meta;
+    rt.sm.state.port = rt.cons.port;
+    refresh();
+  });
+
+  // ─── DID resolve ──────────────────────────────────────────────
+  document.getElementById('did-resolve').addEventListener('click', () => {
+    const did = document.getElementById('did-input').value;
+    const doc = rt.didResolver.resolve(did);
+    document.getElementById('did-display').textContent = JSON.stringify(doc, null, 2);
+  });
+
+  // ─── WebRTC ───────────────────────────────────────────────────
+  document.getElementById('webrtc-offer').addEventListener('click', async () => {
+    const offer = await rt.peer.createOffer();
+    if (offer) {
+      document.getElementById('did-display').textContent =
+        'WebRTC Offer:\n' + JSON.stringify(offer, null, 2);
+      document.getElementById('webrtc-status').textContent = `WebRTC: ${rt.peer.getStatus()}`;
+    }
+  });
+  document.getElementById('webrtc-answer').addEventListener('click', async () => {
+    // Simplified: create offer-like structure
+    const ans = await rt.peer.createAnswer({ type: 'offer', sdp: '' });
+    if (ans) {
+      document.getElementById('did-display').textContent =
+        'WebRTC Answer:\n' + JSON.stringify(ans, null, 2);
+      document.getElementById('webrtc-status').textContent = `WebRTC: ${rt.peer.getStatus()}`;
+    }
+  });
+
+  // ─── Peer button ──────────────────────────────────────────────
+  document.getElementById('btn-peer').addEventListener('click', () => {
+    // Simulate peer discovery
+    const peerCount = Math.floor(Math.random() * 5) + 1;
+    document.getElementById('peer-chip').textContent = `peers: ${peerCount}`;
+  });
+
+  // ─── Initial render ───────────────────────────────────────────
+  refresh();
+});
+</script>
+</body>
+</html>

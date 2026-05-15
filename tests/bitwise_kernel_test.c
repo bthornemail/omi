@@ -95,7 +95,8 @@ static void test_kernel_tick(void)
         .K = 0x00u,
         .fano = 0x01u,
         .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
-        .GS = OMI_BITWISE_KERNEL_GS
+        .GS = OMI_BITWISE_KERNEL_GS,
+        .semantic_clock = {0}
     };
 
     kernel_tick(&ks);
@@ -103,6 +104,9 @@ static void test_kernel_tick(void)
     assert(ks.fano == 0x02u);
     assert(ks.sonar.lo == 0x00000002u);
     assert(ks.sonar.hi == 0x00000000u);
+    assert(ks.semantic_clock.phase == 1u);
+    assert(ks.semantic_clock.layer == 0);
+    assert(ks.semantic_clock.combinator == LC_COMB_POSSIBILITY);
 
     kernel_state_t before_null = ks;
     kernel_tick(0);
@@ -114,6 +118,35 @@ static void test_kernel_tick(void)
     printf("  OK kernel_tick advances delta8, Fano, and Sonar\n\n");
 }
 
+static void test_kernel_sync_bom_clock(void)
+{
+    printf("Testing kernel/BOM semantic clock sync\n");
+
+    omi_bom_clock_t clock;
+    omi_bom_init(&clock);
+    assert(clock.tick == 0u);
+    assert(clock.semantic_clock.phase == 0u);
+    assert(clock.semantic_clock.combinator == LC_COMB_POSSIBILITY);
+
+    (void)omi_bom_advance(&clock);
+    (void)omi_bom_advance(&clock);
+
+    kernel_state_t ks = {
+        .K = 0x00u,
+        .fano = 0x01u,
+        .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
+        .GS = OMI_BITWISE_KERNEL_GS,
+        .semantic_clock = {0}
+    };
+
+    kernel_sync_bom_clock(&ks, &clock);
+    assert(ks.semantic_clock.phase == clock.semantic_clock.phase);
+    assert(ks.semantic_clock.layer == clock.semantic_clock.layer);
+    assert(ks.semantic_clock.combinator == clock.semantic_clock.combinator);
+
+    printf("  OK BOM ticks can drive kernel semantic layer state directly\n\n");
+}
+
 int main(void)
 {
     printf("Testing Phase 28 - Bitwise Kernel Law\n");
@@ -123,6 +156,7 @@ int main(void)
     test_fano_clock();
     test_sonar_clock();
     test_kernel_tick();
+    test_kernel_sync_bom_clock();
 
     printf("=====================================\n");
     printf("ALL PHASE 28 TESTS PASSED\n");

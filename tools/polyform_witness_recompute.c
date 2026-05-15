@@ -27,7 +27,8 @@ int main(int argc, char **argv)
         .K = 0x00u,
         .fano = 0x01u,
         .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
-        .GS = OMI_BITWISE_KERNEL_GS
+        .GS = OMI_BITWISE_KERNEL_GS,
+        .semantic_clock = {0}
     };
 
     for (uint64_t i = 0; i < tick; i++) {

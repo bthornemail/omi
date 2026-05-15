@@ -211,6 +211,13 @@
       (rule "Phase 87 names the runtime lattice before the runtime opens it")
       (declaration "declarations/runtime-channel-manifest.omilisp")
       (doctrine "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md")))
+  (platform-distribution-manifests
+    (manifest janet-guix-webview-platform-distribution
+      (kind platform.distribution-manifest)
+      (rule "Janet hosts declaration and compiler orchestration, Guix distributes the raw binary boot surface, and WebView projects OMI UI without becoming authority")
+      (module "workbench/src/platform_distribution_manifest.js")
+      (declaration "declarations/janet-guix-webview-platform-distribution.omilisp")
+      (doctrine "docs/PHASE-116-JANET-GUIX-WEBVIEW-PLATFORM-DISTRIBUTION.md")))
   (adapter-registries
     (registry distributed-adapter-transport-registry
       (kind runtime.adapter-transport-registry)
@@ -466,6 +473,18 @@
         (sid runtime-channel-manifest-declaration)
         (path "declarations/runtime-channel-manifest.omilisp")
         (role runtime-channel-manifest-declaration))
+      (surface
+        (sid phase-116-platform-distribution-manifest)
+        (path "docs/PHASE-116-JANET-GUIX-WEBVIEW-PLATFORM-DISTRIBUTION.md")
+        (role platform-distribution-manifest-doctrine))
+      (surface
+        (sid platform-distribution-manifest-declaration)
+        (path "declarations/janet-guix-webview-platform-distribution.omilisp")
+        (role platform-distribution-manifest-declaration))
+      (surface
+        (sid platform-distribution-manifest-module)
+        (path "workbench/src/platform_distribution_manifest.js")
+        (role platform-distribution-manifest-module))
       (surface
         (sid phase-88-distributed-adapter-transport-registry)
         (path "docs/PHASE-88-DISTRIBUTED-ADAPTER-TRANSPORT-REGISTRY.md")

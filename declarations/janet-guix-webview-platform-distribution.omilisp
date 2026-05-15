@@ -1,0 +1,146 @@
+(omi
+  (identity
+    (sid janet-guix-webview-platform-distribution)
+    (title "Janet / Guix / WebView Platform Distribution Manifest")
+    (kind platform.distribution-manifest)
+    (source "docs/PHASE-116-JANET-GUIX-WEBVIEW-PLATFORM-DISTRIBUTION.md"))
+  (address
+    (addr janet-guix-webview-platform-distribution.self)
+    (locator runtime-channel-manifest.self)
+    (binding platform-distribution.binding.v0))
+  (scope
+    (fs omi)
+    (gs platform)
+    (rs distribution)
+    (us manifest))
+  (rule
+    (statement "Janet hosts declaration and compiler orchestration, Guix distributes the raw binary boot surface, and WebView projects OMI UI without becoming authority")
+    (janet-script-is-authority false)
+    (guix-package-is-authority false)
+    (browser-state-is-authority false)
+    (dom-cssom-appearance-is-authority false)
+    (transport-packet-is-authority false)
+    (declared-kernel-and-receipts-are-authority true))
+  (platform-ladder
+    (step raw-binary-boot-kernel
+      (order 0)
+      (role authority-carrier))
+    (step guix-distribution-closure
+      (order 1)
+      (role reproducible-package-closure))
+    (step janet-declaration-host
+      (order 2)
+      (role orchestration-surface))
+    (step omi-lisp-compiler
+      (order 3)
+      (role canonical-declaration-compiler))
+    (step semantic-web-bridge
+      (order 4)
+      (role wordnet-prolog-rdf-sparql-grounding))
+    (step dom-cssom-projection-window
+      (order 5)
+      (role browser-ui-projection))
+    (step modem-multiplexer-transport
+      (order 6)
+      (role lane-composed-distribution-surface)))
+  (components
+    (component janet
+      (role declaration-host)
+      (authority false)
+      (input declaration-graph)
+      (output compiler-session))
+    (component guix
+      (role reproducible-distribution-closure)
+      (authority false)
+      (input raw-binary-kernel)
+      (output derivation-bundle))
+    (component boot-kernel
+      (role raw-binary-authority-carrier)
+      (authority true)
+      (input declared-memory-image)
+      (output replayable-boot-state))
+    (component omi-lisp-compiler
+      (role canonical-declaration-compiler)
+      (authority false)
+      (input omi-lisp-source)
+      (output graph-ir))
+    (component atom-browser
+      (role projection-workbench-shell)
+      (authority false)
+      (input admitted-world-and-ui-state)
+      (output browsable-projection))
+    (component webview
+      (role html-css-projection-window)
+      (authority false)
+      (input dom-cssom-surface)
+      (output cross-platform-ui-projection))
+    (component semantic-web-bridge
+      (role lexical-logic-w3c-projection-bridge)
+      (authority false)
+      (input spom-cons-lattice)
+      (output advisory-semantic-projection)))
+  (lanes
+    (lane declaration
+      (kind compiler-lane)
+      (mode multiplexed)
+      (receipt lane.declaration.v0))
+    (lane receipt
+      (kind witness-lane)
+      (mode append-only)
+      (receipt lane.receipt.v0))
+    (lane semantic
+      (kind grounding-lane)
+      (mode advisory)
+      (receipt lane.semantic.v0))
+    (lane ui
+      (kind projection-lane)
+      (mode projection-only)
+      (receipt lane.ui.v0))
+    (lane transport
+      (kind modem-lane)
+      (mode duplex)
+      (receipt lane.transport.v0)))
+  (transport
+    (surface modem
+      (role carrier-transmutation-without-identity-rewrite)
+      (authority false))
+    (surface multiplexer
+      (role lane-interleaving-with-separate-receipts)
+      (authority false))
+    (surface demultiplexer
+      (role lane-separation-before-admission)
+      (authority false)))
+  (guardrails
+    (guard no-runtime-vendoring
+      (statement "Phase 116 does not embed Janet vendor Guix launch WebView or ship Atom"))
+    (guard browser-projection-only
+      (statement "DOM CSSOM and browser state are projection surfaces and do not become OMI authority"))
+    (guard semantic-bridge-advisory
+      (statement "WordNet Prolog RDF and SPARQL remain advisory grounding adapters over the CONS lattice"))
+    (guard kernel-authority-boundary
+      (statement "Only declared kernel state and receipts define admitted authority"))
+    (guard multiplexed-lanes-separate
+      (statement "Declaration receipt semantic UI and transport lanes may share carriers but retain separate receipts")))
+  (references
+    (surface phase-87-runtime-manifest
+      (path "docs/PHASE-87-RUNTIME-CHANNEL-MANIFEST-COURT.md")
+      (role runtime-channel-vocabulary))
+    (surface phase-94-semantic-grounding
+      (path "docs/PHASE-94-WORDNET-PROLOG-SEMANTIC-GROUNDING-ADAPTER.md")
+      (role semantic-grounding-vocabulary))
+    (surface phase-100-browser-smoke
+      (path "docs/PHASE-100-AUTONOMOUS-WORLD-UX-BROWSER-SMOKE-COURT.md")
+      (role browser-navigation-vocabulary))
+    (surface phase-101-live-renderer
+      (path "docs/PHASE-101-AUTONOMOUS-WORLD-LIVE-RENDERER.md")
+      (role projection-renderer-vocabulary)))
+  (projections
+    (lazy barcode)
+    (greedy chart)
+    (static reconciliation)
+    (animated timeline))
+  (receipts
+    (identity pending)
+    (projection pending)
+    (package pending)
+    (view pending)))

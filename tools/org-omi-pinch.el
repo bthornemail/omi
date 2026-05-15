@@ -51,6 +51,41 @@
   :type 'boolean
   :group 'org-omi)
 
+(defconst org-omi--car-layers
+  '(declarative epistemic systematic topological closure)
+  "CAR partition layers.")
+
+(defconst org-omi--cdr-layers
+  '(definitive federated procedural chronological constructive)
+  "CDR partition layers.")
+
+(defconst org-omi--layer-to-osi
+  '((declarative . application)
+    (epistemic . presentation)
+    (systematic . session)
+    (topological . transport)
+    (closure . network)
+    (definitive . data-link)
+    (constructive . physical))
+  "Primary 10-layer ontology to 7-layer OSI projection mapping.")
+
+(defconst org-omi--layer-modifiers
+  '((federated . (network transport))
+    (procedural . (session application))
+    (chronological . (transport physical)))
+  "Cross-layer modifier projections.")
+
+(defun org-omi-layer-to-osi (layer)
+  "Map a 10-layer LAYER symbol to its 7-layer OSI projection."
+  (or (cdr (assq layer org-omi--layer-to-osi))
+      (cdr (assq layer org-omi--layer-modifiers))
+      layer))
+
+(defun org-omi-car-cdr-projection ()
+  "Return canonical CAR/CDR projection pair."
+  (cons (mapcar #'org-omi-layer-to-osi org-omi--car-layers)
+        (mapcar #'org-omi-layer-to-osi org-omi--cdr-layers)))
+
 (defun org-omi--repo-root ()
   (or (locate-dominating-file default-directory "AGENTS.md")
       default-directory))
@@ -160,6 +195,98 @@
 
 (defun org-omi--manifest-file (omi-id tangle-root)
   (expand-file-name (concat (org-omi--safe-id-to-file-name omi-id) ".manifest.json") tangle-root))
+
+(defun org-omi-obsidian--json-response (alist)
+  "Return JSON response string for ALIST."
+  (json-encode alist))
+
+(defun org-omi-obsidian--with-temp-org (body file-path fn)
+  "Run FN in a temporary Org buffer containing BODY."
+  (with-temp-buffer
+    (org-mode)
+    (insert body)
+    (setq-local buffer-file-name file-path)
+    (funcall fn)))
+
+(defun org-omi-obsidian--json-friendly (value)
+  "Convert VALUE into a JSON-friendly projection structure."
+  (cond
+   ((symbolp value) (symbol-name value))
+   ((listp value) (mapcar #'org-omi-obsidian--json-friendly value))
+   (t value)))
+
+(defun org-omi-obsidian--osi-manifest ()
+  "Return a JSON-friendly OSI projection manifest."
+  `((car . ,(org-omi-obsidian--json-friendly (car (org-omi-car-cdr-projection))))
+    (cdr . ,(org-omi-obsidian--json-friendly (cdr (org-omi-car-cdr-projection))))))
+
+(defun org-omi-obsidian--pinch-body (body file-path)
+  "Pinch Obsidian BODY as an org-omi declaration candidate."
+  (org-omi-obsidian--with-temp-org
+   body file-path
+   (lambda ()
+     (let* ((normalized (org-omi--normalized-declaration))
+            (receipt (org-omi--fnv1a32 normalized)))
+       (org-omi-obsidian--json-response
+        `((ok . t)
+          (stdout . ((receipt . ,receipt)
+                     (omi . ,normalized)
+                     (osiManifest . ,(org-omi-obsidian--osi-manifest))))))))))
+
+(defun org-omi-obsidian--verify-body (body file-path)
+  "Verify Obsidian BODY against its mirrored declaration receipt."
+  (org-omi-obsidian--with-temp-org
+   body file-path
+   (lambda ()
+     (let* ((current (org-omi--get-front-matter org-omi-receipt-key))
+            (computed (org-omi--fnv1a32 (org-omi--normalized-declaration))))
+       (if (and current (string= current computed))
+           (org-omi-obsidian--json-response
+            `((ok . t)
+              (stdout . ((receipt . ,computed)))))
+         (org-omi-obsidian--json-response
+          `((ok . :json-false)
+            (stderr . ((code . "receipt-mismatch")
+                       (message . ,(format "current=%s computed=%s" current computed)))))))))))
+
+(defun org-omi-obsidian--export-osi (body file-path)
+  "Export OSI projection for Obsidian BODY."
+  (org-omi-obsidian--with-temp-org
+   body file-path
+   (lambda ()
+     (let ((receipt (org-omi--fnv1a32 (org-omi--normalized-declaration))))
+       (org-omi-obsidian--json-response
+        `((ok . t)
+          (stdout . ((receipt . ,receipt)
+                     (osiManifest . ,(org-omi-obsidian--osi-manifest))))))))))
+
+(defun org-omi-obsidian-dispatch-json (json-string)
+  "Receive Obsidian JSON request and return JSON string for emacsclient."
+  (condition-case err
+      (let* ((json-object-type 'alist)
+             (json-array-type 'list)
+             (json-key-type 'symbol)
+             (req (json-read-from-string json-string))
+             (op (alist-get 'op req))
+             (body (or (alist-get 'body req) ""))
+             (file-path (or (alist-get 'filePath req) default-directory)))
+        (pcase op
+          ("pinch"
+           (org-omi-obsidian--pinch-body body file-path))
+          ("verify"
+           (org-omi-obsidian--verify-body body file-path))
+          ("export-osi"
+           (org-omi-obsidian--export-osi body file-path))
+          (_
+           (org-omi-obsidian--json-response
+            `((ok . :json-false)
+              (stderr . ((code . "unknown-op")
+                         (message . ,(format "Unknown op: %s" op)))))))))
+    (error
+     (org-omi-obsidian--json-response
+      `((ok . :json-false)
+        (stderr . ((code . "emacs-error")
+                   (message . ,(error-message-string err)))))))))
 
 ;;;###autoload
 (defun org-omi-pinch-tangle-and-receipt ()

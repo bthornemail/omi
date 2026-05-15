@@ -10,7 +10,10 @@ static int kernel_equal(kernel_state_t a, kernel_state_t b)
            a.fano == b.fano &&
            a.GS == b.GS &&
            a.sonar.lo == b.sonar.lo &&
-           a.sonar.hi == b.sonar.hi;
+           a.sonar.hi == b.sonar.hi &&
+           a.semantic_clock.phase == b.semantic_clock.phase &&
+           a.semantic_clock.layer == b.semantic_clock.layer &&
+           a.semantic_clock.combinator == b.semantic_clock.combinator;
 }
 
 static int projection_equal(omi_osi_projection_t a, omi_osi_projection_t b)
@@ -27,7 +30,8 @@ static kernel_state_t seeded_state(void)
         .K = 0x00u,
         .fano = 0x01u,
         .sonar = { .lo = 0x00000001u, .hi = 0x00000000u },
-        .GS = OMI_BITWISE_KERNEL_GS
+        .GS = OMI_BITWISE_KERNEL_GS,
+        .semantic_clock = {0}
     };
 
     for (unsigned i = 0; i < 11u; i++) {
