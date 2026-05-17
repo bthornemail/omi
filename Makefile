@@ -16,7 +16,7 @@ RISCV_ELF := $(RISCV_BUILD_DIR)/omi-riscv.elf
 RISCV_BIN := $(RISCV_BUILD_DIR)/omi-riscv.bin
 RISCV_CFLAGS := -std=c11 -Wall -Wextra -Werror -Ikernel/include -march=rv64imac_zicsr -mabi=lp64 -mcmodel=medany -ffreestanding -fno-builtin -nostdlib
 
-.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test polyform-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test compiler-pipeline-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-org-omi-test workbench-dom-cssom-surface-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-platform-distribution-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-unicode-annotation-lattice-test workbench-sixty-four-ion-blackboard-pairing-test workbench-universal-closure-coding-test workbench-autonomous-world-builder-test workbench-autonomous-world-browser-smoke-test workbench-autonomous-world-live-renderer-test workbench-autonomous-world-interjection-overlay-test workbench-autonomous-world-overlay-admission-test workbench-autonomous-world-version-history-test workbench-autonomous-world-merge-reconciliation-test workbench-autonomous-world-package-sync-test workbench-autonomous-world-peer-exchange-test workbench-autonomous-world-subscription-court-test workbench-autonomous-world-live-transport-adapter-test workbench-autonomous-world-transport-replay-test workbench-autonomous-world-transport-checkpoint-test workbench-autonomous-world-transport-compaction-test workbench-autonomous-world-transport-repair-test workbench-autonomous-world-transport-availability-test workbench-autonomous-world-transport-request-scheduler-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test omi-blob-test org-omi-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
+.PHONY: all test unit-test e2e-test stress-test qemu-platform-test qemu-cross-arch-readiness qemu-multi-platform-court qemu-multi-platform-report-test riscv-image riscv-run riscv-qemu-foundation-test cons256-test polyform-test polyform-roundtrip-test polyform-capsule-test polyform-capsule-court-test model-test model-registry-test user-init-test lazy-eval-test model-vfs-test hotplug-model-test carrier-decode-test polyform-render-test polyform-coordinate-test scope-multigraph-test event-model-test intent-model-test texture-model-test diagram-template-test declarative-surface-test app-model-test device-model-test event-packet-test esp32-witness-test compiler-pipeline-test workbench-test workbench-edit-test workbench-merge-test workbench-sync-test workbench-file-sync-test workbench-barcode-sync-test workbench-esp32-sync-test workbench-org-test workbench-org-omi-test workbench-dom-cssom-surface-test workbench-diagram-tangle-test workbench-diagram-renderer-test workbench-polyform-coordinate-test workbench-scope-multigraph-test workbench-composer-test workbench-composer-package-test workbench-package-trust-test workbench-geometric-reconciliation-test workbench-view-switcher-test workbench-animation-timeline-test workbench-fractal-subchart-test workbench-cube-differential-test workbench-barcode-template-composition-test workbench-composition-trust-test workbench-composition-bundle-test workbench-stream-declaration-test workbench-stream-projection-test workbench-stream-overlay-test workbench-stream-overlay-package-test workbench-omilisp-declaration-test workbench-spom-triangulation-test workbench-omi-self-declaration-test workbench-polyform-cons-reconstruction-test workbench-orientation-incidence-blackboard-test workbench-network-runtime-resolver-test workbench-runtime-channel-manifest-test workbench-platform-distribution-manifest-test workbench-distributed-adapter-transport-registry-test workbench-raw-binary-decentralized-lattice-test workbench-raw-binary-chunk-index-test workbench-boundary-geometry-constitution-test workbench-omi-observer-lattice-sitter-test workbench-wordnet-prolog-semantic-grounding-test workbench-omi-transmutator-roundtrip-test workbench-unicode-annotation-lattice-test workbench-sixty-four-ion-blackboard-pairing-test workbench-universal-closure-coding-test workbench-autonomous-world-builder-test workbench-autonomous-world-browser-smoke-test workbench-autonomous-world-live-renderer-test workbench-autonomous-world-interjection-overlay-test workbench-autonomous-world-overlay-admission-test workbench-autonomous-world-version-history-test workbench-autonomous-world-merge-reconciliation-test workbench-autonomous-world-package-sync-test workbench-autonomous-world-peer-exchange-test workbench-autonomous-world-subscription-court-test workbench-autonomous-world-live-transport-adapter-test workbench-autonomous-world-transport-replay-test workbench-autonomous-world-transport-checkpoint-test workbench-autonomous-world-transport-compaction-test workbench-autonomous-world-transport-repair-test workbench-autonomous-world-transport-availability-test workbench-autonomous-world-transport-request-scheduler-test workbench-block-image-test workbench-block-image-projection-test workbench-narrative-timeline-test workbench-gpu-projection-test workbench-webgl-runtime-test workbench-webgl-preview-test workbench-gles-runtime-test workbench-opengl-runtime-test workbench-graphics-equivalence-test workbench-visual-equivalence-test omi-blob-test org-omi-test qemu-model-test qemu-model-registry-test qemu-tcg-foundation-test qemu-tcg-model-registry-test qemu-tcg-court qemu-page-court-test qemu-mmio-device-court-test qemu-portable-test full-test image kernel iso run replay rules gauge-replay-test platform-endian-test pre-os-test bitwise-test osi-test qemu-foundation-test foundation-proof clean
 
 all: test image replay kernel iso
 
@@ -34,6 +34,12 @@ $(BUILD_DIR)/graph_tests: tests/graph_tests.c kernel/vm/memory_graph.c kernel/vm
 
 $(BUILD_DIR)/cons_tests: tests/cons_tests.c kernel/vm/cons_engine.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
+
+$(BUILD_DIR)/omi_cons256.o: kernel/runtime/omi_cons256.c kernel/include/omi_cons256.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c kernel/runtime/omi_cons256.c -o $@
+
+$(BUILD_DIR)/cons256_test: tests/cons256_test.c $(BUILD_DIR)/omi_cons256.o | $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/cons256_test.c $(BUILD_DIR)/omi_cons256.o -o $@
 
 $(BUILD_DIR)/omi_blob.o: tools/omi_blob.c tools/omi_blob.h | $(BUILD_DIR)
 	$(CC) -std=c99 -Wall -Wextra -O2 -Itools -c tools/omi_blob.c -o $@
@@ -240,6 +246,26 @@ $(BUILD_DIR)/polyform_block_test: polyform/tests/polyform_block_test.c $(BUILD_D
 $(BUILD_DIR)/polyform_witness_recompute: tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Ipolyform/include tools/polyform_witness_recompute.c $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
 
+# ── Polyform reversible encoding (Aegean/Braille/bitboard roundtrip) ──
+
+$(BUILD_DIR)/polyform_encode.o: polyform/src/polyform_encode.c polyform/include/polyform_encode.h polyform/include/polyform_block.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include -c polyform/src/polyform_encode.c -o $@
+
+$(BUILD_DIR)/polyform_roundtrip_test: polyform/tests/polyform_roundtrip_test.c $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include polyform/tests/polyform_roundtrip_test.c $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
+
+$(BUILD_DIR)/polyform_capsule.o: polyform/src/polyform_capsule.c polyform/include/polyform_capsule.h polyform/include/polyform_encode.h polyform/include/polyform_block.h kernel/include/layer_clock.h kernel/include/term_rewriting_lexer.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include -c polyform/src/polyform_capsule.c -o $@
+
+$(BUILD_DIR)/polyform_capsule_test: polyform/tests/polyform_capsule_test.c $(BUILD_DIR)/polyform_capsule.o $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o $(BUILD_DIR)/term_rewriting_lexer.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include polyform/tests/polyform_capsule_test.c $(BUILD_DIR)/polyform_capsule.o $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o $(BUILD_DIR)/term_rewriting_lexer.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
+
+$(BUILD_DIR)/polyform_capsule_court.o: polyform/src/polyform_capsule_court.c polyform/include/polyform_capsule_court.h polyform/include/polyform_capsule.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include -c polyform/src/polyform_capsule_court.c -o $@
+
+$(BUILD_DIR)/polyform_capsule_court_test: polyform/tests/polyform_capsule_court_test.c $(BUILD_DIR)/polyform_capsule_court.o $(BUILD_DIR)/polyform_capsule.o $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o $(BUILD_DIR)/term_rewriting_lexer.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -Ipolyform/include polyform/tests/polyform_capsule_court_test.c $(BUILD_DIR)/polyform_capsule_court.o $(BUILD_DIR)/polyform_capsule.o $(BUILD_DIR)/polyform_encode.o $(BUILD_DIR)/polyform_block.o $(BUILD_DIR)/polyform_witness.o $(BUILD_DIR)/bitwise_kernel.o $(BUILD_DIR)/osi_projection.o $(BUILD_DIR)/layer_clock.o $(BUILD_DIR)/term_rewriting_lexer.o polyform/encoding/aegean.c polyform/encoding/braille.c polyform/encoding/projection_address.c polyform/geometry/omi_geometry.c -o $@
+
 $(RISCV_BUILD_DIR)/boot.o: riscv/boot.S | $(RISCV_BUILD_DIR)
 	$(RISCV_CC) $(RISCV_CFLAGS) -c $< -o $@
 
@@ -395,6 +421,9 @@ pre-os-test: $(BUILD_DIR)/pre_os_measurement_test
 bitwise-test: $(BUILD_DIR)/bitwise_kernel_test
 	./$(BUILD_DIR)/bitwise_kernel_test
 
+cons256-test: $(BUILD_DIR)/cons256_test
+	./$(BUILD_DIR)/cons256_test
+
 osi-test: $(BUILD_DIR)/osi_projection_test
 	./$(BUILD_DIR)/osi_projection_test
 
@@ -403,6 +432,15 @@ platform-endian-test: $(BUILD_DIR)/platform_endian_test
 
 polyform-test: $(BUILD_DIR)/polyform_block_test
 	./$(BUILD_DIR)/polyform_block_test
+
+polyform-roundtrip-test: $(BUILD_DIR)/polyform_roundtrip_test
+	./$(BUILD_DIR)/polyform_roundtrip_test
+
+polyform-capsule-test: $(BUILD_DIR)/polyform_capsule_test
+	./$(BUILD_DIR)/polyform_capsule_test
+
+polyform-capsule-court-test: $(BUILD_DIR)/polyform_capsule_court_test
+	./$(BUILD_DIR)/polyform_capsule_court_test
 
 model-test: $(BUILD_DIR)/model_trace_test
 	./$(BUILD_DIR)/model_trace_test
@@ -775,10 +813,14 @@ unit-test:
 	$(MAKE) compiler-pipeline-test
 	$(MAKE) omi-blob-test
 	$(MAKE) bitwise-test
+	$(MAKE) cons256-test
 	$(MAKE) osi-test
 	$(MAKE) pre-os-test
 	$(MAKE) platform-endian-test
 	$(MAKE) polyform-test
+	$(MAKE) polyform-roundtrip-test
+	$(MAKE) polyform-capsule-test
+	$(MAKE) polyform-capsule-court-test
 	$(MAKE) model-test
 	$(MAKE) model-registry-test
 	$(MAKE) user-init-test
