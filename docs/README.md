@@ -13,6 +13,10 @@ belongs in `RULES.omi` or in a spec section that explicitly points to it.
 
 ## Reading Order
 
+Public deployment entry point: `OMI-DISTRIBUTED-CONSISTENCY-DEPLOYMENT-SPEC.md`
+defines the coordination-free, causally ordered, erasure-coded knowledge
+lattice and its deployable node/protocol/packet surface.
+
 1. `ARCHITECTURE.md` gives the mental model of the system.
 2. `OMI-CONSTITUTIONAL-GEOMETRY.md` is the sovereign doctrine source for
    boundary, segmentation, projection, and propagation.
